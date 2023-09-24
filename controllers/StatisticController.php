@@ -54,6 +54,7 @@ class StatisticController extends Controller
         if ($form->load(app()->request->post()) && $form->validate()) {
 
             try {
+
                 $this->service->create($form);
 
                 return $this->ajaxRedirect();
