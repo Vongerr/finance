@@ -35,7 +35,7 @@ class StatisticController extends Controller
             'class' => FinanceSearch::class
         ]);
 
-        $dataProvider = $searchModel->search();
+        $dataProvider = $searchModel->search(app()->request->get());
 
         return $this->render('index', [
             'searchModel' => $searchModel,

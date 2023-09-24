@@ -21,15 +21,17 @@ class FinanceSearch extends Model
         ];
     }
 
-    public function search(): ActiveDataProvider
+    public function search($params): ActiveDataProvider
     {
-        $finance = Finance::find();
+        $this->load($params) && $this->validate();
+
+        $finance = Finance::find()
+            ->andFilterWhere([
+                'date' => $this->date
+            ]);
 
         return new ActiveDataProvider([
             'query' => $finance,
-            'pagination' => [
-                'pageSize' => 100
-            ]
         ]);
     }
 

@@ -21,7 +21,9 @@ class CategoryHelper extends ListHelper
             Finance::BEAUTY => 'Красота',
             Finance::PHARMACY => 'Аптека',
             Finance::ZOO => 'Зоомагазин',
-            Finance::DIGITAL_STORE => 'Онлайн покупки'
+            Finance::DIGITAL_STORE => 'Онлайн покупки',
+            Finance::REPAIR => 'Дом и ремонт',
+            Finance::STATIONARY => 'Канцеллярские товары'
         ];
     }
 
@@ -40,6 +42,8 @@ class CategoryHelper extends ListHelper
             Finance::PHARMACY => Html::tag('span', 'Аптека', ['class'=>'label label-primary']),
             Finance::ZOO => Html::tag('span', 'Зоомагазин', ['class'=>'label label-primary']),
             Finance::DIGITAL_STORE => Html::tag('span', 'Онлайн покупки', ['class'=>'label label-primary']),
+            Finance::REPAIR => Html::tag('span', 'Дом и ремонт', ['class'=>'label label-primary']),
+            Finance::STATIONARY => Html::tag('span', 'Канцеллярские товары', ['class'=>'label label-primary']),
         ];
     }
 }

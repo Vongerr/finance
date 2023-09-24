@@ -35,6 +35,8 @@ class Finance extends ActiveRecord
     const PHARMACY = 'pharmacy';
     const ZOO = 'zoo';
     const DIGITAL_STORE = 'digital_store';
+    const REPAIR = 'repair';
+    const STATIONARY = 'stationary';
 
     public static function create(FinanceForm $form): Finance
     {

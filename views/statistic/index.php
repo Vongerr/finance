@@ -80,8 +80,6 @@ echo GridView::widget([
     'hover' => true,
     'panel' => [
         'type' => GridView::TYPE_DEFAULT,
-        'footer' => false,
-        'after' => false,
     ],
     'panelTemplate' => '<div class="{prefix}{type} {solid}">{panelHeading}<div class="box-body">'
         . '{panelBefore}{items}{panelAfter}</div>{panelFooter}</div>',
