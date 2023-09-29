@@ -12,6 +12,7 @@ class CategoryHelper extends ListHelper
         return [
             Finance::TAXI => 'Такси',
             Finance::CAFE => 'Питание',
+            Finance::FAST_FOOD => 'Фастфуд',
             Finance::MARKET => 'Супермаркет',
             Finance::TRANSPORT => 'Общественный транспорт',
             Finance::TRANSFER => 'Переводы',
@@ -23,7 +24,9 @@ class CategoryHelper extends ListHelper
             Finance::ZOO => 'Зоомагазин',
             Finance::DIGITAL_STORE => 'Онлайн покупки',
             Finance::REPAIR => 'Дом и ремонт',
-            Finance::STATIONARY => 'Канцеллярские товары'
+            Finance::STATIONARY => 'Канцеллярские товары',
+            Finance::EDUCATION => 'Образование',
+            Finance::COMMUNICATION => 'Мобильная связь'
         ];
     }
 
@@ -32,6 +35,7 @@ class CategoryHelper extends ListHelper
         return [
             Finance::TAXI => Html::tag('span', 'Такси', ['class'=>'label label-warning']),
             Finance::CAFE => Html::tag('span', 'Питание', ['class'=>'label label-warning']),
+            Finance::FAST_FOOD => Html::tag('span', 'Фастфуд', ['class'=>'label label-primary']),
             Finance::MARKET => Html::tag('span', 'Супермаркет', ['class'=>'label label-primary']),
             Finance::TRANSPORT => Html::tag('span', 'Общественный транспорт', ['class'=>'label label-primary']),
             Finance::TRANSFER => Html::tag('span', 'Переводы', ['class'=>'label label-primary']),
@@ -44,6 +48,8 @@ class CategoryHelper extends ListHelper
             Finance::DIGITAL_STORE => Html::tag('span', 'Онлайн покупки', ['class'=>'label label-primary']),
             Finance::REPAIR => Html::tag('span', 'Дом и ремонт', ['class'=>'label label-primary']),
             Finance::STATIONARY => Html::tag('span', 'Канцеллярские товары', ['class'=>'label label-primary']),
+            Finance::EDUCATION => Html::tag('span', 'Образование', ['class'=>'label label-primary']),
+            Finance::COMMUNICATION => Html::tag('span', 'Мобильная связь', ['class'=>'label label-primary']),
         ];
     }
 }

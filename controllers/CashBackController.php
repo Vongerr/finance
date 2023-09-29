@@ -2,9 +2,9 @@
 
 namespace app\controllers;
 
-use app\forms\FinanceForm;
-use app\models\search\FinanceSearch;
-use app\services\FinanceService;
+use app\forms\CashBackForm;
+use app\models\search\CashBackSearch;
+use app\services\CashBackService;
 use Exception;
 use Throwable;
 use Yii;
@@ -12,14 +12,14 @@ use yii\base\InvalidConfigException;
 use yii\web\Controller;
 use yii\web\Response;
 
-class StatisticController extends Controller
+class CashBackController extends Controller
 {
     /**
-     * @var FinanceService
+     * @var CashBackService
      */
-    private FinanceService $service;
+    private $service;
 
-    public function __construct(string $id, $module, FinanceService $service, array $config = [])
+    public function __construct(string $id, $module, CashBackService $service, array $config = [])
     {
         parent::__construct($id, $module, $config);
 
@@ -32,7 +32,7 @@ class StatisticController extends Controller
     public function actionIndex(): string
     {
         $searchModel = Yii::createObject([
-            'class' => FinanceSearch::class
+            'class' => CashBackSearch::class
         ]);
 
         $dataProvider = $searchModel->search(app()->request->get());
@@ -49,7 +49,7 @@ class StatisticController extends Controller
      */
     public function actionCreate()
     {
-        $form = new FinanceForm();
+        $form = new CashBackForm();
 
         if ($form->load(app()->request->post()) && $form->validate()) {
 
@@ -74,7 +74,7 @@ class StatisticController extends Controller
     {
         $model = $this->service->getStatisticById($id);
 
-        $form = new FinanceForm($model);
+        $form = new CashBackForm($model);
 
         if ($form->load(app()->request->post()) && $form->validate()) {
 
@@ -94,21 +94,6 @@ class StatisticController extends Controller
         ]);
     }
 
-    /**
-     * @throws InvalidConfigException
-     */
-    public function actionFinance(): string
-    {
-        $searchModel = Yii::createObject([
-            'class' => FinanceSearch::class
-        ]);
-
-        $data = $searchModel->getFinanceInfo();
-
-        return $this->render('finance', [
-            'data' => $data,
-        ]);
-    }
     /**
      * @throws Throwable
      */

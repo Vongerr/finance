@@ -19,14 +19,18 @@
     },
     "minimum-stability": "stable",
     "require": {
-        "php": ">=7.2",
+        "php": ">=7.4",
         "yiisoft/yii2": "~2.0.14",
-        "yiisoft/yii2-bootstrap4": "~2.0.0",
+        "yiisoft/yii2-bootstrap4": "^2.0",
         "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
         "kartik-v/yii2-editors": "^1.0",
         "kartik-v/yii2-grid": "^3.5",
         "kartik-v/yii2-date-range": "^1.7",
-        "kartik-v/yii2-widget-datepicker": "^1.4"
+        "kartik-v/yii2-widget-datepicker": "^1.4",
+        "virtualwonders/yii2-fontawesome": "*",
+        "wbraganca/yii2-fancytree-widget": "*",
+        "bower-asset/font-awesome": "^6.4",
+        "yiisoft/yii2-bootstrap5": "^2.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

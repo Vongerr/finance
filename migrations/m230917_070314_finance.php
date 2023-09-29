@@ -4,7 +4,7 @@ use app\components\Migration;
 
 class m230917_070314_finance extends Migration
 {
-    protected $table = 'statistic';
+    protected $table = 'finance';
 
     public function safeUp()
     {
@@ -16,6 +16,7 @@ class m230917_070314_finance extends Migration
             'time' => $this->string(5)->comment('Время операции'),
             'username' => $this->char(30)->comment('Имя пользователя'),
             'money' => $this->float(14)->notNull()->comment('Средства'),
+            'comment' => $this->string(250)->null()->comment('Комментарий'),
         ]);
 
         $this->createDateColumns();

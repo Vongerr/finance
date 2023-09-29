@@ -1,7 +1,7 @@
 <?php
 
 /** @var yii\web\View $this */
-/** @var yii\bootstrap4\ActiveForm $form */
+/** @var yii\bootstrap5\ActiveForm $form */
 /** @var app\models\LoginForm $model */
 
 use yii\bootstrap4\ActiveForm;

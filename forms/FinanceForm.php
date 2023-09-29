@@ -3,8 +3,12 @@
 namespace app\forms;
 
 use app\entities\Finance;
+use app\helpers\CategoryBudgetHelper;
+use app\helpers\CategoryHelper;
 use yii\base\Model;
 
+//"bower-asset/bootstrap": "^3.3",
+//        "npm-asset/jquery": "^2.2"
 class FinanceForm extends Model
 {
     public $budget_category;
@@ -19,6 +23,8 @@ class FinanceForm extends Model
 
     public $money;
 
+    public $comment;
+
     public function __construct(Finance $finance = null, array $config = [])
     {
         parent::__construct($config);
@@ -31,6 +37,7 @@ class FinanceForm extends Model
             $this->time = $finance->time;
             $this->username = $finance->username;
             $this->money = $finance->money;
+            $this->comment = $finance->comment;
         } else {
             $this->username = 'vonger';
             $this->date = date('Y-m-d');
@@ -43,8 +50,10 @@ class FinanceForm extends Model
             [['date', 'budget_category', 'category', 'money'], 'required'],
             [['money'], 'double'],
             [['date', 'time'], 'safe'],
-            [['category', 'budget_category'], 'string', 'max' => 20],
+            [['category'], 'in', 'range' => array_keys(CategoryHelper::getList())],
+            [['budget_category'], 'in', 'range' => array_keys(CategoryBudgetHelper::getList())],
             [['username'], 'string', 'max' => 30],
+            [['comment'], 'string', 'max' => 250],
         ];
     }
 
@@ -57,7 +66,8 @@ class FinanceForm extends Model
             'date' => 'Дата операции',
             'time' => 'Время операции',
             'username' => 'Имя пользователя',
-            'money' => 'Средства'
+            'money' => 'Средства',
+            'comment' => 'Комментарий'
         ];
     }
 

@@ -1,15 +1,14 @@
 <?php
 
-use app\forms\FinanceForm;
-use app\helpers\CategoryBudgetHelper;
+use app\forms\CashBackForm;
 use app\helpers\CategoryHelper;
-use kartik\date\DatePicker;
+use app\helpers\MonthHelper;
 use yii\bootstrap5\ActiveForm;
 use yii\web\View;
 use yii\helpers\Html;
 
 /** @var View $this */
-/** @var FinanceForm $model */
+/** @var CashBackForm $model */
 
 try {
     $form = ActiveForm::begin([
@@ -22,35 +21,20 @@ try {
     echo $form->errorSummary($model);
     ?>
     <div class="row">
+        <div class="col-sm-12">
+            <?php echo $form->field($model, 'month')->dropDownList(MonthHelper::getList()); ?>
+        </div>
+        <div class="col-sm-6">
+            <?php echo $form->field($model, 'year'); ?>
+        </div>
         <div class="col-sm-6">
             <?php echo $form->field($model, 'category')->dropDownList(CategoryHelper::getList()); ?>
         </div>
         <div class="col-sm-6">
-            <?php echo $form->field($model, 'budget_category')->dropDownList(CategoryBudgetHelper::getList()); ?>
+            <?php echo $form->field($model, 'individual_category'); ?>
         </div>
         <div class="col-sm-6">
-            <?php echo $form->field($model, 'date')->widget(
-                DatePicker::class,
-                [
-                    'language' => 'ru',
-                    'options' => [
-                        'value' => $model->date ? date('d.m.Y', strtotime($model->date)) : '',
-                        'placeholder' => 'Выберите дату ...',
-                    ]
-                ]
-            ); ?>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-6">
-            <?php echo $form->field($model, 'money'); ?>
-            <?php echo $form->field($model, 'time'); ?>
-        </div>
-        <div class="col-sm-6">
-            <?php echo $form->field($model, 'username'); ?>
-        </div>
-        <div class="col-sm-6">
-            <?php echo $form->field($model, 'comment'); ?>
+            <?php echo $form->field($model, 'percent'); ?>
         </div>
     </div>
     <br>

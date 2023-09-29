@@ -3,18 +3,21 @@
 namespace app\entities;
 
 use app\forms\FinanceForm;
+use app\helpers\CategoryBudgetHelper;
+use app\helpers\CategoryHelper;
 use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "attendance__absenteeism_periods".
  *
  * @property int $id
- * @property int $budget_category Категория бюджета
+ * @property string $budget_category Категория бюджета
  * @property string $category Категория
  * @property string $date Дата операции
  * @property string $time Время операции
  * @property string $username Имя пользователя
- * @property string $money Средства
+ * @property float $money Средства
+ * @property float $comment Комментарий
  * @property string $created_at
  * @property string $updated_at
  */
@@ -25,6 +28,7 @@ class Finance extends ActiveRecord
 
     const TAXI = 'taxi';
     const CAFE = 'cafe';
+    const FAST_FOOD = 'fast_food';
     const MARKET = 'market';
     const TRANSPORT = 'transport';
     const TRANSFER = 'transfer';
@@ -37,6 +41,8 @@ class Finance extends ActiveRecord
     const DIGITAL_STORE = 'digital_store';
     const REPAIR = 'repair';
     const STATIONARY = 'stationary';
+    const EDUCATION = 'education';
+    const COMMUNICATION = 'mobile_communication';
 
     public static function create(FinanceForm $form): Finance
     {
@@ -55,6 +61,7 @@ class Finance extends ActiveRecord
         $this->time = $form->time;
         $this->username = $form->username;
         $this->money = $form->money;
+        $this->comment = $form->comment;
     }
 
     public static function tableName(): string
@@ -68,8 +75,10 @@ class Finance extends ActiveRecord
             [['date', 'budget_category', 'category', 'money'], 'required'],
             [['money'], 'double'],
             [['date', 'time'], 'safe'],
-            [['category', 'budget_category'], 'string', 'max' => 20],
+            [['category'], 'in', 'range' => array_keys(CategoryHelper::getList())],
+            [['budget_category'], 'in', 'range' => array_keys(CategoryBudgetHelper::getList())],
             [['username'], 'string', 'max' => 30],
+            [['comment'], 'string', 'max' => 250],
         ];
     }
 
@@ -83,6 +92,7 @@ class Finance extends ActiveRecord
             'time' => 'Время операции',
             'username' => 'Имя пользователя',
             'money' => 'Средства',
+            'comment' => 'Комментарий',
         ];
     }
 }
