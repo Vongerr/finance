@@ -9,6 +9,7 @@ use Exception;
 use Throwable;
 use Yii;
 use yii\base\InvalidConfigException;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\Response;
 
@@ -43,11 +44,7 @@ class StatisticController extends Controller
         ]);
     }
 
-    /**
-     * @return string|Response
-     * @throws Exception
-     */
-    public function actionCreate()
+    public function actionCreate(): Response|array|string
     {
         $form = new FinanceForm();
 
@@ -57,7 +54,7 @@ class StatisticController extends Controller
 
                 $this->service->create($form);
 
-                return $this->ajaxRedirect();
+                return $this->ajaxRedirect(Url::to(['index']));
 
             } catch (Exception $e) {
 
@@ -70,7 +67,7 @@ class StatisticController extends Controller
         ]);
     }
 
-    public function actionUpdate(int $id)
+    public function actionUpdate(int $id): Response|array|string
     {
         $model = $this->service->getStatisticById($id);
 
@@ -112,14 +109,14 @@ class StatisticController extends Controller
     /**
      * @throws Throwable
      */
-    public function actionDelete(int $id)
+    public function actionDelete(int $id): Response|array
     {
         $this->service->remove($id);
 
         return $this->ajaxRedirect();
     }
 
-    protected function ajaxRedirect(string $url = null, string $message = null)
+    protected function ajaxRedirect(string $url = null, string $message = null): Response|array
     {
         if (!$url) {
 

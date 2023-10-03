@@ -1,15 +1,23 @@
 <?php
 
+use app\assets\AdminLteAssets;
 use app\assets\AppAsset;
+use app\assets\BootstrapIconsAssets;
+use app\assets\iCheckAssets;
 use app\components\View;
 use app\widgets\Alert;
-use yii\bootstrap5\Breadcrumbs;
-use yii\bootstrap5\Html;
-use yii\bootstrap5\Nav;
-use yii\bootstrap5\NavBar;
+use yii\bootstrap\Html;
+use yii\bootstrap\Nav;
+use yii\bootstrap\NavBar;
+use yii\widgets\Breadcrumbs;
 
 /** @var View $this */
 /** @var string $content */
+
+AdminLteAssets::register($this);
+ICheckAssets::register($this);
+
+BootstrapIconsAssets::register($this);
 
 AppAsset::register($this);
 ?>
@@ -32,7 +40,7 @@ AppAsset::register($this);
         'brandLabel' => 'Finance',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
-            'class' => 'navbar navbar-expand-md navbar-dark bg-dark fixed-top',
+            'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
     echo Nav::widget([

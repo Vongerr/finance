@@ -6,30 +6,30 @@ use yii\web\View as BaseView;
 
 /**
  * Class View
- * @package core\components
+ * @package app\components
  *
  * @property bool $isBootstrapIcons
  */
 class View extends BaseView
 {
-    private $isBootstrapIcons = false;
+    private bool $isBootstrapIcons = false;
 
     /**
-     * @var string/null - Заголовок 2 уровня страницы
+     * @var string|null - Заголовок 2 уровня страницы
      */
-    public $bigTitle = null;
+    public ?string $bigTitle = null;
 
     /**
-     * @var string/null - Заголовок 2 уровня страницы
+     * @var string|null - Заголовок 2 уровня страницы
      */
-    public $smallTitle = null;
+    public ?string $smallTitle = null;
 
     /**
      * Установить заголовок 2 уровня
      *
      * @param string $title
      */
-    public function setSmallTitle($title)
+    public function setSmallTitle(string $title)
     {
         $this->smallTitle = $title;
     }
@@ -49,7 +49,7 @@ class View extends BaseView
      *
      * @return string
      */
-    public function getSmallTitle()
+    public function getSmallTitle(): ?string
     {
         return $this->smallTitle;
     }
@@ -60,7 +60,7 @@ class View extends BaseView
      *
      * @return string
      */
-    public function getTitle()
+    public function getTitle(): ?string
     {
         return $this->bigTitle;
     }

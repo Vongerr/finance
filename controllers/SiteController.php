@@ -2,14 +2,8 @@
 
 namespace app\controllers;
 
-use app\models\search\FinanceSearch;
-use app\services\FinanceService;
-use Exception;
-use FinanceForm;
 use Yii;
-use yii\base\InvalidConfigException;
 use yii\filters\AccessControl;
-use yii\gii\Module;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
@@ -54,75 +48,12 @@ class SiteController extends Controller
         ];
     }
 
-    /**
-     * @var FinanceService
-     */
-    private $service;
-
-    public function __construct($id, $module, $service, array $config = [])
-    {
-        $this->service = $service;
-        parent::__construct($id, $module, $config);
-
-    }
-
     public function actionIndex(): string
     {
         return $this->render('index');
     }
 
-    /**
-     * @throws InvalidConfigException
-     */
-    public function actionFinance(): string
-    {
-        $searchModel = Yii::createObject([
-            'class' => FinanceSearch::class
-        ]);
-
-        $dataProvider = $searchModel->search();
-
-        return $this->render('finance', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider
-        ]);
-    }
-
-    /**
-     * @return string
-     * @throws Exception|InvalidConfigException
-     */
-    public function actionCreate(): string
-    {
-        $employeeList = [];
-
-        $form = Yii::createObject([
-            'class' => FinanceForm::class,
-            'employeeList' => $employeeList,
-        ]);
-
-        if ($form->load(app()->request->post()) && $form->validate()) {
-
-            try {
-                $this->service->create($form);
-
-            } catch (Exception $e) {
-
-                $form->addError('title', $e->getMessage() . (YII_DEBUG ? (PHP_EOL . $e->getTraceAsString()) : ''));
-            }
-        }
-
-        return $this->render('form', [
-            'model' => $form,
-        ]);
-    }
-
-    /**
-     * Login action.
-     *
-     * @return Response|string
-     */
-    public function actionLogin()
+    public function actionLogin(): Response|string
     {
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
@@ -139,24 +70,14 @@ class SiteController extends Controller
         ]);
     }
 
-    /**
-     * Logout action.
-     *
-     * @return Response
-     */
-    public function actionLogout()
+    public function actionLogout(): Response
     {
         Yii::$app->user->logout();
 
         return $this->goHome();
     }
 
-    /**
-     * Displays contact page.
-     *
-     * @return Response|string
-     */
-    public function actionContact()
+    public function actionContact(): Response|string
     {
         $model = new ContactForm();
         if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
@@ -169,12 +90,7 @@ class SiteController extends Controller
         ]);
     }
 
-    /**
-     * Displays about page.
-     *
-     * @return string
-     */
-    public function actionAbout()
+    public function actionAbout(): string
     {
         return $this->render('about');
     }

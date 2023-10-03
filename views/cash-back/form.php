@@ -3,7 +3,7 @@
 use app\forms\CashBackForm;
 use app\helpers\CategoryHelper;
 use app\helpers\MonthHelper;
-use yii\bootstrap5\ActiveForm;
+use yii\bootstrap\ActiveForm;
 use yii\web\View;
 use yii\helpers\Html;
 
@@ -21,19 +21,23 @@ try {
     echo $form->errorSummary($model);
     ?>
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-3">
             <?php echo $form->field($model, 'month')->dropDownList(MonthHelper::getList()); ?>
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-3">
             <?php echo $form->field($model, 'year'); ?>
         </div>
-        <div class="col-sm-6">
+    </div>
+    <div class="row">
+        <div class="col-sm-3">
             <?php echo $form->field($model, 'category')->dropDownList(CategoryHelper::getList()); ?>
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-3">
             <?php echo $form->field($model, 'individual_category'); ?>
         </div>
-        <div class="col-sm-6">
+    </div>
+    <div class="row">
+        <div class="col-sm-3">
             <?php echo $form->field($model, 'percent'); ?>
         </div>
     </div>
