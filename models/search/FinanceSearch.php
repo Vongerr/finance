@@ -18,28 +18,24 @@ class FinanceSearch extends Model
 
     public $date;
 
-    private $_filters = [];
+    private array $_filters = [];
 
     public function rules(): array
     {
         return [
-            [['category', 'budget_category', 'date'], 'string']
+            [['category', 'budget_category', 'date'], 'string'],
         ];
     }
 
     public function search($params): ActiveDataProvider
     {
-        $this->load($params) && $this->validate();
-
         $finance = Finance::find();
 
         if ($this->load($params) && $this->validate()) {
             $finance
-                ->andFilterWhere([
-                    'date' => $this->date,
-                    'category' => $this->category,
-                    'budget_category' => $this->budget_category
-                ]);
+                ->andFilterWhere(['date' => $this->date ? date('Y-m-d', strtotime($this->date)) : null])
+                ->andFilterWhere(['category' => $this->category])
+                ->andFilterWhere(['budget_category' => $this->budget_category]);
         }
 
         $this->_filters = [
@@ -131,7 +127,7 @@ class FinanceSearch extends Model
         return $cashBackCategoryList;
     }
 
-    private function defineCashBack(Finance $item, array $cashBackCategoryList)
+    private function defineCashBack(Finance $item, array $cashBackCategoryList): float|int
     {
         if ($item->category != Finance::TRANSFER) {
 
@@ -158,7 +154,7 @@ class FinanceSearch extends Model
      */
     private function queryFinance(): array
     {
-        return Finance::find()->orderBy(['date' => SORT_ASC])->all();
+        return Finance::find()->all();
     }
 
     public function getRangeList(string $attribute = null): array

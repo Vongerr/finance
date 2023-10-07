@@ -7,8 +7,6 @@ use app\helpers\CategoryBudgetHelper;
 use app\helpers\CategoryHelper;
 use yii\base\Model;
 
-//"bower-asset/bootstrap": "^3.3",
-//        "npm-asset/jquery": "^2.2"
 class FinanceForm extends Model
 {
     public $budget_category;
@@ -49,7 +47,8 @@ class FinanceForm extends Model
         return [
             [['date', 'budget_category', 'category', 'money'], 'required'],
             [['money'], 'double'],
-            [['date', 'time'], 'safe'],
+            ['date', 'date', 'format' => 'php:d.m.Y', 'timestampAttribute' => 'date', 'timestampAttributeFormat' => 'php:Y-m-d'],
+            [['time'], 'date', 'format'=>'H:i'],
             [['category'], 'in', 'range' => array_keys(CategoryHelper::getList())],
             [['budget_category'], 'in', 'range' => array_keys(CategoryBudgetHelper::getList())],
             [['username'], 'string', 'max' => 30],

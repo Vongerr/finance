@@ -24,24 +24,24 @@ class FinanceService
         return $this->repository->getStatisticById($id);
     }
 
-    public function create(FinanceForm $form)
+    public function create(FinanceForm $form): void
     {
         $model = Finance::create($form);
 
-        $model->save();
+        $this->repository->save($model);
     }
 
-    public function update(FinanceForm $form, Finance $model)
+    public function update(FinanceForm $form, Finance $model): void
     {
         $model->edit($form);
 
-        $model->save();
+        $this->repository->save($model);
     }
 
     /**
      * @throws Throwable
      */
-    public function remove(int $id)
+    public function remove(int $id): void
     {
         $model = $this->repository->getStatisticById($id);
 

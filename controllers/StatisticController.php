@@ -36,7 +36,7 @@ class StatisticController extends Controller
             'class' => FinanceSearch::class
         ]);
 
-        $dataProvider = $searchModel->search(app()->request->get());
+        $dataProvider = $searchModel->search(app()->request->get() ?? []);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -78,7 +78,7 @@ class StatisticController extends Controller
             try {
                 $this->service->update($form, $model);
 
-                return $this->ajaxRedirect();
+                return $this->ajaxRedirect(Url::to(['index']));
 
             } catch (Exception $e) {
 
@@ -106,6 +106,7 @@ class StatisticController extends Controller
             'data' => $data,
         ]);
     }
+
     /**
      * @throws Throwable
      */
@@ -113,7 +114,7 @@ class StatisticController extends Controller
     {
         $this->service->remove($id);
 
-        return $this->ajaxRedirect();
+        return $this->ajaxRedirect(Url::to(['index']));
     }
 
     protected function ajaxRedirect(string $url = null, string $message = null): Response|array

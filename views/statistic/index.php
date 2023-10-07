@@ -1,8 +1,5 @@
 <?php
 
-use app\assets\AdminLteAssets;
-use app\assets\BootstrapIconsAssets;
-use app\assets\iCheckAssets;
 use app\assets\PjaxWindowAsset;
 use app\components\View;
 use app\entities\Finance;

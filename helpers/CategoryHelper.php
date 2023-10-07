@@ -26,7 +26,8 @@ class CategoryHelper extends ListHelper
             Finance::REPAIR => 'Дом и ремонт',
             Finance::STATIONARY => 'Канцеллярские товары',
             Finance::EDUCATION => 'Образование',
-            Finance::COMMUNICATION => 'Мобильная связь'
+            Finance::COMMUNICATION => 'Мобильная связь',
+            Finance::OTHER => 'Другое'
         ];
     }
 
@@ -50,6 +51,7 @@ class CategoryHelper extends ListHelper
             Finance::STATIONARY => Html::tag('span', 'Канцеллярские товары', ['class'=>'label label-primary']),
             Finance::EDUCATION => Html::tag('span', 'Образование', ['class'=>'label label-primary']),
             Finance::COMMUNICATION => Html::tag('span', 'Мобильная связь', ['class'=>'label label-primary']),
+            Finance::OTHER => Html::tag('span', 'Другое', ['class'=>'label label-primary']),
         ];
     }
 }

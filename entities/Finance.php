@@ -43,6 +43,7 @@ class Finance extends ActiveRecord
     const STATIONARY = 'stationary';
     const EDUCATION = 'education';
     const COMMUNICATION = 'mobile_communication';
+    const OTHER = 'other';
 
     public static function create(FinanceForm $form): Finance
     {
@@ -74,7 +75,7 @@ class Finance extends ActiveRecord
         return [
             [['date', 'budget_category', 'category', 'money'], 'required'],
             [['money'], 'double'],
-            [['date', 'time'], 'safe'],
+            [['date', 'time'], 'string'],
             [['category'], 'in', 'range' => array_keys(CategoryHelper::getList())],
             [['budget_category'], 'in', 'range' => array_keys(CategoryBudgetHelper::getList())],
             [['username'], 'string', 'max' => 30],
