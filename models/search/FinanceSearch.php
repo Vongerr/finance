@@ -86,27 +86,35 @@ class FinanceSearch extends Model
 
     public function getFinanceInfo(): array
     {
-        $info = [
-            'finance' => 0,
-            'cashback' => 0
-        ];
+        $info = [];
 
         $cashBackCategoryList = $this->buildCashBackCategoryList();
 
         foreach ($this->queryFinance() as $item) {
+            $month = date('n', strtotime($item->date));
+
+            if (!isset($info[$month])) {
+                $info[$month] = [
+                    'finance' => 0,
+                    'cashback' => 0
+                ];
+            }
 
             if (Finance::EXPENSES == $item->budget_category) {
 
-                $info['finance'] -= $item->money;
+                $info[$month]['finance'] -= $item->money;
 
-                $info['cashback'] += $this->defineCashBack($item, $cashBackCategoryList);
+                $info[$month]['cashback'] += $this->defineCashBack($item, $cashBackCategoryList);
             } else {
 
-                $info['finance'] += $item->money;
+                $info[$month]['finance'] += $item->money;
             }
         }
 
-        $info['finance'] += $info['cashback'];
+        foreach ($info as $index => $monthInfo) {
+
+            $info[$index]['finance'] += $monthInfo['cashback'];
+        }
 
         return $info;
     }
