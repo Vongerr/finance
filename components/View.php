@@ -29,7 +29,7 @@ class View extends BaseView
      *
      * @param string $title
      */
-    public function setSmallTitle(string $title)
+    public function setSmallTitle(string $title): void
     {
         $this->smallTitle = $title;
     }
@@ -38,7 +38,7 @@ class View extends BaseView
      * Установить заголовок 1го уровня
      * @param $title
      */
-    public function setTitle($title)
+    public function setTitle($title): void
     {
         $this->bigTitle = $title;
         $this->title = trim(strip_tags($title));

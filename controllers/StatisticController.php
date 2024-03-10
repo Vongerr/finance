@@ -10,10 +10,10 @@ use Throwable;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\helpers\Url;
-use yii\web\Controller;
+use yii\web\BadRequestHttpException;
 use yii\web\Response;
 
-class StatisticController extends Controller
+class StatisticController extends MainController
 {
     /**
      * @var FinanceService
@@ -25,6 +25,23 @@ class StatisticController extends Controller
         parent::__construct($id, $module, $config);
 
         $this->service = $service;
+    }
+
+    /**
+     * @param $action
+     * @return bool
+     * @throws BadRequestHttpException
+     */
+    public function beforeAction($action): bool
+    {
+        if (parent::beforeAction($action)) {
+
+            //$this->setTitle('Статистика');
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -41,7 +58,7 @@ class StatisticController extends Controller
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider
-        ]);
+        ], true);
     }
 
     public function actionCreate(): Response|array|string
@@ -64,7 +81,7 @@ class StatisticController extends Controller
 
         return $this->render('form', [
             'model' => $form,
-        ]);
+        ], true);
     }
 
     public function actionUpdate(int $id): Response|array|string
@@ -88,7 +105,7 @@ class StatisticController extends Controller
 
         return $this->render('form', [
             'model' => $form,
-        ]);
+        ], true);
     }
 
     /**
@@ -104,7 +121,7 @@ class StatisticController extends Controller
 
         return $this->render('finance', [
             'data' => $data,
-        ]);
+        ], true);
     }
 
     /**
@@ -115,39 +132,5 @@ class StatisticController extends Controller
         $this->service->remove($id);
 
         return $this->ajaxRedirect(Url::to(['index']));
-    }
-
-    protected function ajaxRedirect(string $url = null, string $message = null): Response|array
-    {
-        if (!$url) {
-
-            $url = user()->returnUrl;
-        }
-
-        if (!app()->request->isAjax) {
-
-            if ($message) {
-
-                user()->setSuccessFlash($message);
-            }
-
-            return $this->redirect($url);
-
-        } else {
-
-            app()->response->format = Response::FORMAT_JSON;
-
-            $data = [
-                'success' => true,
-                'url' => $url,
-            ];
-
-            if ($message) {
-
-                $data['message'] = $message;
-            }
-
-            return $data;
-        }
     }
 }
