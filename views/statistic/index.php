@@ -3,6 +3,7 @@
 use app\assets\PjaxWindowAsset;
 use app\components\View;
 use app\entities\Finance;
+use app\helpers\BankHelper;
 use app\helpers\CategoryBudgetHelper;
 use app\helpers\CategoryHelper;
 use app\models\search\FinanceSearch;
@@ -79,6 +80,23 @@ try {
                         ],
                     ])
             ],
+            [
+                'content' => Html::a(
+                    'Будущие финансы',
+                    Url::to(['finance']),
+                    [
+                        'title' => 'Будущие финансы',
+                        'class' => 'btn btn-primary',
+                        'data' => [
+                            'pjax' => 0,
+                            'toggle' => 'modal',
+                            'target' => '#grid-modal',
+                            'pjax-id' => $pjaxId,
+                            'title' => 'Будущие финансы',
+                            'href' => Url::to(['future-finance']),
+                        ],
+                    ])
+            ],
         ],
         'bordered' => true,
         'striped' => false,
@@ -92,6 +110,12 @@ try {
             'type' => GridViewInterface::TYPE_DEFAULT,
         ],
         'panelTemplate' => '<div class="{prefix}{type} {solid}">{panelHeading}<div class="box-body">'
+            . MenuFilterWidget::widget([
+                'searchModel' => $searchModel,
+                'attribute' => 'bank',
+                'assoc' => true,
+                'titleAllButton' => 'Все',
+            ]) . Html::tag('br')
             . MenuFilterWidget::widget([
                 'searchModel' => $searchModel,
                 'attribute' => 'category',
@@ -195,6 +219,26 @@ try {
                 'value' => function (Finance $model) {
 
                     return $model->time;
+                },
+            ],
+            [
+                'class' => DataColumn::class,
+                'attribute' => 'date_time',
+                'hAlign' => GridViewInterface::ALIGN_CENTER,
+                'vAlign' => GridViewInterface::ALIGN_TOP,
+                'value' => function (Finance $model) {
+
+                    return $model->date_time ? date('d.m.Y H:i', strtotime($model->date_time)) : '';
+                },
+            ],
+            [
+                'class' => DataColumn::class,
+                'attribute' => 'bank',
+                'hAlign' => GridViewInterface::ALIGN_CENTER,
+                'vAlign' => GridViewInterface::ALIGN_TOP,
+                'value' => function (Finance $model) {
+
+                    return BankHelper::getValue($model->bank);
                 },
             ],
             [

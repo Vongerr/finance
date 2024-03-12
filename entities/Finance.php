@@ -15,22 +15,26 @@ use yii\db\ActiveRecord;
  * @property string $category Категория
  * @property string $date Дата операции
  * @property string $time Время операции
+ * @property string $date_time Время операции
  * @property string $username Имя пользователя
  * @property float $money Средства
+ * @property float $bank Банк
  * @property float $comment Комментарий
  * @property string $created_at
  * @property string $updated_at
  */
 class Finance extends ActiveRecord
 {
-    const REVENUE = 'revenue'; // доходы
-    const EXPENSES = 'expenses'; // расходы
+    const REVENUE = 'revenue'; // Доходы
+    const EXPENSES = 'expenses'; // Расходы
 
     const TAXI = 'taxi';
     const CAFE = 'cafe';
+    const RESTAURANT = 'restaurant';
     const FAST_FOOD = 'fast_food';
     const MARKET = 'market';
     const TRANSPORT = 'transport';
+    const SALARY = 'salary';
     const TRANSFER = 'transfer';
     const SPORT = 'sport';
     const ELECTRONIC = 'electronic';
@@ -45,6 +49,11 @@ class Finance extends ActiveRecord
     const COMMUNICATION = 'mobile_communication';
     const OTHER = 'other';
 
+    const TINKOFF = 'tinkoff';
+    const ALFA = 'alfa';
+    const OTKRITIE = 'otkritie';
+    const VTB = 'vtb';
+
     public static function create(FinanceForm $form): Finance
     {
         $finance = new static();
@@ -54,14 +63,16 @@ class Finance extends ActiveRecord
         return $finance;
     }
 
-    public function edit(FinanceForm $form)
+    public function edit(FinanceForm $form): void
     {
         $this->budget_category = $form->budget_category;
         $this->category = $form->category;
         $this->date = $form->date;
         $this->time = $form->time;
+        $this->date_time = $form->date . ' ' . $form->time;
         $this->username = $form->username;
         $this->money = $form->money;
+        $this->bank = $form->bank;
         $this->comment = $form->comment;
     }
 
@@ -75,7 +86,7 @@ class Finance extends ActiveRecord
         return [
             [['date', 'budget_category', 'category', 'money'], 'required'],
             [['money'], 'double'],
-            [['date', 'time'], 'string'],
+            [['date', 'time', 'date_time'], 'string'],
             [['category'], 'in', 'range' => array_keys(CategoryHelper::getList())],
             [['budget_category'], 'in', 'range' => array_keys(CategoryBudgetHelper::getList())],
             [['username'], 'string', 'max' => 30],
@@ -91,8 +102,10 @@ class Finance extends ActiveRecord
             'category' => 'Категория',
             'date' => 'Дата операции',
             'time' => 'Время операции',
+            'date_time' => 'Дата и время операции',
             'username' => 'Имя пользователя',
             'money' => 'Средства',
+            'bank' => 'Банк',
             'comment' => 'Комментарий',
         ];
     }

@@ -12,9 +12,11 @@ class CategoryHelper extends ListHelper
         return [
             Finance::TAXI => 'Такси',
             Finance::CAFE => 'Питание',
+            Finance::RESTAURANT => 'Рестораны',
             Finance::FAST_FOOD => 'Фастфуд',
             Finance::MARKET => 'Супермаркет',
             Finance::TRANSPORT => 'Общественный транспорт',
+            Finance::SALARY => 'Зарплата',
             Finance::TRANSFER => 'Переводы',
             Finance::SPORT => 'Спорттовары',
             Finance::ELECTRONIC => 'Электроника',
@@ -36,9 +38,11 @@ class CategoryHelper extends ListHelper
         return [
             Finance::TAXI => Html::tag('span', 'Такси', ['class'=>'label label-warning']),
             Finance::CAFE => Html::tag('span', 'Питание', ['class'=>'label label-warning']),
+            Finance::RESTAURANT => Html::tag('span', 'Рестораны', ['class'=>'label label-warning']),
             Finance::FAST_FOOD => Html::tag('span', 'Фастфуд', ['class'=>'label label-primary']),
             Finance::MARKET => Html::tag('span', 'Супермаркет', ['class'=>'label label-primary']),
             Finance::TRANSPORT => Html::tag('span', 'Общественный транспорт', ['class'=>'label label-primary']),
+            Finance::SALARY => Html::tag('span', 'Зарплата', ['class'=>'label label-primary']),
             Finance::TRANSFER => Html::tag('span', 'Переводы', ['class'=>'label label-primary']),
             Finance::SPORT => Html::tag('span', 'Спорттовары', ['class'=>'label label-primary']),
             Finance::ELECTRONIC => Html::tag('span', 'Электроника', ['class'=>'label label-primary']),

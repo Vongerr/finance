@@ -16,6 +16,7 @@ class m230917_070314_finance extends Migration
             'time' => $this->string(5)->comment('Время операции'),
             'username' => $this->char(30)->comment('Имя пользователя'),
             'money' => $this->float(14)->notNull()->comment('Средства'),
+            'bank' => $this->char(10)->notNull()->comment('Банк'),
             'comment' => $this->string(250)->null()->comment('Комментарий'),
         ]);
 

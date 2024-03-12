@@ -1,6 +1,7 @@
 <?php
 
 use app\forms\FinanceForm;
+use app\helpers\BankHelper;
 use app\helpers\CategoryBudgetHelper;
 use app\helpers\CategoryHelper;
 use kartik\date\DatePicker;
@@ -22,15 +23,15 @@ try {
     echo $form->errorSummary($model);
     ?>
     <div class="row">
-        <div class="col-sm-3">
+        <div class="col-sm-6">
             <?php echo $form->field($model, 'category')->dropDownList(CategoryHelper::getList()); ?>
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-6">
             <?php echo $form->field($model, 'budget_category')->dropDownList(CategoryBudgetHelper::getList()); ?>
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-3">
+        <div class="col-sm-6">
             <?php echo $form->field($model, 'date')->widget(
                 DatePicker::class,
                 [
@@ -42,19 +43,22 @@ try {
                 ]
             ); ?>
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-6">
             <?php echo $form->field($model, 'time'); ?>
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-3">
+        <div class="col-sm-6">
             <?php echo $form->field($model, 'money'); ?>
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-6">
             <?php echo $form->field($model, 'username'); ?>
         </div>
     </div>
     <div class="row">
+        <div class="col-sm-6">
+            <?php echo $form->field($model, 'bank')->dropDownList(BankHelper::getList()); ?>
+        </div>
         <div class="col-sm-6">
             <?php echo $form->field($model, 'comment'); ?>
         </div>

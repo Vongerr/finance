@@ -124,6 +124,12 @@ class StatisticController extends MainController
         ], true);
     }
 
+    public function actionFutureFinance(): string
+    {
+        return $this->render('future-finance', [
+        ], true);
+    }
+
     /**
      * @throws Throwable
      */

@@ -4,6 +4,7 @@ namespace app\models\search;
 
 use app\entities\CashBack;
 use app\entities\Finance;
+use app\helpers\BankHelper;
 use app\helpers\CategoryBudgetHelper;
 use app\helpers\CategoryHelper;
 use yii\base\Model;
@@ -12,6 +13,8 @@ use yii\db\ActiveQuery;
 
 class FinanceSearch extends Model
 {
+    public $bank;
+
     public $category;
 
     public $budget_category;
@@ -23,7 +26,7 @@ class FinanceSearch extends Model
     public function rules(): array
     {
         return [
-            [['category', 'budget_category', 'date'], 'string'],
+            [['category', 'budget_category', 'bank', 'date'], 'string'],
         ];
     }
 
@@ -31,14 +34,22 @@ class FinanceSearch extends Model
     {
         $finance = Finance::find();
 
+        foreach ($finance->all() as $model) {
+            $model->date_time = $model->date . ' ' . $model->time;
+
+            $model->save();
+        }
+
         if ($this->load($params) && $this->validate()) {
             $finance
                 ->andFilterWhere(['date' => $this->date ? date('Y-m-d', strtotime($this->date)) : null])
+                ->andFilterWhere(['bank' => $this->bank])
                 ->andFilterWhere(['category' => $this->category])
                 ->andFilterWhere(['budget_category' => $this->budget_category]);
         }
 
         $this->_filters = [
+            'bank' => $this->defineFilterBank(),
             'category' => $this->defineFilterCategory(),
             'budget_category' => $this->defineFilterCategoryBudget(),
         ];
@@ -52,6 +63,21 @@ class FinanceSearch extends Model
     {
         return Finance::find()
             ->asArray();
+    }
+
+    private function defineFilterBank(): array
+    {
+        $filter = $this->filterQuery()
+            ->select(['bank'])
+            ->column();
+
+        $list = [];
+
+        foreach ($filter as $attribute) {
+            $list[$attribute] = BankHelper::getValue($attribute);
+        }
+
+        return $list;
     }
 
     private function defineFilterCategoryBudget(): array

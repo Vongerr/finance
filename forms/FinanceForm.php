@@ -3,6 +3,7 @@
 namespace app\forms;
 
 use app\entities\Finance;
+use app\helpers\BankHelper;
 use app\helpers\CategoryBudgetHelper;
 use app\helpers\CategoryHelper;
 use yii\base\Model;
@@ -21,6 +22,8 @@ class FinanceForm extends Model
 
     public $money;
 
+    public $bank;
+
     public $comment;
 
     public function __construct(Finance $finance = null, array $config = [])
@@ -35,6 +38,7 @@ class FinanceForm extends Model
             $this->time = $finance->time;
             $this->username = $finance->username;
             $this->money = $finance->money;
+            $this->bank = $finance->bank;
             $this->comment = $finance->comment;
         } else {
             $this->username = 'vonger';
@@ -51,6 +55,7 @@ class FinanceForm extends Model
             [['time'], 'date', 'format'=>'H:i'],
             [['category'], 'in', 'range' => array_keys(CategoryHelper::getList())],
             [['budget_category'], 'in', 'range' => array_keys(CategoryBudgetHelper::getList())],
+            [['bank'], 'in', 'range' => array_keys(BankHelper::getList())],
             [['username'], 'string', 'max' => 30],
             [['comment'], 'string', 'max' => 250],
         ];
@@ -66,6 +71,7 @@ class FinanceForm extends Model
             'time' => 'Время операции',
             'username' => 'Имя пользователя',
             'money' => 'Средства',
+            'bank' => 'Банк',
             'comment' => 'Комментарий'
         ];
     }
