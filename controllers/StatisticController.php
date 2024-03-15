@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\forms\FinanceForm;
 use app\models\search\FinanceSearch;
 use app\services\FinanceService;
+use app\services\ImportFinanceService;
 use Exception;
 use Throwable;
 use Yii;
@@ -20,11 +21,19 @@ class StatisticController extends MainController
      */
     private FinanceService $service;
 
-    public function __construct(string $id, $module, FinanceService $service, array $config = [])
+    private ImportFinanceService $serviceImport;
+
+    public function __construct(string               $id,
+                                                     $module,
+                                FinanceService       $service,
+                                ImportFinanceService $serviceImport,
+                                array                $config = []
+    )
     {
         parent::__construct($id, $module, $config);
 
         $this->service = $service;
+        $this->serviceImport = $serviceImport;
     }
 
     /**
@@ -138,5 +147,10 @@ class StatisticController extends MainController
         $this->service->remove($id);
 
         return $this->ajaxRedirect(Url::to(['index']));
+    }
+
+    public function actionImportFinance(): void
+    {
+        $this->serviceImport->importFinance();
     }
 }

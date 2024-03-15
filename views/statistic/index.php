@@ -97,6 +97,23 @@ try {
                         ],
                     ])
             ],
+            [
+                'content' => Html::a(
+                    'Импортировать финансы',
+                    Url::to(['import-finance']),
+                    [
+                        'title' => 'Импортировать финансы',
+                        'class' => 'btn btn-warning',
+                        'data' => [
+                            'pjax' => 0,
+                            'toggle' => 'modal',
+                            'target' => '#grid-modal',
+                            'pjax-id' => $pjaxId,
+                            'title' => 'Импортировать финансы',
+                            'href' => Url::to(['import-finance']),
+                        ],
+                    ])
+            ],
         ],
         'bordered' => true,
         'striped' => false,
@@ -213,16 +230,6 @@ try {
             ],
             [
                 'class' => DataColumn::class,
-                'attribute' => 'time',
-                'hAlign' => GridViewInterface::ALIGN_CENTER,
-                'vAlign' => GridViewInterface::ALIGN_TOP,
-                'value' => function (Finance $model) {
-
-                    return $model->time;
-                },
-            ],
-            [
-                'class' => DataColumn::class,
                 'attribute' => 'date_time',
                 'hAlign' => GridViewInterface::ALIGN_CENTER,
                 'vAlign' => GridViewInterface::ALIGN_TOP,
@@ -246,6 +253,7 @@ try {
                 'attribute' => 'username',
                 'hAlign' => GridViewInterface::ALIGN_CENTER,
                 'vAlign' => GridViewInterface::ALIGN_TOP,
+                'width' => '30px',
                 'value' => function (Finance $model) {
 
                     return $model->username;

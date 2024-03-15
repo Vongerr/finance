@@ -6,7 +6,7 @@ class m230917_070314_finance extends Migration
 {
     protected $table = 'finance';
 
-    public function safeUp()
+    public function safeUp(): void
     {
         $this->createTable($this->table, [
             'id' => $this->primaryKey(),
@@ -18,6 +18,7 @@ class m230917_070314_finance extends Migration
             'money' => $this->float(14)->notNull()->comment('Средства'),
             'bank' => $this->char(10)->notNull()->comment('Банк'),
             'comment' => $this->string(250)->null()->comment('Комментарий'),
+            'exclusion' => $this->tinyInteger(1)->null()->comment('Исключения'),
         ]);
 
         $this->createDateColumns();
@@ -28,7 +29,7 @@ class m230917_070314_finance extends Migration
         $this->createIndex("ix_{$this->tableName}_username", $this->table, ['username']);
     }
 
-    public function safeDown()
+    public function safeDown(): void
     {
         $this->dropTable($this->table);
     }

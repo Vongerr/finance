@@ -20,6 +20,7 @@ use yii\db\ActiveRecord;
  * @property float $money Средства
  * @property float $bank Банк
  * @property float $comment Комментарий
+ * @property float $exclusion Исключения
  * @property string $created_at
  * @property string $updated_at
  */
@@ -47,6 +48,25 @@ class Finance extends ActiveRecord
     const STATIONARY = 'stationary';
     const EDUCATION = 'education';
     const COMMUNICATION = 'mobile_communication';
+    const BONUS = 'bonus';
+    const MARKETPLACE = 'marketplace';
+    const FUEL = 'fuel';
+    const LOTTERIES = 'lotteries';
+    const BOOKS = 'books';
+    const SOUVENIRS = 'souvenirs';
+    const ENTERTAINMENTS = 'entertainments';
+    const KIDS = 'kids';
+    const MOBILE = 'mobile';
+    const COSMETICS = 'cosmetics';
+    const CLOTHES_AND_SHOES = 'clothes_and_shoes';
+    const GOV_SERVICE = 'gov_service';
+    const TRAIN_TICKET = 'train_ticket';
+    const BANK_SERVICE = 'bank_service';
+    const CASH = 'cash';
+    const HOTELS = 'hotels';
+    const SERVICE = 'service';
+    const FINANCE = 'finance';
+    const CHARITY = 'charity';
     const OTHER = 'other';
 
     const TINKOFF = 'tinkoff';
@@ -91,6 +111,7 @@ class Finance extends ActiveRecord
             [['budget_category'], 'in', 'range' => array_keys(CategoryBudgetHelper::getList())],
             [['username'], 'string', 'max' => 30],
             [['comment'], 'string', 'max' => 250],
+            [['exclusion'], 'integer', 'max' => 2],
         ];
     }
 
@@ -107,6 +128,7 @@ class Finance extends ActiveRecord
             'money' => 'Средства',
             'bank' => 'Банк',
             'comment' => 'Комментарий',
+            'exclusion' => 'Исключения',
         ];
     }
 }
