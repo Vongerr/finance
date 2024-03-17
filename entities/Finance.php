@@ -3,6 +3,7 @@
 namespace app\entities;
 
 use app\forms\FinanceForm;
+use app\helpers\CategoryAllHelper;
 use app\helpers\CategoryBudgetHelper;
 use app\helpers\CategoryHelper;
 use yii\db\ActiveRecord;
@@ -11,6 +12,7 @@ use yii\db\ActiveRecord;
  * This is the model class for table "attendance__absenteeism_periods".
  *
  * @property int $id
+ * @property int $hash Хэш
  * @property string $budget_category Категория бюджета
  * @property string $category Категория
  * @property string $date Дата операции
@@ -29,11 +31,15 @@ class Finance extends ActiveRecord
     const REVENUE = 'revenue'; // Доходы
     const EXPENSES = 'expenses'; // Расходы
 
+    const EXCLUSION = 1; // Расходы
+    const NO_EXCLUSION = 0; // Расходы
+
     const TAXI = 'taxi';
     const CAFE = 'cafe';
     const RESTAURANT = 'restaurant';
     const FAST_FOOD = 'fast_food';
     const MARKET = 'market';
+    const PRODUCTS = 'products';
     const TRANSPORT = 'transport';
     const SALARY = 'salary';
     const TRANSFER = 'transfer';
@@ -56,7 +62,6 @@ class Finance extends ActiveRecord
     const SOUVENIRS = 'souvenirs';
     const ENTERTAINMENTS = 'entertainments';
     const KIDS = 'kids';
-    const MOBILE = 'mobile';
     const COSMETICS = 'cosmetics';
     const CLOTHES_AND_SHOES = 'clothes_and_shoes';
     const GOV_SERVICE = 'gov_service';
@@ -67,6 +72,8 @@ class Finance extends ActiveRecord
     const SERVICE = 'service';
     const FINANCE = 'finance';
     const CHARITY = 'charity';
+    const AUTO = 'auto';
+    const REFUND = 'refund';
     const OTHER = 'other';
 
     const TINKOFF = 'tinkoff';
@@ -85,6 +92,13 @@ class Finance extends ActiveRecord
 
     public function edit(FinanceForm $form): void
     {
+        $this->hash = md5(
+            $form->budget_category
+            . $form->category
+            . $form->date
+            . $form->time
+            . $form->money
+        );
         $this->budget_category = $form->budget_category;
         $this->category = $form->category;
         $this->date = $form->date;
@@ -94,6 +108,7 @@ class Finance extends ActiveRecord
         $this->money = $form->money;
         $this->bank = $form->bank;
         $this->comment = $form->comment;
+        $this->exclusion = $form->exclusion;
     }
 
     public static function tableName(): string
@@ -107,11 +122,12 @@ class Finance extends ActiveRecord
             [['date', 'budget_category', 'category', 'money'], 'required'],
             [['money'], 'double'],
             [['date', 'time', 'date_time'], 'string'],
-            [['category'], 'in', 'range' => array_keys(CategoryHelper::getList())],
+            [['category'], 'in', 'range' => array_keys(CategoryAllHelper::getList())],
             [['budget_category'], 'in', 'range' => array_keys(CategoryBudgetHelper::getList())],
             [['username'], 'string', 'max' => 30],
             [['comment'], 'string', 'max' => 250],
             [['exclusion'], 'integer', 'max' => 2],
+            [['hash'], 'string', 'min' => 32, 'max' => 32],
         ];
     }
 

@@ -3,6 +3,7 @@
 namespace app\repositories;
 
 use app\entities\Finance;
+use app\forms\FinanceForm;
 use DomainException;
 use Exception;
 use RuntimeException;
@@ -17,6 +18,17 @@ class FinanceRepository
             ->andWhere(['id' => $id])
             ->limit(1)
             ->one();
+    }
+
+    public function getHashFinance(FinanceForm $form): string
+    {
+        return md5(
+            $form->budget_category
+            . $form->category
+            . $form->date
+            . $form->time
+            . $form->money
+        );
     }
 
     public function save(Finance $model): bool

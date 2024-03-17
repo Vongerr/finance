@@ -10,6 +10,7 @@ class m230917_070314_finance extends Migration
     {
         $this->createTable($this->table, [
             'id' => $this->primaryKey(),
+            'hash' => $this->string(32)->notNull()->comment('Хэш'),
             'budget_category' => $this->string(20)->notNull()->comment('Категория бюджета'),
             'category' => $this->string(20)->notNull()->comment('Категория'),
             'date' => $this->string(10)->notNull()->comment('Дата операции'),

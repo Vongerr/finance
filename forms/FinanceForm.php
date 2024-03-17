@@ -26,6 +26,8 @@ class FinanceForm extends Model
 
     public $comment;
 
+    public $exclusion;
+
     public function __construct(Finance $finance = null, array $config = [])
     {
         parent::__construct($config);
@@ -40,6 +42,7 @@ class FinanceForm extends Model
             $this->money = $finance->money;
             $this->bank = $finance->bank;
             $this->comment = $finance->comment;
+            $this->exclusion = $finance->exclusion;
         } else {
             $this->username = 'vonger';
             $this->date = date('Y-m-d');
@@ -58,6 +61,7 @@ class FinanceForm extends Model
             [['bank'], 'in', 'range' => array_keys(BankHelper::getList())],
             [['username'], 'string', 'max' => 30],
             [['comment'], 'string', 'max' => 250],
+            [['exclusion'], 'integer', 'max' => 2],
         ];
     }
 

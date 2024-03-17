@@ -5,6 +5,7 @@ namespace app\models\search;
 use app\entities\CashBack;
 use app\entities\Finance;
 use app\helpers\BankHelper;
+use app\helpers\CategoryAllHelper;
 use app\helpers\CategoryBudgetHelper;
 use app\helpers\CategoryHelper;
 use yii\base\Model;
@@ -41,16 +42,21 @@ class FinanceSearch extends Model
         }
 
         if ($this->load($params) && $this->validate()) {
+
+            $category = $this->category;
+
+            if (Finance::OTHER == $this->category) $category = array_keys(array_diff(CategoryAllHelper::getList(), CategoryHelper::getList()));
+
             $finance
                 ->andFilterWhere(['date' => $this->date ? date('Y-m-d', strtotime($this->date)) : null])
                 ->andFilterWhere(['bank' => $this->bank])
-                ->andFilterWhere(['category' => $this->category])
+                ->andFilterWhere(['category' => $category])
                 ->andFilterWhere(['budget_category' => $this->budget_category]);
         }
 
         $this->_filters = [
             'bank' => $this->defineFilterBank(),
-            'category' => $this->defineFilterCategory(),
+            'category' => CategoryHelper::getList(),
             'budget_category' => $this->defineFilterCategoryBudget(),
         ];
 
@@ -117,10 +123,12 @@ class FinanceSearch extends Model
         $cashBackCategoryList = $this->buildCashBackCategoryList();
 
         foreach ($this->queryFinance() as $item) {
-            $month = date('n', strtotime($item->date));
 
-            if (!isset($info[$month])) {
-                $info[$month] = [
+            $month = date('n', strtotime($item->date));
+            $year = date('Y', strtotime($item->date));
+
+            if (!isset($info[$year][$month])) {
+                $info[$year][$month] = [
                     'finance' => 0,
                     'cashback' => 0
                 ];
@@ -128,18 +136,22 @@ class FinanceSearch extends Model
 
             if (Finance::EXPENSES == $item->budget_category) {
 
-                $info[$month]['finance'] -= $item->money;
+                $info[$year][$month]['finance'] -= $item->money;
 
-                $info[$month]['cashback'] += $this->defineCashBack($item, $cashBackCategoryList);
+                $info[$year][$month]['cashback'] += $this->defineCashBack($item, $cashBackCategoryList);
             } else {
 
-                $info[$month]['finance'] += $item->money;
+                $info[$year][$month]['finance'] += $item->money;
             }
+
         }
 
-        foreach ($info as $index => $monthInfo) {
+        foreach ($info as $indexYear => $yearInfo) {
 
-            $info[$index]['finance'] += $monthInfo['cashback'];
+            foreach ($yearInfo as $indexMonth => $monthInfo) {
+
+                $info[$indexYear][$indexMonth]['finance'] += $monthInfo['cashback'];
+            }
         }
 
         return $info;

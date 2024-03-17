@@ -28,12 +28,16 @@ class FinanceService
     {
         $model = Finance::create($form);
 
+        $model->exclusion = 0;
+
         $this->repository->save($model);
     }
 
     public function update(FinanceForm $form, Finance $model): void
     {
         $model->edit($form);
+
+        $model->exclusion = 0;
 
         $this->repository->save($model);
     }

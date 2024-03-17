@@ -4,6 +4,7 @@ use app\assets\PjaxWindowAsset;
 use app\components\View;
 use app\entities\Finance;
 use app\helpers\BankHelper;
+use app\helpers\CategoryAllHelper;
 use app\helpers\CategoryBudgetHelper;
 use app\helpers\CategoryHelper;
 use app\models\search\FinanceSearch;
@@ -99,8 +100,8 @@ try {
             ],
             [
                 'content' => Html::a(
-                    'Импортировать финансы',
-                    Url::to(['import-finance']),
+                    'Импортировать финансы Тинькофф',
+                    Url::to(['import-finance-tinkoff']),
                     [
                         'title' => 'Импортировать финансы',
                         'class' => 'btn btn-warning',
@@ -110,7 +111,41 @@ try {
                             'target' => '#grid-modal',
                             'pjax-id' => $pjaxId,
                             'title' => 'Импортировать финансы',
-                            'href' => Url::to(['import-finance']),
+                            'href' => Url::to(['import-finance-tinkoff']),
+                        ],
+                    ])
+            ],
+            [
+                'content' => Html::a(
+                    'Импортировать финансы Альфа-банк',
+                    Url::to(['import-finance-alpha']),
+                    [
+                        'title' => 'Импортировать финансы',
+                        'class' => 'btn btn-warning',
+                        'data' => [
+                            'pjax' => 0,
+                            'toggle' => 'modal',
+                            'target' => '#grid-modal',
+                            'pjax-id' => $pjaxId,
+                            'title' => 'Импортировать финансы',
+                            'href' => Url::to(['import-finance-alpha']),
+                        ],
+                    ])
+            ],
+            [
+                'content' => Html::a(
+                    'Импортировать финансы Открытие',
+                    Url::to(['import-finance-alpha']),
+                    [
+                        'title' => 'Импортировать финансы',
+                        'class' => 'btn btn-warning',
+                        'data' => [
+                            'pjax' => 0,
+                            'toggle' => 'modal',
+                            'target' => '#grid-modal',
+                            'pjax-id' => $pjaxId,
+                            'title' => 'Импортировать финансы',
+                            'href' => Url::to(['import-finance-otkritie']),
                         ],
                     ])
             ],
@@ -205,7 +240,7 @@ try {
                 'format' => 'raw',
                 'value' => function (Finance $model) {
 
-                    return CategoryHelper::getValue($model->category, true);
+                    return CategoryAllHelper::getValue($model->category, true);
                 },
             ],
             [

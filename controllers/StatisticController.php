@@ -149,8 +149,18 @@ class StatisticController extends MainController
         return $this->ajaxRedirect(Url::to(['index']));
     }
 
-    public function actionImportFinance(): void
+    public function actionImportFinanceTinkoff(): void
     {
-        $this->serviceImport->importFinance();
+        $this->serviceImport->importFinanceTinkoff();
+    }
+
+    public function actionImportFinanceAlpha(): void
+    {
+        $this->serviceImport->importFinanceAlpha();
+    }
+
+    public function actionImportFinanceOtkritie(): void
+    {
+        $this->serviceImport->importFinanceOtkritie();
     }
 }
