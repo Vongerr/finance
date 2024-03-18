@@ -5,7 +5,6 @@ namespace app\entities;
 use app\forms\FinanceForm;
 use app\helpers\CategoryAllHelper;
 use app\helpers\CategoryBudgetHelper;
-use app\helpers\CategoryHelper;
 use yii\db\ActiveRecord;
 
 /**
@@ -20,9 +19,9 @@ use yii\db\ActiveRecord;
  * @property string $date_time Время операции
  * @property string $username Имя пользователя
  * @property float $money Средства
- * @property float $bank Банк
- * @property float $comment Комментарий
- * @property float $exclusion Исключения
+ * @property string $bank Банк
+ * @property string $comment Комментарий
+ * @property boolean $exclusion Исключения
  * @property string $created_at
  * @property string $updated_at
  */
@@ -41,6 +40,7 @@ class Finance extends ActiveRecord
     const MARKET = 'market';
     const PRODUCTS = 'products';
     const TRANSPORT = 'transport';
+    const SCHOLARSHIP = 'scholarship';
     const SALARY = 'salary';
     const TRANSFER = 'transfer';
     const SPORT = 'sport';

@@ -9,30 +9,43 @@ use app\helpers\MonthHelper;
 $financeAll = 0;
 $cashbackAll = 0;
 
-$changeYear = 0;
+$changeYear = 0; ?>
 
-foreach ($data as $year => $yearInfo) {
-    foreach ($yearInfo as $month => $monthInfo) {
-        $finance = $monthInfo['finance'];
-        $cashback = $monthInfo['cashback'];
-        $monthTitle = MonthHelper::getValue($month);
+    <table>
+        <caption>Финансы</caption>
+        <tr>
+            <th colspan="5">Год </th>
+            <th colspan="15">Месяц</th>
+            <th colspan="4">Деньги</th>
+        </tr>
 
-        $financeAll += $monthInfo['finance'];
-        $cashbackAll += $monthInfo['cashback'];
+        <?php
+        foreach ($data as $year => $yearInfo) {
+            foreach ($yearInfo as $month => $monthInfo) {
 
-        if ($changeYear != $year) {
+                $finance = $monthInfo['finance'];
+                $cashback = $monthInfo['cashback'];
+                $monthTitle = MonthHelper::getValue($month);
 
-            echo "<h1>$year</h1>";
+                ?>
+                <tr>
+                    <td colspan="5"><?= $changeYear != $year ? $year : ''?></td>
+                    <td colspan="15"><?= MonthHelper::getValue($month) ?></td>
+                    <td colspan="4"><?= $finance?></td>
+                </tr>
+                <?php
 
-            $changeYear = $year;
-        }
+                $financeAll += $monthInfo['finance'];
+                $cashbackAll += $monthInfo['cashback'];
 
-        echo "<h3>$monthTitle</h3>";
+                if ($changeYear != $year) {
 
-        echo "<h4>Финансы: $finance</h4>";
-        echo "<h4>Кешбэк: $cashback</h4>";
-    }
-}
+                    $changeYear = $year;
+                }
+            }
+        } ?>
+    </table>
+<?php
 
 echo "<h2>Итого</h2>";
 

@@ -4,12 +4,14 @@ namespace app\controllers;
 
 use app\forms\FinanceForm;
 use app\models\search\FinanceSearch;
+use app\services\DeleteService;
 use app\services\FinanceService;
 use app\services\ImportFinanceService;
 use Exception;
 use Throwable;
 use Yii;
 use yii\base\InvalidConfigException;
+use yii\db\StaleObjectException;
 use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
 use yii\web\Response;
@@ -23,10 +25,13 @@ class StatisticController extends MainController
 
     private ImportFinanceService $serviceImport;
 
+    private DeleteService $serviceDelete;
+
     public function __construct(string               $id,
                                                      $module,
                                 FinanceService       $service,
                                 ImportFinanceService $serviceImport,
+                                DeleteService $serviceDelete,
                                 array                $config = []
     )
     {
@@ -34,6 +39,7 @@ class StatisticController extends MainController
 
         $this->service = $service;
         $this->serviceImport = $serviceImport;
+        $this->serviceDelete = $serviceDelete;
     }
 
     /**
@@ -162,5 +168,14 @@ class StatisticController extends MainController
     public function actionImportFinanceOtkritie(): void
     {
         $this->serviceImport->importFinanceOtkritie();
+    }
+
+    /**
+     * @throws StaleObjectException
+     * @throws Throwable
+     */
+    public function actionDeleteBank(string $bank): void
+    {
+        $this->serviceDelete->deleteBank($bank);
     }
 }

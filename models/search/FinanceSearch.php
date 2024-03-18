@@ -124,6 +124,8 @@ class FinanceSearch extends Model
 
         foreach ($this->queryFinance() as $item) {
 
+            if ($item->exclusion == Finance::EXCLUSION) continue;
+
             $month = date('n', strtotime($item->date));
             $year = date('Y', strtotime($item->date));
 
@@ -152,6 +154,7 @@ class FinanceSearch extends Model
 
                 $info[$indexYear][$indexMonth]['finance'] += $monthInfo['cashback'];
             }
+             ksort($info[$indexYear]);
         }
 
         return $info;

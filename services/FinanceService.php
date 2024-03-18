@@ -6,6 +6,7 @@ use app\entities\Finance;
 use app\forms\FinanceForm;
 use app\repositories\FinanceRepository;
 use Throwable;
+use yii\db\Exception;
 
 class FinanceService
 {
@@ -24,9 +25,22 @@ class FinanceService
         return $this->repository->getStatisticById($id);
     }
 
+    /**
+     * @throws Exception
+     */
     public function create(FinanceForm $form): void
     {
+        $hashList = [];
+
+        foreach (Finance::find()->asArray()->select(['hash'])->column() as $item) {
+            $hashList[$item] = $item;
+        }
+
         $model = Finance::create($form);
+
+        if (isset($hashList[$model->hash])) {
+            throw new Exception('Такая запись уже существует');
+        }
 
         $model->exclusion = 0;
 

@@ -76,7 +76,8 @@ class FinanceForm extends Model
             'username' => 'Имя пользователя',
             'money' => 'Средства',
             'bank' => 'Банк',
-            'comment' => 'Комментарий'
+            'comment' => 'Комментарий',
+            'exclusion' => 'Исключение'
         ];
     }
 

@@ -63,6 +63,11 @@ try {
             <?php echo $form->field($model, 'comment'); ?>
         </div>
     </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <?php echo $form->field($model, 'exclusion')->checkbox([0 => 'Не исключение', 1 => 'Исключение']); ?>
+        </div>
+    </div>
     <br>
     <div class="row">
         <div class="col-xs-12">

@@ -100,7 +100,7 @@ try {
             ],
             [
                 'content' => Html::a(
-                    'Импортировать финансы Тинькофф',
+                    'Импортировать Тинькофф',
                     Url::to(['import-finance-tinkoff']),
                     [
                         'title' => 'Импортировать финансы',
@@ -117,7 +117,7 @@ try {
             ],
             [
                 'content' => Html::a(
-                    'Импортировать финансы Альфа-банк',
+                    'Импортировать Альфа-банк',
                     Url::to(['import-finance-alpha']),
                     [
                         'title' => 'Импортировать финансы',
@@ -134,8 +134,8 @@ try {
             ],
             [
                 'content' => Html::a(
-                    'Импортировать финансы Открытие',
-                    Url::to(['import-finance-alpha']),
+                    'Импортировать Открытие',
+                    Url::to(['import-finance-otkritie']),
                     [
                         'title' => 'Импортировать финансы',
                         'class' => 'btn btn-warning',
@@ -146,6 +146,57 @@ try {
                             'pjax-id' => $pjaxId,
                             'title' => 'Импортировать финансы',
                             'href' => Url::to(['import-finance-otkritie']),
+                        ],
+                    ])
+            ],
+            [
+                'content' => Html::a(
+                    'Удалить информацию Тинькофф',
+                    Url::to(['delete-bank']),
+                    [
+                        'title' => 'Удалить информацию',
+                        'class' => 'btn btn-danger',
+                        'data' => [
+                            'pjax' => 0,
+                            'toggle' => 'modal',
+                            'target' => '#grid-modal',
+                            'pjax-id' => $pjaxId,
+                            'title' => 'Удалить информацию',
+                            'href' => Url::to(['delete-bank', 'bank' => Finance::TINKOFF]),
+                        ],
+                    ])
+            ],
+            [
+                'content' => Html::a(
+                    'Удалить информацию Альфа-банк',
+                    Url::to(['delete-bank']),
+                    [
+                        'title' => 'Удалить информацию',
+                        'class' => 'btn btn-danger',
+                        'data' => [
+                            'pjax' => 0,
+                            'toggle' => 'modal',
+                            'target' => '#grid-modal',
+                            'pjax-id' => $pjaxId,
+                            'title' => 'Удалить информацию',
+                            'href' => Url::to(['delete-bank', 'bank' => Finance::ALFA]),
+                        ],
+                    ])
+            ],
+            [
+                'content' => Html::a(
+                    'Удалить информацию Открытие',
+                    Url::to(['delete-bank']),
+                    [
+                        'title' => 'Удалить информацию',
+                        'class' => 'btn btn-danger',
+                        'data' => [
+                            'pjax' => 0,
+                            'toggle' => 'modal',
+                            'target' => '#grid-modal',
+                            'pjax-id' => $pjaxId,
+                            'title' => 'Удалить информацию',
+                            'href' => Url::to(['delete-bank', 'bank' => Finance::OTKRITIE]),
                         ],
                     ])
             ],
@@ -278,6 +329,7 @@ try {
                 'attribute' => 'bank',
                 'hAlign' => GridViewInterface::ALIGN_CENTER,
                 'vAlign' => GridViewInterface::ALIGN_TOP,
+                'filter' => false,
                 'value' => function (Finance $model) {
 
                     return BankHelper::getValue($model->bank);

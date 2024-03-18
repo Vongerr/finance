@@ -123,10 +123,23 @@ class ImportFinanceService
             $hashList[$modelOld->hash] = $modelOld->hash;
         }
 
+        /*$arr = [];
+
+        foreach ($list as $it) {
+            if (!isset($it[6])) continue;
+            if ($it[3] == 'Ошибка') continue;
+
+            $arr[$it[5] . '; ' . $it[6]] = $it[6];
+        }
+
+        printr($arr,1);*/
+
+        $count = 0;
+
         foreach ($list as $name) {
 
             if (!isset($name[6])) continue;
-            if ($name[6] == 'Ошибка') continue;
+            if ($name[2] == 'Ошибка') continue;
 
             $form = new FinanceForm();
 
@@ -138,10 +151,28 @@ class ImportFinanceService
             $form->comment = $name[6];
             $form->category = $categories[$category] ?? Finance::OTHER;
             $form->exclusion = isset($exclusions[$name[6]]) ? Finance::EXCLUSION : Finance::NO_EXCLUSION;
+
             if ($name[6] == 'Перевод между своими счетами')
                 $form->exclusion = Finance::EXCLUSION;
 
+            if (str_contains($name[6], 'заработной')
+                || str_contains($name[6], 'Пособия')
+                || str_contains($name[6], 'Salary')
+                || str_contains($name[6], 'аванс')
+                || str_contains($name[6], 'отпускные')) {
+
+                $form->exclusion = Finance::NO_EXCLUSION;
+                $form->category = Finance::SALARY;
+            }
+
+            if (str_contains($name[6], 'стипендия')) {
+
+                $form->exclusion = Finance::NO_EXCLUSION;
+                $form->category = Finance::SCHOLARSHIP;
+            }
+
             $indexMoney = (count($name) == 9) ? 7 : 9;
+
             $form->budget_category = $name[$indexMoney] > 0 ? Finance::REVENUE : Finance::EXPENSES;
             $form->money = $name[$indexMoney] > 0 ? (double)$name[$indexMoney] : (double)$name[$indexMoney] * (-1);
 
@@ -150,9 +181,11 @@ class ImportFinanceService
             $model = Finance::create($form);
 
             $this->repository->save($model);
+
+            ++$count;
         }
 
-        echo 'Все финансы импортированы';
+        echo 'Все финансы импортированы: ' . $count;
     }
 
     public function importFinanceAlpha(): void
@@ -203,6 +236,8 @@ class ImportFinanceService
             $hashList[$modelOld->hash] = $modelOld->hash;
         }
 
+        $count = 0;
+
         foreach ($sheets as $index => $name) {
 
             $reader->ChangeSheet($index);
@@ -210,6 +245,7 @@ class ImportFinanceService
             foreach ($reader as $indexRow => $row) {
 
                 if ($indexRow == 0) continue;
+                if (!$row[0] && !$row[7]) continue;
 
                 $form = new FinanceForm();
 
@@ -229,10 +265,12 @@ class ImportFinanceService
                 $model = Finance::create($form);
 
                 $this->repository->save($model);
+
+                ++$count;
             }
         }
 
-        echo 'Все финансы импортированы';
+        echo 'Все финансы импортированы: ' . $count;
     }
 
     public function importFinanceTinkoff(): void
@@ -280,6 +318,23 @@ class ImportFinanceService
             $hashList[$modelOld->hash] = $modelOld->hash;
         }
 
+        $count = 0;
+
+        $arr = [];
+
+        foreach ($sheets as $index => $name) {
+
+            $reader->ChangeSheet($index);
+
+            foreach ($reader as $indexRow => $row) {
+
+                if ($indexRow == 0) continue;
+                if ($row[2] == 'FAILED') continue;
+
+                $arr[$row[5]] = $row[5];
+            }
+        }
+
         foreach ($sheets as $index => $name) {
 
             $reader->ChangeSheet($index);
@@ -291,24 +346,26 @@ class ImportFinanceService
 
                 $form = new FinanceForm();
 
-                $category = $transports[$row[5]] ?? $row[5];
+                $category = $transports[$row[9]] ?? $row[9];
 
                 $form->bank = Finance::TINKOFF;
                 $form->date = date('Y-m-d', strtotime($row[0]));
                 $form->time = date('H:i', strtotime($row[0]));
-                $form->budget_category = (int)$row[3] > 0 ? Finance::REVENUE : Finance::EXPENSES;
+                $form->budget_category = (int)$row[4] > 0 ? Finance::REVENUE : Finance::EXPENSES;
                 $form->category = $categories[$category] ?? Finance::OTHER;
-                $form->money = (double)$row[7];
-                $form->comment = $row[6];
-                $form->exclusion = isset($exclusions[$row[6]]) ? Finance::EXCLUSION : Finance::NO_EXCLUSION;
+                $form->money = (double)$row[14];
+                $form->comment = $row[11];
+                $form->exclusion = isset($exclusions[$row[11]]) ? Finance::EXCLUSION : Finance::NO_EXCLUSION;
 
                 if (isset($hashList[$this->repository->getHashFinance($form)])) continue;
 
                 $model = Finance::create($form);
 
                 $this->repository->save($model);
+
+                ++$count;
             }
         }
-        echo 'Все финансы импортированы';
+        echo 'Все финансы импортированы: ' . $count;
     }
 }
