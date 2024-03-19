@@ -83,7 +83,6 @@ class ImportFinanceService
 
         $transports = [
             'Перевод денежных средств' => 'Переводы',
-            'Наличные' => 'Переводы',
             'Перевод между своими счетами' => 'Переводы',
             'Транспорт' => 'Общественный транспорт',
             'Платежи' => 'Мобильная связь',
@@ -93,6 +92,16 @@ class ImportFinanceService
             'Развлечения и шопинг' => 'Развлечения',
             'Бизнес услуги' => 'Другое',
             'Спорт' => 'Спорттовары'
+        ];
+
+        $dateScholarshipList = [
+            '2022-07-25' => '2022-07-25',
+            '2022-06-24' => '2022-06-25',
+        ];
+
+        $dateCashListExclusion = [
+            '2022-01-19' => '2022-01-19',
+            '2021-09-04' => '2021-09-04',
         ];
 
         $filename = 'C:\Users\danii\Desktop/all_time_otkritie_without.txt';
@@ -161,13 +170,18 @@ class ImportFinanceService
                 || str_contains($name[6], 'аванс')
                 || str_contains($name[6], 'отпускные')) {
 
-                $form->exclusion = Finance::NO_EXCLUSION;
                 $form->category = Finance::SALARY;
             }
 
             if (str_contains($name[6], 'стипендия')) {
 
-                $form->exclusion = Finance::NO_EXCLUSION;
+                $form->category = Finance::SCHOLARSHIP;
+            }
+
+            if (date('Y-m-d', strtotime($name[0])) < '2022-03-01' && Finance::SALARY == $categories[$category]
+                || date('Y-m-d', strtotime($name[0])) < '2022-03-01' && str_contains($name[6], 'реестру')
+                || in_array(date('Y-m-d', strtotime($name[0])), $dateScholarshipList) && Finance::SALARY == $categories[$category]) {
+
                 $form->category = Finance::SCHOLARSHIP;
             }
 
@@ -175,6 +189,10 @@ class ImportFinanceService
 
             $form->budget_category = $name[$indexMoney] > 0 ? Finance::REVENUE : Finance::EXPENSES;
             $form->money = $name[$indexMoney] > 0 ? (double)$name[$indexMoney] : (double)$name[$indexMoney] * (-1);
+
+            if (Finance::CASH == $form->category && Finance::EXPENSES == $form->budget_category
+                || $name[6] == 'Перевод между своими счетами'
+                || in_array(date('Y-m-d', strtotime($name[0])), $dateCashListExclusion)) $form->exclusion = Finance::EXCLUSION;
 
             if (isset($hashList[$this->repository->getHashFinance($form)])) continue;
 
@@ -205,6 +223,7 @@ class ImportFinanceService
             'Пополнение брокерского счета' => 'Пополнение брокерского счета',
             'Пополнение Инвесткопилки' => 'Пополнение Инвесткопилки',
             'Перевод на вклад' => 'Перевод на вклад',
+            'Между своими счетами' => 'Между своими счетами',
             'Внесение наличных через банкомат Тинькофф' => 'Внесение наличных через банкомат Тинькофф',
         ];
 

@@ -7,6 +7,7 @@ use app\helpers\BankHelper;
 use app\helpers\CategoryAllHelper;
 use app\helpers\CategoryBudgetHelper;
 use app\helpers\CategoryHelper;
+use app\helpers\ExclusionHelper;
 use app\models\search\FinanceSearch;
 use app\widgets\CustomActionColumn;
 use app\widgets\CustomGridView;
@@ -77,7 +78,7 @@ try {
                             'target' => '#grid-modal',
                             'pjax-id' => $pjaxId,
                             'title' => 'Финансы',
-                            'href' => Url::to(['finance']),
+                            'href' => Url::to(['finance', 'category' => $searchModel->category]),
                         ],
                     ])
             ],
@@ -221,6 +222,12 @@ try {
             ]) . Html::tag('br')
             . MenuFilterWidget::widget([
                 'searchModel' => $searchModel,
+                'attribute' => 'exclusion',
+                'assoc' => true,
+                'titleAllButton' => 'Все',
+            ]) . Html::tag('br')
+            . MenuFilterWidget::widget([
+                'searchModel' => $searchModel,
                 'attribute' => 'category',
                 'assoc' => true,
                 'titleAllButton' => 'Все',
@@ -281,7 +288,6 @@ try {
                     return CategoryBudgetHelper::getValue($model->budget_category, true);
                 },
             ],
-            //Информация по приказу
             [
                 'class' => DataColumn::class,
                 'attribute' => 'category',
@@ -292,6 +298,18 @@ try {
                 'value' => function (Finance $model) {
 
                     return CategoryAllHelper::getValue($model->category, true);
+                },
+            ],
+            [
+                'class' => DataColumn::class,
+                'attribute' => 'exclusion',
+                'hAlign' => GridViewInterface::ALIGN_CENTER,
+                'vAlign' => GridViewInterface::ALIGN_TOP,
+                'filter' => false,
+                'format' => 'raw',
+                'value' => function (Finance $model) {
+
+                    return ExclusionHelper::getValue($model->exclusion, true);
                 },
             ],
             [

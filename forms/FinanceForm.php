@@ -44,6 +44,7 @@ class FinanceForm extends Model
             $this->comment = $finance->comment;
             $this->exclusion = $finance->exclusion;
         } else {
+            $this->exclusion = Finance::NO_EXCLUSION;
             $this->username = 'vonger';
             $this->date = date('Y-m-d');
         }

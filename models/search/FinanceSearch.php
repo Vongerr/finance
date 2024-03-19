@@ -8,6 +8,7 @@ use app\helpers\BankHelper;
 use app\helpers\CategoryAllHelper;
 use app\helpers\CategoryBudgetHelper;
 use app\helpers\CategoryHelper;
+use app\helpers\ExclusionHelper;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveQuery;
@@ -22,12 +23,17 @@ class FinanceSearch extends Model
 
     public $date;
 
+    public $exclusion;
+
+    public $comment;
+
     private array $_filters = [];
 
     public function rules(): array
     {
         return [
-            [['category', 'budget_category', 'bank', 'date'], 'string'],
+            [['exclusion'], 'integer'],
+            [['category', 'budget_category', 'bank', 'date', 'comment'], 'string'],
         ];
     }
 
@@ -50,11 +56,14 @@ class FinanceSearch extends Model
             $finance
                 ->andFilterWhere(['date' => $this->date ? date('Y-m-d', strtotime($this->date)) : null])
                 ->andFilterWhere(['bank' => $this->bank])
+                ->andFilterWhere(['exclusion' => $this->exclusion])
                 ->andFilterWhere(['category' => $category])
+                ->andFilterWhere(['like', 'comment', $this->comment])
                 ->andFilterWhere(['budget_category' => $this->budget_category]);
         }
 
         $this->_filters = [
+            'exclusion' => ExclusionHelper::getList(),
             'bank' => $this->defineFilterBank(),
             'category' => CategoryHelper::getList(),
             'budget_category' => $this->defineFilterCategoryBudget(),
@@ -116,13 +125,13 @@ class FinanceSearch extends Model
         return $list;
     }
 
-    public function getFinanceInfo(): array
+    public function getFinanceInfo($category = null): array
     {
         $info = [];
 
         $cashBackCategoryList = $this->buildCashBackCategoryList();
 
-        foreach ($this->queryFinance() as $item) {
+        foreach ($this->queryFinance($category) as $item) {
 
             if ($item->exclusion == Finance::EXCLUSION) continue;
 
@@ -154,10 +163,13 @@ class FinanceSearch extends Model
 
                 $info[$indexYear][$indexMonth]['finance'] += $monthInfo['cashback'];
             }
-             ksort($info[$indexYear]);
+
+            ksort($info[$indexYear]);
         }
 
-        return $info;
+        ksort($info);
+
+        return array_reverse($info, true);
     }
 
     /**
@@ -201,9 +213,11 @@ class FinanceSearch extends Model
     /**
      * @return array|Finance[]
      */
-    private function queryFinance(): array
+    private function queryFinance(string $category = null): array
     {
-        return Finance::find()->all();
+        return Finance::find()
+            ->andFilterWhere(['category' => $category])
+            ->all();
     }
 
     public function getRangeList(string $attribute = null): array

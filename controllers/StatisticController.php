@@ -126,13 +126,13 @@ class StatisticController extends MainController
     /**
      * @throws InvalidConfigException
      */
-    public function actionFinance(): string
+    public function actionFinance(string $category = null): string
     {
         $searchModel = Yii::createObject([
             'class' => FinanceSearch::class
         ]);
 
-        $data = $searchModel->getFinanceInfo();
+        $data = $searchModel->getFinanceInfo($category);
 
         return $this->render('finance', [
             'data' => $data,
