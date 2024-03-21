@@ -133,6 +133,7 @@ class FinanceSearch extends Model
 
         foreach ($this->queryFinance($category) as $item) {
 
+
             if ($item->exclusion == Finance::EXCLUSION) continue;
 
             $month = date('n', strtotime($item->date));
