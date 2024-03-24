@@ -4,8 +4,8 @@ namespace app\services;
 
 use app\entities\Finance;
 use app\forms\FinanceForm;
-use app\helpers\CategoryAllHelper;
 use app\repositories\FinanceRepository;
+use Exception;
 use SpreadsheetReader;
 
 class ImportFinanceService
@@ -55,6 +55,7 @@ class ImportFinanceService
             'Перевод собств. ср-в со счёта 40817810326083159360 (Юмаков Д. В.) на карту 2200********7072 (40817810880005424392 Юмаков Д. В.). НДС не облагается.' => 'Перевод собств. ср-в со счёта 40817810326083159360 (Юмаков Д. В.) на карту 2200********7072 (40817810880005424392 Юмаков Д. В.). НДС не облагается.',
             'Перевод собств. ср-в с карты 2200********7072 (40817810880005424392 Юмаков Д. В.) на счёт 40817810900004367806 (Юмаков Д. В.). НДС не облагается.' => 'Перевод собств. ср-в с карты 2200********7072 (40817810880005424392 Юмаков Д. В.) на счёт 40817810900004367806 (Юмаков Д. В.). НДС не облагается.',
             'Газпромбанк' => 'Газпромбанк',
+            'Перевод с карты на карту' => 'Перевод с карты на карту',
             'Альфа-Банк' => 'Альфа-Банк',
             'Перевод СБП A132109091085324000006211D142271 от Даниил Владимирович Ю 79631265667 Тинькофф Банк.' => 'Перевод СБП A132109091085324000006211D142271 от Даниил Владимирович Ю 79631265667 Тинькофф Банк.',
             'Перевод СБП B12850656470530100001546241820D7 от Даниил Владимирович Ю 79631265667 Тинькофф Банк.' => 'Перевод СБП B12850656470530100001546241820D7 от Даниил Владимирович Ю 79631265667 Тинькофф Банк.',
@@ -65,11 +66,11 @@ class ImportFinanceService
             'Перевод собств. ср-в с карты 2200********9562 (40817810880005424392 Юмаков Д. В.) на счёт 40817810100003873007 (Юмаков Д. В.). НДС не облагается.' => 'Перевод собств. ср-в с карты 2200********9562 (40817810880005424392 Юмаков Д. В.) на счёт 40817810100003873007 (Юмаков Д. В.). НДС не облагается.',
             'Перевод собств. ср-в со счёта 40817810000003571412 (Юмаков Д. В.) на карту 2200********9562 (40817810880005424392 Юмаков Д. В.). НДС не облагается.' => 'Перевод собств. ср-в со счёта 40817810000003571412 (Юмаков Д. В.) на карту 2200********9562 (40817810880005424392 Юмаков Д. В.). НДС не облагается.',
             'Перевод собств. ср-в с карты 2200********9562 (40817810880005424392 Юмаков Д. В.) на счёт 40817810000003571412 (Юмаков Д. В.). НДС не облагается.' => 'Перевод собств. ср-в с карты 2200********9562 (40817810880005424392 Юмаков Д. В.) на счёт 40817810000003571412 (Юмаков Д. В.). НДС не облагается.',
-            'Ирина Ю.' => 'Ирина Ю.',
-            'Владимир Ю.' => 'Владимир Ю.',
+            //'Ирина Ю.' => 'Ирина Ю.',
+            //'Владимир Ю.' => 'Владимир Ю.',
             'Перевод между счетами' => 'Перевод между счетами',
             'Вывод с брокерского счета' => 'Вывод с брокерского счета',
-            'Дмитрий Ю.' => 'Дмитрий Ю.',
+            //'Дмитрий Ю.' => 'Дмитрий Ю.',
             'Артем Г.' => 'Артем Г.',
             'Регулярный перевод в Инвесткопилку' => 'Регулярный перевод в Инвесткопилку',
             'Вывод со счета Тинькофф Брокер' => 'Вывод со счета Тинькофф Брокер',
@@ -104,8 +105,7 @@ class ImportFinanceService
             '2021-09-04' => '2021-09-04',
         ];
 
-        $filename = 'C:\Users\danii\Desktop/all_time_otkritie_without.txt';
-        $text = file_get_contents($filename);
+        $text = file_get_contents($this->getPathDocs('all_time_otkritie_without.txt'));
 
         $financeList = explode(';', $text);
         $indexPay = 0;
@@ -121,16 +121,8 @@ class ImportFinanceService
             if ($finance == 'RUR') ++$indexPay;
         }
 
-        $categories = [];
-        $hashList = [];
-
-        foreach (CategoryAllHelper::getList() as $indexCategory => $item) {
-            $categories[$item] = $indexCategory;
-        }
-
-        foreach (Finance::find()->all() as $modelOld) {
-            $hashList[$modelOld->hash] = $modelOld->hash;
-        }
+        $categoryList = $this->repository->getCategoryList();
+        $hashList = $this->repository->getFinanceList();
 
         /*$arr = [];
 
@@ -158,7 +150,7 @@ class ImportFinanceService
             $form->date = date('Y-m-d', strtotime($name[0]));
             $form->time = date('H:i', strtotime($name[0]));
             $form->comment = $name[6];
-            $form->category = $categories[$category] ?? Finance::OTHER;
+            $form->category = $categoryList[$category] ?? Finance::OTHER;
             $form->exclusion = isset($exclusions[$name[6]]) ? Finance::EXCLUSION : Finance::NO_EXCLUSION;
 
             if ($name[6] == 'Перевод между своими счетами')
@@ -178,9 +170,9 @@ class ImportFinanceService
                 $form->category = Finance::SCHOLARSHIP;
             }
 
-            if (date('Y-m-d', strtotime($name[0])) < '2022-03-01' && Finance::SALARY == $categories[$category]
+            if (date('Y-m-d', strtotime($name[0])) < '2022-03-01' && Finance::SALARY == $categoryList[$category]
                 || date('Y-m-d', strtotime($name[0])) < '2022-03-01' && str_contains($name[6], 'реестру')
-                || in_array(date('Y-m-d', strtotime($name[0])), $dateScholarshipList) && Finance::SALARY == $categories[$category]) {
+                || in_array(date('Y-m-d', strtotime($name[0])), $dateScholarshipList) && Finance::SALARY == $categoryList[$category]) {
 
                 $form->category = Finance::SCHOLARSHIP;
             }
@@ -206,25 +198,25 @@ class ImportFinanceService
         echo 'Все финансы импортированы: ' . $count;
     }
 
+    /**
+     * @throws Exception
+     */
     public function importFinanceAlpha(): void
     {
         $exclusions = [
             'Даниил Ю.' => 'Даниил Ю.',
-            'Ирина Ю.' => 'Ирина Ю.',
-            'Владимир Ю.' => 'Владимир Ю.',
+            //'Ирина Ю.' => 'Ирина Ю.',
+            //'Владимир Ю.' => 'Владимир Ю.',
             'Перевод между счетами' => 'Перевод между счетами',
             'Вывод с брокерского счета' => 'Вывод с брокерского счета',
-            'Дмитрий Ю.' => 'Дмитрий Ю.',
+            //'Дмитрий Ю.' => 'Дмитрий Ю.',
             'Артем Г.' => 'Артем Г.',
             'Регулярный перевод в Инвесткопилку' => 'Регулярный перевод в Инвесткопилку',
-            'Вывод со счета Тинькофф Брокер' => 'Вывод со счета Тинькофф Брокер',
             'Вывод средств с брокерского счета' => 'Вывод средств с брокерского счета',
-            'Пополнение счета Тинькофф Брокер' => 'Пополнение счета Тинькофф Брокер',
             'Пополнение брокерского счета' => 'Пополнение брокерского счета',
             'Пополнение Инвесткопилки' => 'Пополнение Инвесткопилки',
             'Перевод на вклад' => 'Перевод на вклад',
             'Между своими счетами' => 'Между своими счетами',
-            'Внесение наличных через банкомат Тинькофф' => 'Внесение наличных через банкомат Тинькофф',
         ];
 
         $transports = [
@@ -241,19 +233,11 @@ class ImportFinanceService
             '' => 'Другое',
         ];
 
-        $reader = new SpreadsheetReader('C:\Users\danii\Desktop/all_time_alpha.xlsx');
+        $reader = new SpreadsheetReader($this->getPathDocs('all_time_alpha.xlsx'));
         $sheets = $reader->Sheets();
 
-        $categories = [];
-        $hashList = [];
-
-        foreach (CategoryAllHelper::getList() as $indexCategory => $item) {
-            $categories[$item] = $indexCategory;
-        }
-
-        foreach (Finance::find()->all() as $modelOld) {
-            $hashList[$modelOld->hash] = $modelOld->hash;
-        }
+        $categoryList = $this->repository->getCategoryList();
+        $hashList = $this->repository->getFinanceList();
 
         $count = 0;
 
@@ -273,7 +257,7 @@ class ImportFinanceService
                 $form->bank = Finance::ALFA;
                 $form->date = date('Y-m-d', strtotime($row[0]));
                 $form->budget_category = $row[12] == 'Пополнение' ? Finance::REVENUE : Finance::EXPENSES;
-                $form->category = $categories[$category] ?? Finance::OTHER;
+                $form->category = $categoryList[$category] ?? Finance::OTHER;
                 $form->time = '01:00';
                 $form->money = (double)$row[7];
                 $form->comment = $row[6];
@@ -292,15 +276,18 @@ class ImportFinanceService
         echo 'Все финансы импортированы: ' . $count;
     }
 
+    /**
+     * @throws Exception
+     */
     public function importFinanceTinkoff(): void
     {
         $exclusions = [
             'Даниил Ю.' => 'Даниил Ю.',
-            'Ирина Ю.' => 'Ирина Ю.',
-            'Владимир Ю.' => 'Владимир Ю.',
+            //'Ирина Ю.' => 'Ирина Ю.',
+            //'Владимир Ю.' => 'Владимир Ю.',
             'Перевод между счетами' => 'Перевод между счетами',
             'Вывод с брокерского счета' => 'Вывод с брокерского счета',
-            'Дмитрий Ю.' => 'Дмитрий Ю.',
+            //'Дмитрий Ю.' => 'Дмитрий Ю.',
             'Артем Г.' => 'Артем Г.',
             'Регулярный перевод в Инвесткопилку' => 'Регулярный перевод в Инвесткопилку',
             'Вывод со счета Тинькофф Брокер' => 'Вывод со счета Тинькофф Брокер',
@@ -323,19 +310,12 @@ class ImportFinanceService
             'Пополнения' => 'Переводы',
         ];
 
-        $reader = new SpreadsheetReader('C:\Users\danii\Desktop/all_time_tinkoff.xlsx');
+        $reader = new SpreadsheetReader($this->getPathDocs('web/docs-statistics/all_time_tinkoff.xlsx'));
+
         $sheets = $reader->Sheets();
 
-        $categories = [];
-        $hashList = [];
-
-        foreach (CategoryAllHelper::getList() as $indexCategory => $item) {
-            $categories[$item] = $indexCategory;
-        }
-
-        foreach (Finance::find()->all() as $modelOld) {
-            $hashList[$modelOld->hash] = $modelOld->hash;
-        }
+        $categoryList = $this->repository->getCategoryList();
+        $hashList = $this->repository->getFinanceList();
 
         $count = 0;
 
@@ -371,7 +351,7 @@ class ImportFinanceService
                 $form->date = date('Y-m-d', strtotime($row[0]));
                 $form->time = date('H:i', strtotime($row[0]));
                 $form->budget_category = (int)$row[4] > 0 ? Finance::REVENUE : Finance::EXPENSES;
-                $form->category = $categories[$category] ?? Finance::OTHER;
+                $form->category = $categoryList[$category] ?? Finance::OTHER;
                 $form->money = (double)$row[14];
                 $form->comment = $row[11];
                 $form->exclusion = isset($exclusions[$row[11]]) ? Finance::EXCLUSION : Finance::NO_EXCLUSION;
@@ -386,5 +366,23 @@ class ImportFinanceService
             }
         }
         echo 'Все финансы импортированы: ' . $count;
+    }
+
+    private function getPathDocs(string $name): string
+    {
+        $pathList = explode('\\', __DIR__);
+
+        $path = array_shift($pathList);
+
+        foreach ($pathList as $item) {
+
+            if ('services' == $item) continue;
+
+            $path .= '/' . $item;
+        }
+
+        $path .= '/' . $name;
+
+        return $path;
     }
 }

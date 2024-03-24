@@ -27,6 +27,8 @@ class FinanceSearch extends Model
 
     public $comment;
 
+    const QIWI = 9346;
+
     private array $_filters = [];
 
     public function rules(): array
@@ -129,15 +131,26 @@ class FinanceSearch extends Model
     {
         $info = [];
 
+        $date = '';
+
         $cashBackCategoryList = $this->buildCashBackCategoryList();
 
         foreach ($this->queryFinance($category) as $item) {
-
 
             if ($item->exclusion == Finance::EXCLUSION) continue;
 
             $month = date('n', strtotime($item->date));
             $year = date('Y', strtotime($item->date));
+
+            /*if ($month == 1 and $year == 2023) {
+                if ($date != $item->date) {
+                    echo '<h4>' . $item->date . '</h4>';
+
+                    $date = $item->date;
+                }
+
+                printr($item->time . ' ' . ($item->budget_category == Finance::EXPENSES ? '-' : '+') . $item->money . ' ' . BankHelper::getValue($item->bank) . ' ' . ($item->exclusion == Finance::EXCLUSION ? '-' : '+'));
+            }*/
 
             if (!isset($info[$year][$month])) {
                 $info[$year][$month] = [
@@ -218,6 +231,9 @@ class FinanceSearch extends Model
     {
         return Finance::find()
             ->andFilterWhere(['category' => $category])
+            ->orderBy([
+                'date_time' => SORT_DESC
+            ])
             ->all();
     }
 

@@ -4,6 +4,7 @@ namespace app\repositories;
 
 use app\entities\Finance;
 use app\forms\FinanceForm;
+use app\helpers\CategoryAllHelper;
 use DomainException;
 use Exception;
 use RuntimeException;
@@ -18,6 +19,30 @@ class FinanceRepository
             ->andWhere(['id' => $id])
             ->limit(1)
             ->one();
+    }
+
+    public function getFinanceList(): array
+    {
+        $hashList = [];
+
+        $financeList = Finance::find()->all();
+
+        foreach ($financeList as $modelOld) {
+            $hashList[$modelOld->hash] = $modelOld->hash;
+        }
+
+        return $hashList;
+    }
+
+    public function getCategoryList(): array
+    {
+        $categories = [];
+
+        foreach (CategoryAllHelper::getList() as $indexCategory => $item) {
+            $categories[$item] = $indexCategory;
+        }
+
+        return $categories;
     }
 
     public function getHashFinance(FinanceForm $form): string
