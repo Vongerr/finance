@@ -27,6 +27,8 @@ use yii\db\ActiveRecord;
  */
 class Finance extends ActiveRecord
 {
+    const QIWI = 9346;
+
     const REVENUE = 'revenue'; // Доходы
     const EXPENSES = 'expenses'; // Расходы
 
@@ -137,9 +139,9 @@ class Finance extends ActiveRecord
             'id' => 'ID',
             'budget_category' => 'Категория бюджета',
             'category' => 'Категория',
-            'date' => 'Дата операции',
+            'date' => 'Дата',
             'time' => 'Время операции',
-            'date_time' => 'Дата и время операции',
+            'date_time' => 'Дата и время',
             'username' => 'Имя пользователя',
             'money' => 'Средства',
             'bank' => 'Банк',

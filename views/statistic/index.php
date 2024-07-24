@@ -6,18 +6,17 @@ use app\entities\Finance;
 use app\helpers\BankHelper;
 use app\helpers\CategoryAllHelper;
 use app\helpers\CategoryBudgetHelper;
-use app\helpers\CategoryHelper;
 use app\helpers\ExclusionHelper;
 use app\models\search\FinanceSearch;
 use app\widgets\CustomActionColumn;
 use app\widgets\CustomGridView;
 use app\widgets\MenuFilterWidget;
+use app\widgets\Modal;
 use kartik\dialog\Dialog;
 use kartik\grid\ActionColumn;
 use kartik\grid\DataColumn;
 use kartik\grid\GridViewInterface;
 use kartik\grid\SerialColumn;
-use yii\bootstrap\Modal;
 use yii\helpers\Html;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Url;
@@ -152,6 +151,23 @@ try {
             ],
             [
                 'content' => Html::a(
+                    'Экспорт финансов',
+                    Url::to(['export-finance']),
+                    [
+                        'title' => 'Экспортировать финансы',
+                        'class' => 'btn btn-success',
+                        'data' => [
+                            'pjax' => 0,
+                            'toggle' => 'modal',
+                            'target' => '#grid-modal',
+                            'pjax-id' => $pjaxId,
+                            'title' => 'Экспортировать финансы',
+                            'href' => Url::to(['export-finance']),
+                        ],
+                    ])
+            ],
+            [
+                'content' => Html::a(
                     'Удалить информацию Тинькофф',
                     Url::to(['delete-bank']),
                     [
@@ -216,6 +232,18 @@ try {
         'panelTemplate' => '<div class="{prefix}{type} {solid}">{panelHeading}<div class="box-body">'
             . MenuFilterWidget::widget([
                 'searchModel' => $searchModel,
+                'attribute' => 'year',
+                'assoc' => true,
+                'titleAllButton' => 'Все',
+            ]) . Html::tag('br')
+            . MenuFilterWidget::widget([
+                'searchModel' => $searchModel,
+                'attribute' => 'month',
+                'assoc' => true,
+                'titleAllButton' => 'Все',
+            ]) . Html::tag('br')
+            . MenuFilterWidget::widget([
+                'searchModel' => $searchModel,
                 'attribute' => 'bank',
                 'assoc' => true,
                 'titleAllButton' => 'Все',
@@ -278,11 +306,15 @@ try {
             ],
             [
                 'class' => DataColumn::class,
-                'attribute' => 'budget_category',
+                'label' => 'Бюджет',
                 'hAlign' => GridViewInterface::ALIGN_CENTER,
                 'vAlign' => GridViewInterface::ALIGN_TOP,
                 'filter' => false,
                 'format' => 'raw',
+                'width' => '50px',
+                'options' => [
+                    'style' => 'width: 50px;'
+                ],
                 'value' => function (Finance $model) {
 
                     return CategoryBudgetHelper::getValue($model->budget_category, true);
@@ -353,7 +385,7 @@ try {
                     return BankHelper::getValue($model->bank);
                 },
             ],
-            [
+            /*[
                 'class' => DataColumn::class,
                 'attribute' => 'username',
                 'hAlign' => GridViewInterface::ALIGN_CENTER,
@@ -363,7 +395,7 @@ try {
 
                     return $model->username;
                 },
-            ],
+            ],*/
             [
                 'class' => DataColumn::class,
                 'attribute' => 'comment',

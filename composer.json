@@ -35,7 +35,8 @@
         "kartik-v/yii2-icons": "^1.4",
         "bower-asset/fastclick": "^1.0",
         "bower-asset/icheck": "^1.0",
-        "nuovo/spreadsheet-reader": "^0.5.11"
+        "nuovo/spreadsheet-reader": "^0.5.11",
+        "shuchkin/simplexlsxgen": "^1.4"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

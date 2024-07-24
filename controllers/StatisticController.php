@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\forms\FinanceForm;
 use app\models\search\FinanceSearch;
 use app\services\DeleteService;
+use app\services\ExportFinanceService;
 use app\services\FinanceService;
 use app\services\ImportFinanceService;
 use Exception;
@@ -18,12 +19,11 @@ use yii\web\Response;
 
 class StatisticController extends MainController
 {
-    /**
-     * @var FinanceService
-     */
     private FinanceService $service;
 
     private ImportFinanceService $serviceImport;
+
+    private ExportFinanceService $serviceExport;
 
     private DeleteService $serviceDelete;
 
@@ -31,6 +31,7 @@ class StatisticController extends MainController
                                                      $module,
                                 FinanceService       $service,
                                 ImportFinanceService $serviceImport,
+                                ExportFinanceService $serviceExport,
                                 DeleteService $serviceDelete,
                                 array                $config = []
     )
@@ -39,6 +40,7 @@ class StatisticController extends MainController
 
         $this->service = $service;
         $this->serviceImport = $serviceImport;
+        $this->serviceExport = $serviceExport;
         $this->serviceDelete = $serviceDelete;
     }
 
@@ -155,11 +157,17 @@ class StatisticController extends MainController
         return $this->ajaxRedirect(Url::to(['index']));
     }
 
+    /**
+     * @throws Exception
+     */
     public function actionImportFinanceTinkoff(): void
     {
         $this->serviceImport->importFinanceTinkoff();
     }
 
+    /**
+     * @throws Exception
+     */
     public function actionImportFinanceAlpha(): void
     {
         $this->serviceImport->importFinanceAlpha();
@@ -168,6 +176,11 @@ class StatisticController extends MainController
     public function actionImportFinanceOtkritie(): void
     {
         $this->serviceImport->importFinanceOtkritie();
+    }
+
+    public function actionExportFinance(): void
+    {
+        $this->serviceExport->exportFinance();
     }
 
     /**

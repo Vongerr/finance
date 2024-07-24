@@ -6,7 +6,7 @@ use yii\helpers\Html;
 
 /**
  * Class Modal
- * @package core\widgets
+ * @package app\widgets
  */
 class Modal extends \yii\bootstrap\Modal
 {

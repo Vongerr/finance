@@ -42,16 +42,12 @@ class FinanceService
             throw new Exception('Такая запись уже существует');
         }
 
-        $model->exclusion = 0;
-
         $this->repository->save($model);
     }
 
     public function update(FinanceForm $form, Finance $model): void
     {
         $model->edit($form);
-
-        $model->exclusion = 0;
 
         $this->repository->save($model);
     }

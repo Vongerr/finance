@@ -105,7 +105,7 @@ class ImportFinanceService
             '2021-09-04' => '2021-09-04',
         ];
 
-        $text = file_get_contents($this->getPathDocs('all_time_otkritie_without.txt'));
+        $text = file_get_contents($this->getPathDocs('otkritie.txt'));
 
         $financeList = explode(';', $text);
         $indexPay = 0;
@@ -233,7 +233,7 @@ class ImportFinanceService
             '' => 'Другое',
         ];
 
-        $reader = new SpreadsheetReader($this->getPathDocs('all_time_alpha.xlsx'));
+        $reader = new SpreadsheetReader($this->getPathDocs('alpha.xlsx'));
         $sheets = $reader->Sheets();
 
         $categoryList = $this->repository->getCategoryList();
@@ -310,7 +310,7 @@ class ImportFinanceService
             'Пополнения' => 'Переводы',
         ];
 
-        $reader = new SpreadsheetReader($this->getPathDocs('web/docs-statistics/all_time_tinkoff.xlsx'));
+        $reader = new SpreadsheetReader($this->getPathDocs('tinkoff.xlsx'));
 
         $sheets = $reader->Sheets();
 
@@ -381,7 +381,7 @@ class ImportFinanceService
             $path .= '/' . $item;
         }
 
-        $path .= '/' . $name;
+        $path .= '/web/docs-statistics/' . $name;
 
         return $path;
     }

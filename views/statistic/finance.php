@@ -1,6 +1,7 @@
 <?php
 
 use app\components\View;
+use app\entities\Finance;
 use app\helpers\MonthHelper;
 
 /* @var $this View */
@@ -9,77 +10,84 @@ use app\helpers\MonthHelper;
 $financeAll = 0;
 $cashbackAll = 0;
 
-$qiwi = 9346;
+$changeYear = 0;
 
-$changeYear = 0; ?>
-
-    <table>
-        <caption>Финансы</caption>
-        <tr>
-            <th colspan="5">Год</th>
-            <th colspan="15">Месяц</th>
-            <th colspan="4">Деньги</th>
-        </tr>
-
-        <?php
-        foreach ($data as $year => $yearInfo) {
-            foreach ($yearInfo as $month => $monthInfo) {
+foreach ($data as $year => $yearInfo) : ?>
+    <label>
+        <h2> <?= $year ?> </h2>
+        <table class="col-sm-3 table-finance">
+            <tr>
+                <th class="th-finance">Месяц</th>
+                <th class="th-finance">Деньги</th>
+            </tr>
+            <?php foreach ($yearInfo as $month => $monthInfo) :
 
                 $finance = $monthInfo['finance'];
                 $cashback = $monthInfo['cashback'];
+
                 $monthTitle = MonthHelper::getValue($month);
 
-                $style = $finance > 0 ? 'style="color: green;"' : 'style="color: red;"';
-
-                ?>
+                $style = $finance > 0 ? 'style="color: green;"' : 'style="color: red;"'; ?>
                 <tr>
-                    <td colspan="5"><?= $changeYear != $year ? $year : '' ?></td>
-                    <td colspan="15"><?= MonthHelper::getValue($month) ?></td>
-                    <td colspan="4" <?php echo $style ?>><?= number_format((float)$finance, 2, '.', '') ?></td>
+                    <td class="td-finance"><?= MonthHelper::getValue($month) ?></td>
+                    <td class="td-finance" <?php echo $style ?>><?= number_format((float)$finance, 2, '.', '') ?></td>
                 </tr>
-                <?php
-
-                $financeAll += $monthInfo['finance'];
+                <?php $financeAll += $monthInfo['finance'];
                 $cashbackAll += $monthInfo['cashback'];
 
                 if ($changeYear != $year) {
 
                     $changeYear = $year;
                 }
-            }
-        }
+            endforeach;
+            ?> </table>
+    </label>
+<?php endforeach;
 
-        $financeAll -= $qiwi
-        ?>
-    </table>
+$financeAll -= Finance::QIWI; ?>
+    <label>
+        <h2>Итого:</h2>
+        <table class="col-sm-3 table-finance">
+            <tr>
+                <th class="th-finance" colspan="15">Финансы</th>
+                <th class="th-finance" colspan="4">Кешбэк</th>
+            </tr>
+            <tr>
+                <td class="td-finance" colspan="15"> <?= $financeAll ?></td>
+                <td class="td-finance" colspan="4"> <?= $cashbackAll ?></td>
+            </tr>
+        </table>
+    </label>
 <?php
-
-echo "<h2>Итого</h2>";
-
-echo "<h4>Финансы: $financeAll</h4>";
-echo "<h4>Кешбэк: $cashbackAll</h4>";
 
 $this->registerCss(
     <<<CSS
-table {
+.table-finance {
 border-spacing: 0 10px;
 font-family: 'Open Sans', sans-serif;
 font-weight: bold;
 }
-th {
+
+.th-finance {
 padding: 10px 20px;
 background: #56433D;
 color: #F9C941;
-border-right: 2px solid; 
 font-size: 0.9em;
+border-top: 2px solid #56433D;
+border-bottom: 2px solid #56433D;
+border-right: 2px solid #56433D;
+border-left: 2px solid #56433D;
 }
-th:first-child {
+
+.th-finance:first-child {
 text-align: left;
 }
-th:last-child {
+
+.th-finance:last-child {
 border-right: none;
 }
-td {
+
+.td-finance {
 vertical-align: middle;
 padding: 10px;
 font-size: 14px;
@@ -87,14 +95,17 @@ text-align: center;
 border-top: 2px solid #56433D;
 border-bottom: 2px solid #56433D;
 border-right: 2px solid #56433D;
+border-left: 2px solid #56433D;
 }
-td:first-child {
+
+.td-finance:first-child {
 border-left: 2px solid #56433D;
 border-right: none;
 }
-td:nth-child(2){
+
+.td-finance:nth-child(2){
 text-align: left;
 }
-CSS
 
+CSS
 );
