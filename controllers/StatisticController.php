@@ -32,7 +32,7 @@ class StatisticController extends MainController
                                 FinanceService       $service,
                                 ImportFinanceService $serviceImport,
                                 ExportFinanceService $serviceExport,
-                                DeleteService $serviceDelete,
+                                DeleteService        $serviceDelete,
                                 array                $config = []
     )
     {
@@ -125,19 +125,10 @@ class StatisticController extends MainController
         ], true);
     }
 
-    /**
-     * @throws InvalidConfigException
-     */
-    public function actionFinance(string $category = null): string
+    public function actionFinance(): string
     {
-        $searchModel = Yii::createObject([
-            'class' => FinanceSearch::class
-        ]);
-
-        $data = $searchModel->getFinanceInfo($category);
-
         return $this->render('finance', [
-            'data' => $data,
+            'data' => $this->service->defineExpenses(),
         ], true);
     }
 
@@ -176,6 +167,14 @@ class StatisticController extends MainController
     public function actionImportFinanceOtkritie(): void
     {
         $this->serviceImport->importFinanceOtkritie();
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function actionImportFinance(): void
+    {
+        $this->serviceImport->importFinance();
     }
 
     public function actionExportFinance(): void

@@ -51,7 +51,7 @@ $config = [
             'showScriptName' => true,
             'rules' => [
                 '<controller:[\w-]+>/<action:[\w-]+>' => '<controller>/<action>',
-                'site/view/<slug:[\w-]+>' => 'site/view',
+                'statistic/view/<slug:[\w-]+>' => 'statistic/view',
             ],
         ],
     ],

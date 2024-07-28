@@ -2,7 +2,6 @@
 
 namespace app\entities;
 
-use app\forms\CashBackForm;
 use app\helpers\CategoryHelper;
 use app\helpers\MonthHelper;
 use yii\db\ActiveRecord;
@@ -34,7 +33,7 @@ class CashBack extends ActiveRecord
     const NOVEMBER = 11;
     const DECEMBER = 12;
 
-    public static function create(CashBackForm $form): CashBack
+    public static function create($form): CashBack
     {
         $finance = new static();
 
@@ -43,7 +42,7 @@ class CashBack extends ActiveRecord
         return $finance;
     }
 
-    public function edit(CashBackForm $form)
+    public function edit($form)
     {
         $this->month = $form->month;
         $this->year = $form->year;

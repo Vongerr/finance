@@ -151,6 +151,23 @@ try {
             ],
             [
                 'content' => Html::a(
+                    'Импорт финансов',
+                    Url::to(['import-finance']),
+                    [
+                        'title' => 'Импортировать финансы',
+                        'class' => 'btn btn-success',
+                        'data' => [
+                            'pjax' => 0,
+                            'toggle' => 'modal',
+                            'target' => '#grid-modal',
+                            'pjax-id' => $pjaxId,
+                            'title' => 'Импортировать финансы',
+                            'href' => Url::to(['import-finance']),
+                        ],
+                    ])
+            ],
+            [
+                'content' => Html::a(
                     'Экспорт финансов',
                     Url::to(['export-finance']),
                     [
@@ -166,7 +183,7 @@ try {
                         ],
                     ])
             ],
-            [
+            /*[
                 'content' => Html::a(
                     'Удалить информацию Тинькофф',
                     Url::to(['delete-bank']),
@@ -216,7 +233,7 @@ try {
                             'href' => Url::to(['delete-bank', 'bank' => Finance::OTKRITIE]),
                         ],
                     ])
-            ],
+            ],*/
         ],
         'bordered' => true,
         'striped' => false,

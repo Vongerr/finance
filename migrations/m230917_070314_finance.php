@@ -15,6 +15,7 @@ class m230917_070314_finance extends Migration
             'category' => $this->string(20)->notNull()->comment('Категория'),
             'date' => $this->string(10)->notNull()->comment('Дата операции'),
             'time' => $this->string(5)->comment('Время операции'),
+            'date_time' => $this->string(16)->notNull()->comment('Дата и время операции'),
             'username' => $this->char(30)->comment('Имя пользователя'),
             'money' => $this->float(14)->notNull()->comment('Средства'),
             'bank' => $this->char(10)->notNull()->comment('Банк'),

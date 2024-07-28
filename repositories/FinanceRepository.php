@@ -21,6 +21,15 @@ class FinanceRepository
             ->one();
     }
 
+    /**
+     * @return array|Finance[]
+     */
+    public function getExpensesModels(): array
+    {
+        return Finance::find()
+            ->all();
+    }
+
     public function getFinanceList(): array
     {
         $hashList = [];
@@ -81,7 +90,7 @@ class FinanceRepository
     /**
      * @throws Throwable
      */
-    public function remove(Finance $ads)
+    public function remove(Finance $ads): void
     {
         try {
 

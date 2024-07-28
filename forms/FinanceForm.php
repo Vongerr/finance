@@ -56,7 +56,7 @@ class FinanceForm extends Model
             [['date', 'budget_category', 'category', 'money'], 'required'],
             [['money'], 'double'],
             ['date', 'date', 'format' => 'php:d.m.Y', 'timestampAttribute' => 'date', 'timestampAttributeFormat' => 'php:Y-m-d'],
-            [['time'], 'date', 'format'=>'H:i'],
+            [['time'], 'string', 'max' => 5],
             [['category'], 'in', 'range' => array_keys(CategoryHelper::getList())],
             [['budget_category'], 'in', 'range' => array_keys(CategoryBudgetHelper::getList())],
             [['bank'], 'in', 'range' => array_keys(BankHelper::getList())],

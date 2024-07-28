@@ -92,6 +92,11 @@ class Finance extends ActiveRecord
         return $finance;
     }
 
+    public static function createImport(): static
+    {
+        return new static();
+    }
+
     public function edit(FinanceForm $form): void
     {
         $this->hash = md5(

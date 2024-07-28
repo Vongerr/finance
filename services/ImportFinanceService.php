@@ -279,6 +279,64 @@ class ImportFinanceService
     /**
      * @throws Exception
      */
+    public function importFinance(): void
+    {
+        $reader = new SpreadsheetReader($this->getPathDocs('finance.xlsx'));
+
+        $sheets = $reader->Sheets();
+
+        $count = 0;
+
+        $arr = [];
+
+        foreach ($sheets as $index => $name) {
+
+            $reader->ChangeSheet($index);
+
+            foreach ($reader as $indexRow => $row) {
+
+                if ($indexRow == 0) continue;
+                if ($row[2] == 'FAILED') continue;
+
+                $arr[$row[5]] = $row[5];
+            }
+        }
+
+        foreach ($sheets as $index => $name) {
+
+            $reader->ChangeSheet($index);
+
+            foreach ($reader as $indexRow => $row) {
+
+                if ($indexRow == 0) continue;
+
+                $model = Finance::createImport();
+
+                $model->hash = $row[0];
+                $model->budget_category = $row[1];
+                $model->category = $row[2];
+                $model->date = date('Y-m-d', strtotime($row[5]));
+                $model->time = $row[4];
+                $model->date_time = $row[5];
+                $model->username = $row[6];
+                $model->money = $row[7];
+                $model->bank = $row[8];
+                $model->comment = $row[9];
+                $model->exclusion = $row[10];
+                $model->created_at = date('Y-m-d H:i', strtotime($row[11]));
+                $model->updated_at = $row[12] ? date('Y-m-d H:i', strtotime($row[12])) : null;
+
+                $this->repository->save($model);
+
+                ++$count;
+            }
+        }
+        echo 'Все финансы импортированы: ' . $count;
+    }
+
+    /**
+     * @throws Exception
+     */
     public function importFinanceTinkoff(): void
     {
         $exclusions = [
