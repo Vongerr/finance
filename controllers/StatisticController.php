@@ -112,7 +112,7 @@ class StatisticController extends MainController
             try {
                 $this->service->update($form, $model);
 
-                return $this->ajaxRedirect(Url::to(['index']));
+                return $this->ajaxRedirect(app()->request->headers['referer']);
 
             } catch (Exception $e) {
 

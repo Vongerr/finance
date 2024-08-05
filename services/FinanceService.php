@@ -26,6 +26,26 @@ class FinanceService
     {
         $models = $this->repository->getExpensesModels();
 
+        $scholarshipModels = Finance::find()
+            ->andWhere([
+                'bank' => [Finance::OTKRITIE, Finance::VTB],
+                'category' => Finance::TRANSFER,
+                'exclusion' => Finance::NO_EXCLUSION,
+                'budget_category' => Finance::EXPENSES,
+            ])
+            ->andWhere(['!=', 'comment', 'Ирина Ю.'])
+            ->andWhere(['!=', 'comment', 'Даниил Д.'])
+            ->andWhere(['!=', 'comment', 'Тхи Х.'])
+            ->andWhere(['>', 'money', 6000])
+            ->all();
+
+        $scholarshipData = [];
+
+        foreach ($scholarshipModels as $scholarshipModel) {
+            $scholarshipData[date('Y', strtotime($scholarshipModel->date))][date('m', strtotime($scholarshipModel->date))]
+                = $scholarshipModel->money;
+        }
+
         $data = [];
 
         foreach ($models as $finance) {
@@ -45,23 +65,29 @@ class FinanceService
                 ];
             }
 
+            $money = $finance->money;
+
             if (Finance::EXPENSES == $finance->budget_category) {
 
-                $data[$year][$month]['expenses'] += $finance->money;
-                $data[$year][$month]['finance'] -= $finance->money;
+                $data[$year][$month]['expenses'] += $money;
+                $data[$year][$month]['finance'] -= $money;
             } else {
 
                 if (Finance::SALARY == $finance->category)
-                    $data[$year][$month]['salary'] += $finance->money;
+                    $data[$year][$month]['salary'] += $money;
 
                 if (Finance::SCHOLARSHIP == $finance->category) {
 
-                    $data[$year][$month]['scholarship'] += $finance->money;
-                    //$data[$year][$month]['scholarship'] -=
+                    $scholarship = $money;
+
+                    if ($money > 6000)
+                        $scholarship -= $scholarshipData[date('Y', strtotime($finance->date))][date('m', strtotime($finance->date))] ?? 0;
+
+                    $data[$year][$month]['scholarship'] += $scholarship;
                 }
 
-                $data[$year][$month]['finance'] += $finance->money;
-                $data[$year][$month]['revenue'] += $finance->money;
+                $data[$year][$month]['revenue'] += $money;
+                $data[$year][$month]['finance'] += $money;
             }
         }
 

@@ -287,21 +287,6 @@ class ImportFinanceService
 
         $count = 0;
 
-        $arr = [];
-
-        foreach ($sheets as $index => $name) {
-
-            $reader->ChangeSheet($index);
-
-            foreach ($reader as $indexRow => $row) {
-
-                if ($indexRow == 0) continue;
-                if ($row[2] == 'FAILED') continue;
-
-                $arr[$row[5]] = $row[5];
-            }
-        }
-
         foreach ($sheets as $index => $name) {
 
             $reader->ChangeSheet($index);
@@ -376,21 +361,6 @@ class ImportFinanceService
         $hashList = $this->repository->getFinanceList();
 
         $count = 0;
-
-        $arr = [];
-
-        foreach ($sheets as $index => $name) {
-
-            $reader->ChangeSheet($index);
-
-            foreach ($reader as $indexRow => $row) {
-
-                if ($indexRow == 0) continue;
-                if ($row[2] == 'FAILED') continue;
-
-                $arr[$row[5]] = $row[5];
-            }
-        }
 
         foreach ($sheets as $index => $name) {
 
