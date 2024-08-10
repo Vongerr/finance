@@ -2,6 +2,7 @@
 
 use app\forms\FinanceForm;
 use app\helpers\BankHelper;
+use app\helpers\CategoryAllHelper;
 use app\helpers\CategoryBudgetHelper;
 use app\helpers\CategoryHelper;
 use kartik\date\DatePicker;
@@ -24,7 +25,7 @@ try {
     ?>
     <div class="row">
         <div class="col-sm-6">
-            <?php echo $form->field($model, 'category')->dropDownList(CategoryHelper::getList()); ?>
+            <?php echo $form->field($model, 'category')->dropDownList(CategoryAllHelper::getList()); ?>
         </div>
         <div class="col-sm-6">
             <?php echo $form->field($model, 'budget_category')->dropDownList(CategoryBudgetHelper::getList()); ?>

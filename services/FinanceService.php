@@ -22,6 +22,33 @@ class FinanceService
         return $this->repository->getStatisticById($id);
     }
 
+    public function defineCategoryFinance(): array
+    {
+        $models = $this->repository->getCategoryFinanceModels();
+
+        $data = [];
+
+        foreach ($models as $finance) {
+
+            $month = date('n', strtotime($finance->date));
+            $year = date('Y', strtotime($finance->date));
+
+            if (!isset($data[$year][$month][$finance->category])) {
+                $data[$year][$month][$finance->category] = 0;
+            }
+
+            $data[$year][$month][$finance->category] += $finance->money;
+        }
+
+        ksort($data);
+
+        foreach ($data as $year => $yearInfo) {
+            ksort($data[$year]);
+        }
+
+        return $data;
+    }
+
     public function defineExpenses(): array
     {
         $models = $this->repository->getExpensesModels();

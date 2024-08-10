@@ -2,16 +2,14 @@
 
 use app\components\View;
 use app\entities\Finance;
-use app\helpers\MonthHelper;
+use app\helpers\CategoryAllHelper;
 
 /* @var $this View */
 /* @var $data array */
 
-$salaryAll = 0;
-$scholarshipAll = 0;
-$revenueAll = 0;
-$expensesAll = 0;
-$financeAll = 0;
+/* foreach ($yearInfo as $month => $monthInfo) {
+       echo '<th class="th-finance">' . MonthHelper::getValue($month) .'</th>';
+}*/
 
 $changeYear = 0;
 
@@ -37,67 +35,32 @@ foreach ($data as $year => $yearInfo) : ?>
                 <th class="th-finance">Всего</th>
             </tr>
 
-            <?php foreach ($yearInfo as $month => $monthInfo) :
-
-                $salary = $monthInfo['salary'];
-                $scholarship = $monthInfo['scholarship'];
-                $revenue = $monthInfo['revenue'];
-                $expenses = $monthInfo['expenses'];
-                $finance = $monthInfo['finance'];
-
-                $monthTitle = MonthHelper::getValue($month);
-
-                $style = $finance > 0 ? 'style="color: green;"' : 'style="color: red;"'; ?>
+            <?php
+            foreach (Finance::CATEGORY_LIST as $category) :?>
                 <tr>
-                    <td class="td-finance"><?= MonthHelper::getValue($month) ?></td>
-                    <td class="td-finance"><?= number_format((float)$salary, 0, ',', '.') ?></td>
-                    <td class="td-finance"><?= number_format((float)$scholarship, 0, ',', '.') ?></td>
-                    <td class="td-finance"><?= number_format((float)$revenue, 0, ',', '.') ?></td>
-                    <td class="td-finance"><?= number_format((float)$expenses, 0, ',', '.') ?></td>
-                    <td class="td-finance" <?php echo $style ?>><?= number_format((float)$finance, 0, ',', '.') ?></td>
+                    <td class="td-finance"><?= CategoryAllHelper::getValue($category) ?></td>
+
+                    <?php foreach ($yearInfo as $month => $monthInfo) :
+
+                        if (isset($monthInfo[$category])) :?>
+
+                            <td class="td-finance"><?= number_format((float)$monthInfo[$category], 0, ',', '.') ?></td>
+                        <?php else: ?>
+
+                            <td class="td-finance"> 0</td>
+                        <?php endif; ?>
+
+                        <?php if ($changeYear != $year) {
+
+                        $changeYear = $year;
+                    }
+                    endforeach; ?>
                 </tr>
-                <?php
-                $salaryAll += $monthInfo['salary'];
-                $scholarshipAll += $monthInfo['scholarship'];
-                $revenueAll += $monthInfo['revenue'];
-                $expensesAll += $monthInfo['expenses'];
-                $financeAll += $monthInfo['finance'];
-
-                if ($changeYear != $year) {
-
-                    $changeYear = $year;
-                }
-            endforeach; ?> </table>
+            <?php endforeach; ?>
+        </table>
     </label>
 
 <?php endforeach;
-$financeAll -= Finance::QIWI;
-$expensesAll -= Finance::QIWI; ?>
-
-    <label>
-        <h2>Итого:</h2>
-        <table class="col-sm-3 table-finance">
-            <tr>
-                <th class="th-finance" colspan="15">Зарплата</th>
-                <th class="th-finance" colspan="15">Стипендия</th>
-                <th class="th-finance" colspan="15">Доходы</th>
-                <th class="th-finance" colspan="15">Расходы</th>
-                <th class="th-finance" colspan="15">Итого</th>
-            </tr>
-            <tr>
-                <td class="td-finance" colspan="15"> <?= financeView((float)$salaryAll) ?></td>
-                <td class="td-finance" colspan="15"> <?= financeView((float)$scholarshipAll) ?></td>
-                <td class="td-finance" colspan="15"> <?= financeView((float)$revenueAll) ?></td>
-                <td class="td-finance" colspan="15"> <?= financeView((float)$expensesAll) ?></td>
-                <td class="td-finance" colspan="15"> <?= financeView((float)$financeAll) ?></td>
-            </tr>
-        </table>
-    </label>
-<?php
-function financeView(float $money): string
-{
-    return number_format($money, 0, ',', '.');
-}
 
 $this->registerCss(
     <<<CSS

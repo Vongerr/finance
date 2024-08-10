@@ -4,8 +4,8 @@ namespace app\forms;
 
 use app\entities\Finance;
 use app\helpers\BankHelper;
+use app\helpers\CategoryAllHelper;
 use app\helpers\CategoryBudgetHelper;
-use app\helpers\CategoryHelper;
 use yii\base\Model;
 
 class FinanceForm extends Model
@@ -57,7 +57,7 @@ class FinanceForm extends Model
             [['money'], 'double'],
             ['date', 'date', 'format' => 'php:d.m.Y', 'timestampAttribute' => 'date', 'timestampAttributeFormat' => 'php:Y-m-d'],
             [['time'], 'string', 'max' => 5],
-            [['category'], 'in', 'range' => array_keys(CategoryHelper::getList())],
+            [['category'], 'in', 'range' => array_keys(CategoryAllHelper::getList())],
             [['budget_category'], 'in', 'range' => array_keys(CategoryBudgetHelper::getList())],
             [['bank'], 'in', 'range' => array_keys(BankHelper::getList())],
             [['username'], 'string', 'max' => 30],

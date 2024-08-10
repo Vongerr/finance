@@ -27,6 +27,22 @@ class FinanceRepository
     public function getExpensesModels(): array
     {
         return Finance::find()
+            ->andWhere(['exclusion' => Finance::NO_EXCLUSION])
+            ->all();
+    }
+
+    /**
+     * @return array|Finance[]
+     */
+    public function getCategoryFinanceModels(): array
+    {
+        return Finance::find()
+            ->andWhere(['exclusion' => Finance::NO_EXCLUSION])
+            ->andWhere(['!=', 'category', Finance::TRANSFER])
+            ->andWhere(['!=', 'category', Finance::SCHOLARSHIP])
+            ->andWhere(['!=', 'category', Finance::SALARY])
+            ->andWhere(['!=', 'category', Finance::TRANSFER])
+            ->andWhere(['!=', 'category', Finance::CASH])
             ->all();
     }
 

@@ -35,6 +35,46 @@ class Finance extends ActiveRecord
     const EXCLUSION = 1; // Расходы
     const NO_EXCLUSION = 0; // Расходы
 
+    const CATEGORY_LIST = [
+        self::TAXI,
+        self::CAFE,
+        self::RESTAURANT,
+        self::FAST_FOOD,
+        self::MARKET,
+        self::PRODUCTS,
+        self::TRANSPORT,
+        self::SPORT,
+        self::ELECTRONIC,
+        self::MEDICAL,
+        self::BEAUTY,
+        self::PHARMACY,
+        self::ZOO,
+        self::DIGITAL_STORE,
+        self::REPAIR,
+        self::STATIONARY,
+        self::EDUCATION,
+        self::COMMUNICATION,
+        self::MARKETPLACE,
+        self::FUEL,
+        self::LOTTERIES,
+        self::BOOKS,
+        self::SOUVENIRS,
+        self::ENTERTAINMENTS,
+        self::KIDS,
+        self::COSMETICS,
+        self::CLOTHES_AND_SHOES,
+        self::GOV_SERVICE,
+        self::TRAIN_TICKET,
+        self::BANK_SERVICE,
+        self::HOTELS,
+        self::SERVICE,
+        self::FINANCE,
+        self::CHARITY,
+        self::AUTO,
+        self::REFUND,
+        self::OTHER,
+    ];
+
     const TAXI = 'taxi';
     const CAFE = 'cafe';
     const RESTAURANT = 'restaurant';

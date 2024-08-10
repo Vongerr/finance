@@ -83,6 +83,23 @@ try {
             ],
             [
                 'content' => Html::a(
+                    'Траты в месяц',
+                    Url::to(['category-finance']),
+                    [
+                        'title' => 'Траты в месяц',
+                        'class' => 'btn btn-primary',
+                        'data' => [
+                            'pjax' => 0,
+                            'toggle' => 'modal',
+                            'target' => '#grid-modal',
+                            'pjax-id' => $pjaxId,
+                            'title' => 'Траты в месяц',
+                            'href' => Url::to(['category-finance', 'category' => $searchModel->category]),
+                        ],
+                    ])
+            ],
+            [
+                'content' => Html::a(
                     'Будущие финансы',
                     Url::to(['finance']),
                     [

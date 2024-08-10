@@ -2,7 +2,6 @@
 
 namespace app\models\search;
 
-use app\entities\CashBack;
 use app\entities\Finance;
 use app\helpers\BankHelper;
 use app\helpers\CategoryAllHelper;

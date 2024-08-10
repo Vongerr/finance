@@ -132,6 +132,13 @@ class StatisticController extends MainController
         ], true);
     }
 
+    public function actionCategoryFinance(): string
+    {
+        return $this->render('finance-month', [
+            'data' => $this->service->defineCategoryFinance(),
+        ], true);
+    }
+
     public function actionFutureFinance(): string
     {
         return $this->render('future-finance', [
