@@ -80,6 +80,7 @@ class CategoryAllHelper extends ListHelper
             Finance::RESTAURANT => Html::tag('span', 'Рестораны', ['class' => 'label label-success']),
             Finance::FAST_FOOD => Html::tag('span', 'Фастфуд', ['class' => 'label label-success']),
             Finance::MARKET => Html::tag('span', 'Супермаркет', ['class' => 'label label-success']),
+            Finance::PRODUCTS => Html::tag('span', 'Продукты', ['class' => 'label label-success']),
             Finance::TRANSPORT => Html::tag('span', 'Общественный транспорт', ['class' => 'label label-default']),
             Finance::SCHOLARSHIP => Html::tag('span', 'Стипендия', ['class' => 'label label-primary']),
             Finance::SALARY => Html::tag('span', 'Зарплата', ['class' => 'label label-primary']),

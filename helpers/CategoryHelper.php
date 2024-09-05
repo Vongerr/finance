@@ -19,6 +19,7 @@ class CategoryHelper extends ListHelper
             Finance::SCHOLARSHIP => 'Стипендия',
             Finance::SALARY => 'Зарплата',
             Finance::TRANSFER => 'Переводы',
+            Finance::CASH . Finance::TRANSFER => 'Наличные + переводы',
             Finance::SPORT => 'Спорттовары',
             Finance::ELECTRONIC => 'Электроника и техника',
             Finance::MEDICAL => 'Медицина',

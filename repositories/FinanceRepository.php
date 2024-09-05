@@ -24,6 +24,25 @@ class FinanceRepository
     /**
      * @return array|Finance[]
      */
+    public function getScholarshipInfo(): array
+    {
+        return Finance::find()
+            ->andWhere([
+                'bank' => [Finance::OTKRITIE, Finance::VTB],
+                'category' => Finance::TRANSFER,
+                'exclusion' => Finance::NO_EXCLUSION,
+                'budget_category' => Finance::EXPENSES,
+            ])
+            ->andWhere(['!=', 'comment', 'Ирина Ю.'])
+            ->andWhere(['!=', 'comment', 'Даниил Д.'])
+            ->andWhere(['!=', 'comment', 'Тхи Х.'])
+            ->andWhere(['>', 'money', 6000])
+            ->all();
+    }
+
+    /**
+     * @return array|Finance[]
+     */
     public function getExpensesModels(): array
     {
         return Finance::find()

@@ -49,35 +49,32 @@ class FinanceService
         return $data;
     }
 
-    public function defineExpenses(): array
+    private function defineScholarship(): array
     {
-        $models = $this->repository->getExpensesModels();
-
-        $scholarshipModels = Finance::find()
-            ->andWhere([
-                'bank' => [Finance::OTKRITIE, Finance::VTB],
-                'category' => Finance::TRANSFER,
-                'exclusion' => Finance::NO_EXCLUSION,
-                'budget_category' => Finance::EXPENSES,
-            ])
-            ->andWhere(['!=', 'comment', 'Ирина Ю.'])
-            ->andWhere(['!=', 'comment', 'Даниил Д.'])
-            ->andWhere(['!=', 'comment', 'Тхи Х.'])
-            ->andWhere(['>', 'money', 6000])
-            ->all();
+        $scholarshipModels = $this->repository->getScholarshipInfo();
 
         $scholarshipData = [];
 
         foreach ($scholarshipModels as $scholarshipModel) {
-            $scholarshipData[date('Y', strtotime($scholarshipModel->date))][date('m', strtotime($scholarshipModel->date))]
-                = $scholarshipModel->money;
+
+            $time = strtotime($scholarshipModel->date);
+
+            $scholarshipData[date('Y', $time)][date('m', $time)] = $scholarshipModel->money;
         }
+
+        return $scholarshipData;
+    }
+
+    public function defineExpenses(): array
+    {
+        $models = $this->repository->getExpensesModels();
+
+        $scholarshipData = $this->defineScholarship();
 
         $data = [];
 
         foreach ($models as $finance) {
 
-            if ($finance->exclusion == Finance::EXCLUSION) continue;
 
             $month = date('n', strtotime($finance->date));
             $year = date('Y', strtotime($finance->date));
@@ -109,6 +106,8 @@ class FinanceService
 
                     if ($money > 6000)
                         $scholarship -= $scholarshipData[date('Y', strtotime($finance->date))][date('m', strtotime($finance->date))] ?? 0;
+
+                    if ('2023-06' == date('Y-m', strtotime($finance->date))) $scholarship -= 13500;
 
                     $data[$year][$month]['scholarship'] += $scholarship;
                 }

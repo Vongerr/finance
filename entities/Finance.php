@@ -127,6 +127,14 @@ class Finance extends ActiveRecord
     {
         $finance = new static();
 
+        $finance->hash = md5(
+            $form->budget_category
+            . $form->category
+            . $form->date
+            . $form->time
+            . $form->money
+        );
+
         $finance->edit($form);
 
         return $finance;
@@ -139,13 +147,6 @@ class Finance extends ActiveRecord
 
     public function edit(FinanceForm $form): void
     {
-        $this->hash = md5(
-            $form->budget_category
-            . $form->category
-            . $form->date
-            . $form->time
-            . $form->money
-        );
         $this->budget_category = $form->budget_category;
         $this->category = $form->category;
         $this->date = $form->date;

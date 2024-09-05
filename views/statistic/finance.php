@@ -15,7 +15,12 @@ $financeAll = 0;
 
 $changeYear = 0;
 
-foreach ($data as $year => $yearInfo) : ?>
+$countMonth = 0;
+
+foreach ($data as $year => $yearInfo) :
+
+    $countMonth += count($yearInfo);
+    ?>
 
     <label>
         <h2> <?= $year ?> </h2>
@@ -74,6 +79,7 @@ $expensesAll -= Finance::QIWI; ?>
                 <th class="th-finance" colspan="15">Стипендия</th>
                 <th class="th-finance" colspan="15">Доходы</th>
                 <th class="th-finance" colspan="15">Расходы</th>
+                <th class="th-finance" colspan="15">Средний расход в месяц</th>
                 <th class="th-finance" colspan="15">Итого</th>
             </tr>
             <tr>
@@ -81,6 +87,7 @@ $expensesAll -= Finance::QIWI; ?>
                 <td class="td-finance" colspan="15"> <?= financeView((float)$scholarshipAll) ?></td>
                 <td class="td-finance" colspan="15"> <?= financeView((float)$revenueAll) ?></td>
                 <td class="td-finance" colspan="15"> <?= financeView((float)$expensesAll) ?></td>
+                <td class="td-finance" colspan="15"> <?= financeView((float)$expensesAll / $countMonth) ?></td>
                 <td class="td-finance" colspan="15"> <?= financeView((float)$financeAll) ?></td>
             </tr>
         </table>

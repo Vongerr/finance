@@ -51,11 +51,20 @@ class FinanceSearch extends Model
 
             if (Finance::OTHER == $this->category) $category = array_keys(array_diff(CategoryAllHelper::getList(), CategoryHelper::getList()));
 
+            if (Finance::CASH . Finance::TRANSFER == $category) {
+
+                $finance
+                    ->andFilterWhere(['category' => [Finance::CASH, Finance::TRANSFER]]);
+
+            } else {
+                $finance
+                    ->andFilterWhere(['category' => $category]);
+            }
+
             $finance
                 ->andFilterWhere(['date' => $this->date ? date('Y-m-d', strtotime($this->date)) : null])
                 ->andFilterWhere(['bank' => $this->bank])
                 ->andFilterWhere(['exclusion' => $this->exclusion])
-                ->andFilterWhere(['category' => $category])
                 ->andFilterWhere(['like', 'comment', $this->comment])
                 ->andFilterWhere(['budget_category' => $this->budget_category])
                 ->andFilterWhere(['YEAR(date)' => $this->year])
