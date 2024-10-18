@@ -134,8 +134,11 @@ class StatisticController extends MainController
 
     public function actionCategoryFinance(): string
     {
+        $financeInfo = $this->service->defineCategoryFinance();
+
         return $this->render('finance-month', [
-            'data' => $this->service->defineCategoryFinance(),
+            'data' => $financeInfo['data'],
+            'categoryList' => $financeInfo['categoryList'],
         ], true);
     }
 

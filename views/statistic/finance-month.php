@@ -1,17 +1,16 @@
 <?php
 
 use app\components\View;
-use app\entities\Finance;
 use app\helpers\CategoryAllHelper;
+use app\helpers\MonthHelper;
 
 /* @var $this View */
 /* @var $data array */
-
-/* foreach ($yearInfo as $month => $monthInfo) {
-       echo '<th class="th-finance">' . MonthHelper::getValue($month) .'</th>';
-}*/
+/* @var $categoryList array */
 
 $changeYear = 0;
+
+$color = 'style="color: #931517;"';
 
 foreach ($data as $year => $yearInfo) : ?>
 
@@ -20,41 +19,29 @@ foreach ($data as $year => $yearInfo) : ?>
         <table class="col-sm-3 table-finance">
             <tr>
                 <th class="th-finance">Категория</th>
-                <th class="th-finance">Январь</th>
-                <th class="th-finance">Февраль</th>
-                <th class="th-finance">Март</th>
-                <th class="th-finance">Апрель</th>
-                <th class="th-finance">Май</th>
-                <th class="th-finance">Июнь</th>
-                <th class="th-finance">Июль</th>
-                <th class="th-finance">Август</th>
-                <th class="th-finance">Сентябрь</th>
-                <th class="th-finance">Октябрь</th>
-                <th class="th-finance">Ноябрь</th>
-                <th class="th-finance">Декабрь</th>
+                <?php foreach ($yearInfo as $month => $monthInfo) : ?>
+                    <th class="th-finance"><?= MonthHelper::getValue($month) ?></th>
+                <?php endforeach; ?>
                 <th class="th-finance">Всего</th>
             </tr>
 
             <?php
-            foreach (Finance::CATEGORY_LIST as $category) :?>
+            foreach ($categoryList[$year] as $category => $item) : ?>
                 <tr>
                     <td class="td-finance"><?= CategoryAllHelper::getValue($category) ?></td>
 
-                    <?php foreach ($yearInfo as $month => $monthInfo) :
+                    <?php foreach ($yearInfo as $month => $monthInfo) : ?>
 
-                        if (isset($monthInfo[$category])) :?>
-
-                            <td class="td-finance"><?= number_format((float)$monthInfo[$category], 0, ',', '.') ?></td>
-                        <?php else: ?>
-
-                            <td class="td-finance"> 0</td>
-                        <?php endif; ?>
+                        <td class="td-finance"><?= isset($monthInfo[$category])
+                                ? number_format((float)$monthInfo[$category], 0, ',', '.')
+                                : '' ?></td>
 
                         <?php if ($changeYear != $year) {
 
-                        $changeYear = $year;
-                    }
+                            $changeYear = $year;
+                        }
                     endforeach; ?>
+                    <td class="td-finance"><?= number_format((float)$item, 0, ',', '.') ?></td>
                 </tr>
             <?php endforeach; ?>
         </table>

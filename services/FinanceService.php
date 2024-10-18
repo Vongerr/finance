@@ -34,19 +34,38 @@ class FinanceService
             $year = date('Y', strtotime($finance->date));
 
             if (!isset($data[$year][$month][$finance->category])) {
+
                 $data[$year][$month][$finance->category] = 0;
             }
 
             $data[$year][$month][$finance->category] += $finance->money;
         }
 
-        ksort($data);
+        $categoryList = [];
 
-        foreach ($data as $year => $yearInfo) {
-            ksort($data[$year]);
+        foreach ($data as $year => $yearInfoList) {
+
+            foreach ($yearInfoList as $monthInfo) {
+
+                foreach ($monthInfo as $category => $value) {
+
+                    if (!isset($categoryList[$year][$category])) $categoryList[$year][$category] = 0;
+
+                    $categoryList[$year][$category] += $value;
+                }
+            }
         }
 
-        return $data;
+        foreach ($categoryList as $year => $infoYear) {
+
+            asort($categoryList[$year], SORT_ASC);
+            $categoryList[$year] = array_reverse($categoryList[$year]);
+        }
+
+        ksort($categoryList);
+        ksort($data);
+
+        return ['data' => $data, 'categoryList' => $categoryList];
     }
 
     private function defineScholarship(): array
