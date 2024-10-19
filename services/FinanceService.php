@@ -38,20 +38,32 @@ class FinanceService
                 $data[$year][$month][$finance->category] = 0;
             }
 
-            $data[$year][$month][$finance->category] += $finance->money;
+            if (Finance::TRANSFER == $finance->category && Finance::REVENUE == $finance->budget_category) {
+
+                $data[$year][$month][$finance->category] -= $finance->money;
+            } else {
+
+                $data[$year][$month][$finance->category] += $finance->money;
+            }
         }
 
         $categoryList = [];
 
         foreach ($data as $year => $yearInfoList) {
 
-            foreach ($yearInfoList as $monthInfo) {
+            foreach ($yearInfoList as $month => $monthInfo) {
 
                 foreach ($monthInfo as $category => $value) {
 
                     if (!isset($categoryList[$year][$category])) $categoryList[$year][$category] = 0;
 
-                    $categoryList[$year][$category] += $value;
+                    if (Finance::TRANSFER == $category && $value < 0) {
+
+                        $data[$year][$month][$category] = 0;
+                    } else {
+
+                        $categoryList[$year][$category] += $value;
+                    }
                 }
             }
         }

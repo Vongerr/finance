@@ -57,10 +57,8 @@ class FinanceRepository
     {
         return Finance::find()
             ->andWhere(['exclusion' => Finance::NO_EXCLUSION])
-            ->andWhere(['!=', 'category', Finance::TRANSFER])
             ->andWhere(['!=', 'category', Finance::SCHOLARSHIP])
             ->andWhere(['!=', 'category', Finance::SALARY])
-            ->andWhere(['!=', 'category', Finance::TRANSFER])
             ->andWhere(['!=', 'category', Finance::CASH])
             ->all();
     }

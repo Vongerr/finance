@@ -47,6 +47,7 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav'],
         'items' => [
             ['label' => 'Финансы', 'url' => ['/statistic']],
+            ['label' => 'Будущие финансы', 'url' => ['/future-finance']],
             Yii::$app->user->isGuest ? (
                 ['label' => 'Авторизация', 'url' => ['/site/login']]
             ) : (
