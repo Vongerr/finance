@@ -112,7 +112,7 @@ class StatisticController extends MainController
             try {
                 $this->service->update($form, $model);
 
-                return $this->ajaxRedirect(app()->request->headers['referer']);
+                return $this->ajaxRedirect();
 
             } catch (Exception $e) {
 
@@ -187,9 +187,11 @@ class StatisticController extends MainController
         $this->serviceImport->importFinance();
     }
 
-    public function actionExportFinance(): void
+    public function actionExportFinance(): string
     {
-        $this->serviceExport->exportFinance();
+        $number = $this->serviceExport->exportFinance();
+
+        return 'Экспортировано ' . $number . ' записей';
     }
 
     /**

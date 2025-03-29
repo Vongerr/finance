@@ -16,11 +16,14 @@ class ExportFinanceService
             ->all();
     }
 
-    public function exportFinance(): void
+    public function exportFinance(): int
     {
+        $number = 0;
+
         $models = $this->getModelsExperiment();
 
         $data[] = [
+            'id',
             'hash',
             'budget_category',
             'category',
@@ -40,23 +43,18 @@ class ExportFinanceService
 
             $result = [];
 
-            $result[] = $model->hash;
-            $result[] = $model->budget_category;
-            $result[] = $model->category;
-            $result[] = $model->date;
-            $result[] = $model->time;
-            $result[] = $model->date_time;
-            $result[] = $model->username;
-            $result[] = $model->money;
-            $result[] = $model->bank;
-            $result[] = $model->comment;
-            $result[] = $model->exclusion;
-            $result[] = $model->created_at;
-            $result[] = $model->updated_at;
+            foreach ($model->attributes() as $attribute) {
+
+                $result[] = $model->$attribute;
+            }
 
             $data[] = $result;
+
+            $number++;
         }
 
-        SimpleXLSXGen::fromArray($data)->saveAs('finance.xlsx');
+        SimpleXLSXGen::fromArray($data)->saveAs('export/finance.xlsx');
+
+        return $number;
     }
 }

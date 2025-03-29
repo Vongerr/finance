@@ -94,7 +94,7 @@ class MainController extends Controller
      * @param string|null $message
      * @return bool[]|Response
      */
-    public function ajaxRedirect(string $url = null, string $message = null)
+    public function ajaxRedirect(string $url = null, string $message = null): array|Response
     {
         if (!$url) {
 
@@ -116,7 +116,7 @@ class MainController extends Controller
 
             $data = [
                 'success' => true,
-                'url' => $url,
+                //'url' => $url,
             ];
 
             if ($message) {
