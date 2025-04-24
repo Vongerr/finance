@@ -48,6 +48,7 @@ AppAsset::register($this);
         'items' => [
             ['label' => 'Финансы', 'url' => ['/statistic']],
             ['label' => 'Будущие финансы', 'url' => ['/future-finance']],
+            ['label' => 'Api', 'url' => ['/api-moex']],
             Yii::$app->user->isGuest ? (
                 ['label' => 'Авторизация', 'url' => ['/site/login']]
             ) : (

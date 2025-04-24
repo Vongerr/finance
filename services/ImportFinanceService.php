@@ -298,19 +298,19 @@ class ImportFinanceService
 
                 $model = Finance::createImport();
 
-                $model->hash = $row[0];
-                $model->budget_category = $row[1];
-                $model->category = $row[2];
-                $model->date = date('Y-m-d', strtotime($row[5]));
-                $model->time = $row[4];
-                $model->date_time = $row[5];
-                $model->username = $row[6];
-                $model->money = $row[7];
-                $model->bank = $row[8];
-                $model->comment = $row[9];
-                $model->exclusion = $row[10];
-                $model->created_at = date('Y-m-d H:i', strtotime($row[11]));
-                $model->updated_at = $row[12] ? date('Y-m-d H:i', strtotime($row[12])) : null;
+                $model->hash = $row[1];
+                $model->budget_category = $row[2];
+                $model->category = $row[3];
+                $model->date = date('Y-m-d', strtotime($row[6]));
+                $model->time = $row[5];
+                $model->date_time = $row[6];
+                $model->username = $row[7];
+                $model->money = $row[8];
+                $model->bank = $row[9];
+                $model->comment = $row[10];
+                $model->exclusion = $row[11];
+                $model->created_at = date('Y-m-d H:i', strtotime($row[12]));
+                $model->updated_at = $row[13] ? date('Y-m-d H:i', strtotime($row[13])) : null;
 
                 $this->repository->save($model);
 

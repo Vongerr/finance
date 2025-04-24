@@ -36,7 +36,8 @@
         "bower-asset/fastclick": "^1.0",
         "bower-asset/icheck": "^1.0",
         "nuovo/spreadsheet-reader": "^0.5.11",
-        "shuchkin/simplexlsxgen": "^1.4"
+        "shuchkin/simplexlsxgen": "^1.4",
+        "yiisoft/yii2-httpclient": "^2.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

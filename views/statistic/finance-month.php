@@ -25,8 +25,7 @@ foreach ($data as $year => $yearInfo) : ?>
                 <th class="th-finance">Всего</th>
             </tr>
 
-            <?php
-            foreach ($categoryList[$year] as $category => $item) : ?>
+            <?php foreach ($categoryList[$year] as $category => $item) : ?>
                 <tr>
                     <td class="td-finance"><?= CategoryAllHelper::getValue($category) ?></td>
 
