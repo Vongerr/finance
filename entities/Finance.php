@@ -32,8 +32,8 @@ class Finance extends ActiveRecord
     const REVENUE = 'revenue'; // Доходы
     const EXPENSES = 'expenses'; // Расходы
 
-    const EXCLUSION = 1; // Расходы
-    const NO_EXCLUSION = 0; // Расходы
+    const EXCLUSION = 1; // Исключение
+    const NO_EXCLUSION = 0; // Не исключение
 
     const CATEGORY_LIST = [
         self::TAXI,

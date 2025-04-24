@@ -5,9 +5,7 @@ namespace app\controllers;
 use app\forms\FinanceForm;
 use app\models\search\FinanceSearch;
 use app\services\DeleteService;
-use app\services\ExportFinanceService;
 use app\services\FinanceService;
-use app\services\ImportFinanceService;
 use Exception;
 use Throwable;
 use Yii;
@@ -19,28 +17,25 @@ use yii\web\Response;
 
 class StatisticController extends MainController
 {
+    const FINANCE = 'finance';
+
+    const CATEGORY_FINANCE = 'category-finance';
+
+    const FUTURE_FINANCE = 'future-finance';
+
     private FinanceService $service;
-
-    private ImportFinanceService $serviceImport;
-
-    private ExportFinanceService $serviceExport;
 
     private DeleteService $serviceDelete;
 
     public function __construct(string               $id,
                                                      $module,
                                 FinanceService       $service,
-                                ImportFinanceService $serviceImport,
-                                ExportFinanceService $serviceExport,
                                 DeleteService        $serviceDelete,
-                                array                $config = []
-    )
+                                array                $config = [])
     {
         parent::__construct($id, $module, $config);
 
         $this->service = $service;
-        $this->serviceImport = $serviceImport;
-        $this->serviceExport = $serviceExport;
         $this->serviceDelete = $serviceDelete;
     }
 
@@ -87,6 +82,31 @@ class StatisticController extends MainController
             try {
 
                 $this->service->create($form);
+
+                return $this->ajaxRedirect(Url::to(['index']));
+
+            } catch (Exception $e) {
+
+                $form->addError('title', $e->getMessage() . (YII_DEBUG ? (PHP_EOL . $e->getTraceAsString()) : ''));
+            }
+        }
+
+        return $this->render('form', [
+            'model' => $form,
+        ], true);
+    }
+
+    public function actionCopy(int $id): Response|array|string
+    {
+        $model = $this->service->getStatisticById($id);
+
+        $form = new FinanceForm($model);
+
+        if ($form->load(app()->request->post()) && $form->validate()) {
+
+            try {
+
+                $this->service->copy($form);
 
                 return $this->ajaxRedirect(Url::to(['index']));
 
@@ -156,42 +176,6 @@ class StatisticController extends MainController
         $this->service->remove($id);
 
         return $this->ajaxRedirect(Url::to(['index']));
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function actionImportFinanceTinkoff(): void
-    {
-        $this->serviceImport->importFinanceTinkoff();
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function actionImportFinanceAlpha(): void
-    {
-        $this->serviceImport->importFinanceAlpha();
-    }
-
-    public function actionImportFinanceOtkritie(): void
-    {
-        $this->serviceImport->importFinanceOtkritie();
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function actionImportFinance(): void
-    {
-        $this->serviceImport->importFinance();
-    }
-
-    public function actionExportFinance(): string
-    {
-        $number = $this->serviceExport->exportFinance();
-
-        return 'Экспортировано ' . $number . ' записей';
     }
 
     /**

@@ -2,6 +2,8 @@
 
 use app\assets\PjaxWindowAsset;
 use app\components\View;
+use app\controllers\StatisticController;
+use app\controllers\TransferFinanceController;
 use app\entities\Finance;
 use app\helpers\BankHelper;
 use app\helpers\CategoryAllHelper;
@@ -67,7 +69,7 @@ try {
             [
                 'content' => Html::a(
                     'Финансы',
-                    Url::to(['finance']),
+                    Url::to([StatisticController::FINANCE]),
                     [
                         'title' => 'Финансы',
                         'class' => 'btn btn-primary',
@@ -77,14 +79,14 @@ try {
                             'target' => '#grid-modal',
                             'pjax-id' => $pjaxId,
                             'title' => 'Финансы',
-                            'href' => Url::to(['finance', 'category' => $searchModel->category]),
+                            'href' => Url::to([StatisticController::FINANCE, 'category' => $searchModel->category]),
                         ],
                     ])
             ],
             [
                 'content' => Html::a(
                     'Траты в месяц',
-                    Url::to(['category-finance']),
+                    Url::to([StatisticController::CATEGORY_FINANCE]),
                     [
                         'title' => 'Траты в месяц',
                         'class' => 'btn btn-primary',
@@ -94,14 +96,14 @@ try {
                             'target' => '#grid-modal',
                             'pjax-id' => $pjaxId,
                             'title' => 'Траты в месяц',
-                            'href' => Url::to(['category-finance', 'category' => $searchModel->category]),
+                            'href' => Url::to([StatisticController::CATEGORY_FINANCE, 'category' => $searchModel->category]),
                         ],
                     ])
             ],
             [
                 'content' => Html::a(
                     'Будущие финансы',
-                    Url::to(['finance']),
+                    Url::to([StatisticController::FUTURE_FINANCE]),
                     [
                         'title' => 'Будущие финансы',
                         'class' => 'btn btn-primary',
@@ -111,65 +113,65 @@ try {
                             'target' => '#grid-modal',
                             'pjax-id' => $pjaxId,
                             'title' => 'Будущие финансы',
-                            'href' => Url::to(['future-finance']),
+                            'href' => Url::to([StatisticController::FUTURE_FINANCE]),
                         ],
                     ])
             ],
             [
                 'content' => Html::a(
                     'Импортировать Тинькофф',
-                    Url::to(['import-finance-tinkoff']),
+                    Url::to([TransferFinanceController::IMPORT_FINANCE_TINKOFF]),
                     [
-                        'title' => 'Импортировать финансы',
+                        'title' => 'Импортировать Тинькофф',
                         'class' => 'btn btn-warning',
                         'data' => [
                             'pjax' => 0,
                             'toggle' => 'modal',
                             'target' => '#grid-modal',
                             'pjax-id' => $pjaxId,
-                            'title' => 'Импортировать финансы',
-                            'href' => Url::to(['import-finance-tinkoff']),
+                            'title' => 'Импортировать Тинькофф',
+                            'href' => Url::to([TransferFinanceController::IMPORT_FINANCE_TINKOFF]),
                         ],
                     ])
             ],
             [
                 'content' => Html::a(
                     'Импортировать Альфа-банк',
-                    Url::to(['import-finance-alpha']),
+                    Url::to([TransferFinanceController::IMPORT_FINANCE_ALPHA]),
                     [
-                        'title' => 'Импортировать финансы',
+                        'title' => 'Импортировать Альфа-банк',
                         'class' => 'btn btn-warning',
                         'data' => [
                             'pjax' => 0,
                             'toggle' => 'modal',
                             'target' => '#grid-modal',
                             'pjax-id' => $pjaxId,
-                            'title' => 'Импортировать финансы',
-                            'href' => Url::to(['import-finance-alpha']),
+                            'title' => 'Импортировать Альфа-банк',
+                            'href' => Url::to([TransferFinanceController::IMPORT_FINANCE_ALPHA]),
                         ],
                     ])
             ],
             [
                 'content' => Html::a(
                     'Импортировать Открытие',
-                    Url::to(['import-finance-otkritie']),
+                    Url::to([TransferFinanceController::IMPORT_FINANCE_OTKRITIE]),
                     [
-                        'title' => 'Импортировать финансы',
+                        'title' => 'Импортировать Открытие',
                         'class' => 'btn btn-warning',
                         'data' => [
                             'pjax' => 0,
                             'toggle' => 'modal',
                             'target' => '#grid-modal',
                             'pjax-id' => $pjaxId,
-                            'title' => 'Импортировать финансы',
-                            'href' => Url::to(['import-finance-otkritie']),
+                            'title' => 'Импортировать Открытие',
+                            'href' => Url::to([TransferFinanceController::IMPORT_FINANCE_OTKRITIE]),
                         ],
                     ])
             ],
             [
                 'content' => Html::a(
                     'Импорт финансов',
-                    Url::to(['import-finance']),
+                    Url::to([TransferFinanceController::IMPORT_FINANCE]),
                     [
                         'title' => 'Импортировать финансы',
                         'class' => 'btn btn-success',
@@ -179,14 +181,14 @@ try {
                             'target' => '#grid-modal',
                             'pjax-id' => $pjaxId,
                             'title' => 'Импортировать финансы',
-                            'href' => Url::to(['import-finance']),
+                            'href' => Url::to([TransferFinanceController::IMPORT_FINANCE]),
                         ],
                     ])
             ],
             [
                 'content' => Html::a(
                     'Экспорт финансов',
-                    Url::to(['export-finance']),
+                    Url::to([TransferFinanceController::EXPORT_FINANCE]),
                     [
                         'title' => 'Экспортировать финансы',
                         'class' => 'btn btn-success',
@@ -196,7 +198,7 @@ try {
                             'target' => '#grid-modal',
                             'pjax-id' => $pjaxId,
                             'title' => 'Экспортировать финансы',
-                            'href' => Url::to(['export-finance']),
+                            'href' => Url::to([TransferFinanceController::EXPORT_FINANCE]),
                         ],
                     ])
             ],
@@ -314,8 +316,8 @@ try {
                 'class' => CustomActionColumn::class,
                 'hAlign' => GridViewInterface::ALIGN_LEFT,
                 'vAlign' => GridViewInterface::ALIGN_TOP,
-                'template' => '{update}',
-                'width' => '30px',
+                'template' => '{update} {copy}',
+                'width' => '65px',
                 'buttons' => [
                     'update' => function ($url) use ($pjaxId) {
 
@@ -324,6 +326,25 @@ try {
                             $url,
                             [
                                 'class' => 'btn btn-warning btn-xs',
+                                'pjax-class' => $pjaxId,
+                                'title' => 'Изменение',
+                                'data' => [
+                                    'pjax' => 0,
+                                    'toggle' => 'modal',
+                                    'target' => '#grid-modal',
+                                    'title' => 'Изменение',
+                                    'href' => $url,
+                                ],
+                            ]
+                        );
+                    },
+                    'copy' => function ($url) use ($pjaxId) {
+
+                        return Html::a(
+                            Html::tag('i', '', ['class' => 'bi bi-files', 'style' => 'height:30px; width:30px']),
+                            $url,
+                            [
+                                'class' => 'btn btn-info btn-xs',
                                 'pjax-class' => $pjaxId,
                                 'title' => 'Изменение',
                                 'data' => [
@@ -457,7 +478,7 @@ try {
                                 'title' => 'Удаление',
                                 'data' => [
                                     'pjax' => 0,
-                                    'confirm-message' => 'Вы действительно желаете удалить данный пункт?',
+                                    'confirm-message' => 'Вы действительно желаете удалить запись?',
                                     'href' => $url,
                                 ],
                             ]);

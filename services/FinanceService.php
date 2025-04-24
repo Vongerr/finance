@@ -74,10 +74,18 @@ class FinanceService
             $categoryList[$year] = array_reverse($categoryList[$year]);
         }
 
+        foreach ($data as $year => $infoYear) {
+
+            ksort($data[$year], SORT_DESC);
+        }
+
         ksort($categoryList);
         ksort($data);
 
-        return ['data' => $data, 'categoryList' => $categoryList];
+        return [
+            'data' => $data,
+            'categoryList' => $categoryList
+        ];
     }
 
     private function defineScholarship(): array
@@ -105,7 +113,6 @@ class FinanceService
         $data = [];
 
         foreach ($models as $finance) {
-
 
             $month = date('n', strtotime($finance->date));
             $year = date('Y', strtotime($finance->date));
@@ -165,13 +172,15 @@ class FinanceService
     {
         $hashList = [];
 
-        foreach (Finance::find()->asArray()->select(['hash'])->column() as $item) {
+        foreach ($this->repository->findHashList() as $item) {
+
             $hashList[$item] = $item;
         }
 
         $model = Finance::create($form);
 
         if (isset($hashList[$model->hash])) {
+
             throw new Exception('Такая запись уже существует');
         }
 
@@ -181,6 +190,13 @@ class FinanceService
     public function update(FinanceForm $form, Finance $model): void
     {
         $model->edit($form);
+
+        $this->repository->save($model);
+    }
+
+    public function copy(FinanceForm $form): void
+    {
+        $model = Finance::create($form);
 
         $this->repository->save($model);
     }

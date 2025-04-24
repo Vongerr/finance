@@ -98,6 +98,14 @@ class FinanceRepository
         );
     }
 
+    public function findHashList(): array
+    {
+        return Finance::find()
+            ->asArray()
+            ->select(['hash'])
+            ->column();
+    }
+
     public function save(Finance $model): bool
     {
         try {
@@ -108,7 +116,7 @@ class FinanceRepository
                     printr($model->getErrors(), 1);
                 } else {
 
-                    throw new RuntimeException($model->getErrors());
+                    throw new RuntimeException(implode(PHP_EOL, $model->getErrors()));
                 }
             }
 
