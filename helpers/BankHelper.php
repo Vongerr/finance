@@ -10,8 +10,8 @@ class BankHelper extends ListHelper
     public static function getList(): array
     {
         return [
-            Finance::VTB => 'ВТБ',
             Finance::TINKOFF => 'Тинькофф',
+            Finance::VTB => 'ВТБ',
             Finance::ALFA => 'Альфа-банк',
             Finance::OTKRITIE => 'Открытие'
         ];

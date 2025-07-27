@@ -46,6 +46,7 @@ AppAsset::register($this);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav'],
         'items' => [
+            ['label' => 'Очистить кэш', 'url' => ['/site/flush']],
             ['label' => 'Финансы', 'url' => ['/statistic']],
             ['label' => 'Будущие финансы', 'url' => ['/future-finance']],
             ['label' => 'Api', 'url' => ['/api-moex']],

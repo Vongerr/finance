@@ -53,6 +53,13 @@ class SiteController extends Controller
         return $this->render('index');
     }
 
+    public function actionFlush(): Response
+    {
+        app()->cache->flush();
+
+        return $this->redirect(app()->request->referrer);
+    }
+
     public function actionLogin(): Response|string
     {
         if (!Yii::$app->user->isGuest) {

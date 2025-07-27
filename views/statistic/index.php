@@ -96,6 +96,7 @@ try {
                             'target' => '#grid-modal',
                             'pjax-id' => $pjaxId,
                             'title' => 'Траты в месяц',
+                            'size' => Modal::SIZE_LARGE,
                             'href' => Url::to([StatisticController::CATEGORY_FINANCE, 'category' => $searchModel->category]),
                         ],
                     ])
