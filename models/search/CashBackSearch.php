@@ -8,7 +8,6 @@ use yii\data\ActiveDataProvider;
 
 class CashBackSearch extends Model
 {
-
     public function search($params): ActiveDataProvider
     {
         $this->load($params) && $this->validate();

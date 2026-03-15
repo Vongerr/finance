@@ -10,7 +10,7 @@ use yii\httpclient\Request;
 
 class MoexService
 {
-    private const MAIN_URL ='http://iss.moex.com/iss/';
+    private const MAIN_URL = 'http://iss.moex.com/iss/';
 
     /**
      * @throws Exception

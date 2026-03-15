@@ -15,21 +15,21 @@ use yii\db\ActiveQuery;
 
 class FinanceSearch extends Model
 {
-    public $bank;
+    public string|null $bank = null;
 
-    public $category;
+    public string|null $category = null;
 
-    public $budget_category;
+    public string|null $budget_category = null;
 
-    public $date;
+    public string|null $date = null;
 
-    public $exclusion;
+    public int|null $exclusion = null;
 
-    public $comment;
+    public string|null $comment = null;
 
-    public $year;
+    public int|null $year = null;
 
-    public $month;
+    public int|null $month = null;
 
     private array $_filters = [];
 
@@ -71,9 +71,7 @@ class FinanceSearch extends Model
                 ->andFilterWhere(['MONTH(date)' => $this->month]);
         }
 
-        if (!isset($params['sort'])) {
-            $finance->orderBy(['date_time' => SORT_DESC]);
-        }
+        if (!isset($params['sort'])) $finance->orderBy(['date_time' => SORT_DESC]);
 
         $this->_filters = [
             'exclusion' => ExclusionHelper::getList(),

@@ -40,8 +40,6 @@ class StatisticController extends MainController
     }
 
     /**
-     * @param $action
-     * @return bool
      * @throws BadRequestHttpException
      */
     public function beforeAction($action): bool
@@ -145,6 +143,9 @@ class StatisticController extends MainController
         ], true);
     }
 
+    /**
+     * Статистика по финансам
+     */
     public function actionFinance(): string
     {
         return $this->render('finance', [
@@ -154,11 +155,11 @@ class StatisticController extends MainController
 
     public function actionCategoryFinance(): string
     {
-        $financeInfo = $this->service->defineCategoryFinance();
+        [$data, $category_list] = $this->service->defineCategoryFinance();
 
         return $this->render('finance-month', [
-            'data' => $financeInfo['data'],
-            'categoryList' => $financeInfo['categoryList'],
+            'data' => $data,
+            'categoryList' => $category_list,
         ], true);
     }
 

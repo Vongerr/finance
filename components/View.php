@@ -14,20 +14,12 @@ class View extends BaseView
 {
     private bool $isBootstrapIcons = false;
 
-    /**
-     * @var string|null - Заголовок 2 уровня страницы
-     */
     public ?string $bigTitle = null;
 
-    /**
-     * @var string|null - Заголовок 2 уровня страницы
-     */
     public ?string $smallTitle = null;
 
     /**
      * Установить заголовок 2 уровня
-     *
-     * @param string $title
      */
     public function setSmallTitle(string $title): void
     {
@@ -36,7 +28,6 @@ class View extends BaseView
 
     /**
      * Установить заголовок 1го уровня
-     * @param $title
      */
     public function setTitle($title): void
     {
@@ -46,8 +37,6 @@ class View extends BaseView
 
     /**
      * Получить заголовок 2 уровня
-     *
-     * @return string
      */
     public function getSmallTitle(): ?string
     {
@@ -57,28 +46,17 @@ class View extends BaseView
 
     /**
      * Получить заголовок 1 уровня
-     *
-     * @return string
      */
     public function getTitle(): ?string
     {
         return $this->bigTitle;
     }
 
-
-    /**
-     * Установить "Хлебный крошки"
-     *
-     * @param array $breadcrumbs
-     */
-    public function setBreadcrumbs(array $breadcrumbs)
+    public function setBreadcrumbs(array $breadcrumbs): void
     {
         $this->params['breadcrumbs'] = $breadcrumbs;
     }
 
-    /**
-     * @return array
-     */
     public function getBreadcrumbs()
     {
         return empty($this->params['breadcrumbs'])
@@ -100,7 +78,7 @@ class View extends BaseView
      * @param string $key
      * @param mixed $value
      */
-    public function setViewParam($key, $value)
+    public function setViewParam($key, $value): void
     {
         $this->params['content'][$key] = $value;
     }
@@ -110,12 +88,12 @@ class View extends BaseView
      * @param mixed|null $defaultValue
      * @return mixed|null
      */
-    public function getViewParam($key, $defaultValue = null)
+    public function getViewParam($key, $defaultValue = null): mixed
     {
         return $this->params['content'][$key]??$defaultValue;
     }
 
-    public function setIsBootstrapIcons(bool $active)
+    public function setIsBootstrapIcons(bool $active): void
     {
         $this->isBootstrapIcons = $active;
     }

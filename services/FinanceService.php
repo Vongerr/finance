@@ -47,7 +47,7 @@ class FinanceService
             }
         }
 
-        $categoryList = [];
+        $category_list = [];
 
         foreach ($data as $year => $yearInfoList) {
 
@@ -55,23 +55,23 @@ class FinanceService
 
                 foreach ($monthInfo as $category => $value) {
 
-                    if (!isset($categoryList[$year][$category])) $categoryList[$year][$category] = 0;
+                    if (!isset($category_list[$year][$category])) $category_list[$year][$category] = 0;
 
                     if (Finance::TRANSFER == $category && $value < 0) {
 
                         $data[$year][$month][$category] = 0;
                     } else {
 
-                        $categoryList[$year][$category] += $value;
+                        $category_list[$year][$category] += $value;
                     }
                 }
             }
         }
 
-        foreach ($categoryList as $year => $infoYear) {
+        foreach ($category_list as $year => $infoYear) {
 
-            asort($categoryList[$year], SORT_ASC);
-            $categoryList[$year] = array_reverse($categoryList[$year]);
+            asort($category_list[$year], SORT_ASC);
+            $category_list[$year] = array_reverse($category_list[$year]);
         }
 
         foreach ($data as $year => $infoYear) {
@@ -79,12 +79,12 @@ class FinanceService
             ksort($data[$year], SORT_DESC);
         }
 
-        ksort($categoryList);
+        ksort($category_list);
         ksort($data);
 
         return [
             'data' => $data,
-            'categoryList' => $categoryList
+            'categoryList' => $category_list
         ];
     }
 

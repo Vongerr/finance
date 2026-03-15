@@ -33,8 +33,6 @@ class TransferFinanceController extends MainController
     }
 
     /**
-     * @param $action
-     * @return bool
      * @throws BadRequestHttpException
      */
     public function beforeAction($action): bool
@@ -75,7 +73,6 @@ class TransferFinanceController extends MainController
      */
     public function actionImportFinance(): void
     {
-        printr(1,1);
         $this->serviceImport->importFinance();
     }
 

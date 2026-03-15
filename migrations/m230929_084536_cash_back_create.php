@@ -6,7 +6,7 @@ class m230929_084536_cash_back_create extends Migration
 {
     protected $table = 'cash_back';
 
-    public function safeUp()
+    public function safeUp(): void
     {
         $this->createTable($this->table, [
             'id' => $this->primaryKey(),
@@ -24,7 +24,7 @@ class m230929_084536_cash_back_create extends Migration
         $this->createIndex("ix_{$this->tableName}_category", $this->table, ['category']);
     }
 
-    public function safeDown()
+    public function safeDown(): void
     {
         $this->dropTable($this->table);
     }

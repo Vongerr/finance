@@ -71,10 +71,9 @@ class MainController extends Controller
     /**
      * Проверить ajax валидность данных модели формы
      *
-     * @param Model $model
      * @throws ExitException
      */
-    public function performAjaxValidation(Model $model)
+    public function performAjaxValidation(Model $model): void
     {
         if (
             app()->request->isAjax && $model->load(app()->request->post())
@@ -88,12 +87,6 @@ class MainController extends Controller
         }
     }
 
-
-    /**
-     * @param string|null $url
-     * @param string|null $message
-     * @return bool[]|Response
-     */
     public function ajaxRedirect(string $url = null, string $message = null): array|Response
     {
         if (!$url) {
@@ -135,7 +128,7 @@ class MainController extends Controller
      * @param Model[] $models
      * @throws ExitException
      */
-    public function performAjaxValidationMultiply(array $models)
+    public function performAjaxValidationMultiply(array $models): void
     {
         if (!app()->request->isAjax) return;
 
@@ -167,7 +160,7 @@ class MainController extends Controller
     /**
      * @param string $url
      */
-    protected function setReturnUrl($url = '')
+    protected function setReturnUrl($url = ''): void
     {
         if (!$url) {
 
@@ -177,10 +170,7 @@ class MainController extends Controller
         user()->returnUrl = $url;
     }
 
-    /**
-     * @return string
-     */
-    protected function getReturnUrl()
+    protected function getReturnUrl(): string
     {
         return user()->returnUrl;
     }

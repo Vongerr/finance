@@ -20,7 +20,7 @@ class CashBackRepository
     /**
      * @throws Throwable
      */
-    public function remove(CashBack $ads)
+    public function remove(CashBack $ads): void
     {
         try {
             $ads->delete();

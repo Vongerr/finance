@@ -200,7 +200,7 @@ try {
                         ],
                     ])
             ],
-            /*[
+            [
                 'content' => Html::a(
                     'Удалить информацию Тинькофф',
                     Url::to(['delete-bank']),
@@ -250,7 +250,7 @@ try {
                             'href' => Url::to(['delete-bank', 'bank' => Finance::OTKRITIE]),
                         ],
                     ])
-            ],*/
+            ],
         ],
         'bordered' => true,
         'striped' => false,

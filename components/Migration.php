@@ -16,8 +16,6 @@ class Migration extends \yii\db\Migration
 {
     const TYPE_INNODB = 'InnoDB';
 
-    const TYPE_MYISAM = 'MyISAM';
-
     const ACTION_CASCADE = 'CASCADE';
 
     const ACTION_RESTRICT = 'RESTRICT';
@@ -35,7 +33,7 @@ class Migration extends \yii\db\Migration
         return str_replace(['{', '}', '%'], '', $table);
     }
 
-    protected function createDateColumns(string $table = null)
+    protected function createDateColumns(string $table = null): void
     {
         if ($table === null && $this->table) {
 
@@ -51,7 +49,7 @@ class Migration extends \yii\db\Migration
         );
     }
 
-    protected function createUserColumns($table = null)
+    protected function createUserColumns($table = null): void
     {
         if ($table === null && $this->table) {
 
@@ -65,7 +63,7 @@ class Migration extends \yii\db\Migration
         $this->addColumn($table, 'updated_by', $this->integer()->null());
     }
 
-    protected function createLoginColumns($table = null)
+    protected function createLoginColumns($table = null): void
     {
         if ($table === null && $this->table) {
 

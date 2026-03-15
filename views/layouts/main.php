@@ -51,7 +51,7 @@ AppAsset::register($this);
             ['label' => 'Будущие финансы', 'url' => ['/future-finance']],
             ['label' => 'Api', 'url' => ['/api-moex']],
             Yii::$app->user->isGuest ? (
-                ['label' => 'Авторизация', 'url' => ['/site/login']]
+            ['label' => 'Авторизация', 'url' => ['/site/login']]
             ) : (
                 '<li>'
                 . Html::beginForm(['/site/logout'], 'post', ['class' => 'form-inline'])

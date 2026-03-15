@@ -13,20 +13,9 @@ use yii\base\Module;
 class RouterUrlHelper
 {
     /**
-     * @return array
-     */
-    private static function _excludedFirstUrl() {
-
-        return [
-            'gii'
-        ];
-    }
-
-    /**
      * @param string $url
-     * @return array
      */
-    private static function _parseUrl($url)
+    private static function _parseUrl($url): array
     {
         if (is_array($url)) {
 
@@ -35,22 +24,20 @@ class RouterUrlHelper
 
         $data = explode('/', ltrim($url, '/'));
 
-        if (in_array($data[0], static::_excludedFirstUrl())) {
+        if ($data[0] == 'gii') {
 
-            array_push($data, 'index');
+            $data[] = 'index';
         }
 
         return $data;
     }
-
     
     /**
      * Получение роутинга из URL
      * @param array|string|mixed $url
      *
-     * @return null|string
      */
-    public static function to($url)
+    public static function to($url): ?string
     {
         $route = self::_parseUrl($url);
 
@@ -94,14 +81,10 @@ class RouterUrlHelper
         return '/' . implode('/', $route);
     }
 
-
     /**
      * Определение активности URL
-     *
-     * @param $url
-     * @return array|bool|null
      */
-    public static function isActiveRoute($url)
+    public static function isActiveRoute($url): bool|array|null
     {
         $route = self::_parseUrl($url);
 
@@ -112,32 +95,18 @@ class RouterUrlHelper
         $c = $controller->id;
         $a = $controller->action->id;
 
-        switch (count($route)) {
-
-            case 3:
-
-                return $route == [$m, $c, $a];
-
-            case 2:
-
-                return $route = [$c, $a];
-
-            case 1:
-
-                return $route == [$a];
-
-            default:
-
-                return null;
-        }
+        return match (count($route)) {
+            3 => $route == [$m, $c, $a],
+            2 => $route = [$c, $a],
+            1 => $route == [$a],
+            default => null,
+        };
     }
-
 
     /**
      * @param string $url
-     * @return string|null
      */
-    public static function getAction($url)
+    public static function getAction($url): ?string
     {
         $url = self::_parseUrl($url);
 

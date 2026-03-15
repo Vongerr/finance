@@ -4,7 +4,6 @@ use app\forms\FinanceForm;
 use app\helpers\BankHelper;
 use app\helpers\CategoryAllHelper;
 use app\helpers\CategoryBudgetHelper;
-use app\helpers\CategoryHelper;
 use kartik\date\DatePicker;
 use yii\bootstrap\ActiveForm;
 use yii\web\View;
