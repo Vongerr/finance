@@ -16,7 +16,7 @@ foreach ($data as $year => $yearInfo) : ?>
 
     <label>
         <h2> <?= $year ?> </h2>
-        <table class="col-sm-3 table-finance">
+        <table class="col-md-3 table-finance">
             <tr>
                 <th class="th-finance">Категория</th>
                 <?php foreach ($yearInfo as $month => $monthInfo) : ?>

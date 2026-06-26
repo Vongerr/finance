@@ -49,15 +49,15 @@ try {
         'toolbar' => [
             [
                 'content' => Html::a(
-                    '<i class="glyphicon glyphicon-plus"></i> Добавить запись',
+                    '<i class="fas fa-plus"></i> Добавить запись',
                     Url::to(['create']),
                     [
                         'title' => 'Добавление записи',
                         'class' => 'btn btn-success',
                         'data' => [
                             'pjax' => 0,
-                            'toggle' => 'modal',
-                            'target' => '#grid-modal',
+                            'bs-toggle' => 'modal',
+                            'bs-target' => '#grid-modal',
                             'pjax-id' => $pjaxId,
                             'title' => 'Добавление записи',
                             'href' => Url::to(['create']),
@@ -73,8 +73,8 @@ try {
                         'class' => 'btn btn-primary',
                         'data' => [
                             'pjax' => 0,
-                            'toggle' => 'modal',
-                            'target' => '#grid-modal',
+                            'bs-toggle' => 'modal',
+                            'bs-target' => '#grid-modal',
                             'pjax-id' => $pjaxId,
                             'title' => 'Финансы',
                             'href' => Url::to(['finance', 'category' => $searchModel->category]),
@@ -90,8 +90,8 @@ try {
                         'class' => 'btn btn-primary',
                         'data' => [
                             'pjax' => 0,
-                            'toggle' => 'modal',
-                            'target' => '#grid-modal',
+                            'bs-toggle' => 'modal',
+                            'bs-target' => '#grid-modal',
                             'pjax-id' => $pjaxId,
                             'title' => 'Траты в месяц',
                             'href' => Url::to(['category-finance', 'category' => $searchModel->category]),
@@ -107,8 +107,8 @@ try {
                         'class' => 'btn btn-primary',
                         'data' => [
                             'pjax' => 0,
-                            'toggle' => 'modal',
-                            'target' => '#grid-modal',
+                            'bs-toggle' => 'modal',
+                            'bs-target' => '#grid-modal',
                             'pjax-id' => $pjaxId,
                             'title' => 'Будущие финансы',
                             'href' => Url::to(['future-finance']),
@@ -124,8 +124,8 @@ try {
                         'class' => 'btn btn-warning',
                         'data' => [
                             'pjax' => 0,
-                            'toggle' => 'modal',
-                            'target' => '#grid-modal',
+                            'bs-toggle' => 'modal',
+                            'bs-target' => '#grid-modal',
                             'pjax-id' => $pjaxId,
                             'title' => 'Импортировать финансы',
                             'href' => Url::to(['import-finance-tinkoff']),
@@ -141,8 +141,8 @@ try {
                         'class' => 'btn btn-warning',
                         'data' => [
                             'pjax' => 0,
-                            'toggle' => 'modal',
-                            'target' => '#grid-modal',
+                            'bs-toggle' => 'modal',
+                            'bs-target' => '#grid-modal',
                             'pjax-id' => $pjaxId,
                             'title' => 'Импортировать финансы',
                             'href' => Url::to(['import-finance-alpha']),
@@ -158,8 +158,8 @@ try {
                         'class' => 'btn btn-warning',
                         'data' => [
                             'pjax' => 0,
-                            'toggle' => 'modal',
-                            'target' => '#grid-modal',
+                            'bs-toggle' => 'modal',
+                            'bs-target' => '#grid-modal',
                             'pjax-id' => $pjaxId,
                             'title' => 'Импортировать финансы',
                             'href' => Url::to(['import-finance-otkritie']),
@@ -175,8 +175,8 @@ try {
                         'class' => 'btn btn-success',
                         'data' => [
                             'pjax' => 0,
-                            'toggle' => 'modal',
-                            'target' => '#grid-modal',
+                            'bs-toggle' => 'modal',
+                            'bs-target' => '#grid-modal',
                             'pjax-id' => $pjaxId,
                             'title' => 'Импортировать финансы',
                             'href' => Url::to(['import-finance']),
@@ -192,8 +192,8 @@ try {
                         'class' => 'btn btn-success',
                         'data' => [
                             'pjax' => 0,
-                            'toggle' => 'modal',
-                            'target' => '#grid-modal',
+                            'bs-toggle' => 'modal',
+                            'bs-target' => '#grid-modal',
                             'pjax-id' => $pjaxId,
                             'title' => 'Экспортировать финансы',
                             'href' => Url::to(['export-finance']),
@@ -209,8 +209,8 @@ try {
                         'class' => 'btn btn-danger',
                         'data' => [
                             'pjax' => 0,
-                            'toggle' => 'modal',
-                            'target' => '#grid-modal',
+                            'bs-toggle' => 'modal',
+                            'bs-target' => '#grid-modal',
                             'pjax-id' => $pjaxId,
                             'title' => 'Удалить информацию',
                             'href' => Url::to(['delete-bank', 'bank' => Finance::TINKOFF]),
@@ -226,8 +226,8 @@ try {
                         'class' => 'btn btn-danger',
                         'data' => [
                             'pjax' => 0,
-                            'toggle' => 'modal',
-                            'target' => '#grid-modal',
+                            'bs-toggle' => 'modal',
+                            'bs-target' => '#grid-modal',
                             'pjax-id' => $pjaxId,
                             'title' => 'Удалить информацию',
                             'href' => Url::to(['delete-bank', 'bank' => Finance::ALFA]),
@@ -243,8 +243,8 @@ try {
                         'class' => 'btn btn-danger',
                         'data' => [
                             'pjax' => 0,
-                            'toggle' => 'modal',
-                            'target' => '#grid-modal',
+                            'bs-toggle' => 'modal',
+                            'bs-target' => '#grid-modal',
                             'pjax-id' => $pjaxId,
                             'title' => 'Удалить информацию',
                             'href' => Url::to(['delete-bank', 'bank' => Finance::OTKRITIE]),
@@ -263,7 +263,7 @@ try {
         'panel' => [
             'type' => GridViewInterface::TYPE_DEFAULT,
         ],
-        'panelTemplate' => '<div class="{prefix}{type} {solid}">{panelHeading}<div class="box-body">'
+        'panelTemplate' => '<div class="{prefix}{type} {solid}">{panelHeading}<div class="card-body">'
             . MenuFilterWidget::widget([
                 'searchModel' => $searchModel,
                 'attribute' => 'year',
@@ -323,13 +323,13 @@ try {
                             Html::tag('i', '', ['class' => 'bi bi-pencil', 'style' => 'height:30px; width:30px']),
                             $url,
                             [
-                                'class' => 'btn btn-warning btn-xs',
+                                'class' => 'btn btn-warning btn-sm',
                                 'pjax-class' => $pjaxId,
                                 'title' => 'Изменение',
                                 'data' => [
                                     'pjax' => 0,
-                                    'toggle' => 'modal',
-                                    'target' => '#grid-modal',
+                                    'bs-toggle' => 'modal',
+                                    'bs-target' => '#grid-modal',
                                     'title' => 'Изменение',
                                     'href' => $url,
                                 ],
@@ -453,7 +453,7 @@ try {
                         return Html::a('<i class="bi bi-trash" aria-hidden="true"></i>',
                             $url,
                             [
-                                'class' => 'btn btn-xs btn-danger ajax-submit',
+                                'class' => 'btn btn-sm btn-danger ajax-submit',
                                 'title' => 'Удаление',
                                 'data' => [
                                     'pjax' => 0,

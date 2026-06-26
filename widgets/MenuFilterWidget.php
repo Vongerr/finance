@@ -25,36 +25,35 @@ class MenuFilterWidget extends Widget
 
     const DIRECTION_VERTICAL = 'nav-stacked';
 
-    public $searchModel;
+    public ?Model $searchModel = null;
 
-    public $existsProperty = true;
+    public ?bool $existsProperty = true;
 
-    public $isFormName = true;
+    public ?bool $isFormName = true;
 
     public $action = null;
 
     public $titleAllButton = null;
 
-    public $type = self::TYPE_PILLS;
+    public ?string $type = self::TYPE_PILLS;
 
-    public $direction = self::DIRECTION_HORIZONTAL;
+    public ?string $direction = self::DIRECTION_HORIZONTAL;
 
-    public $additionalMenu = [];
+    public ?array $additionalMenu = [];
 
-    public $attribute;
+    public string $attribute;
 
-    public $assoc = false;
+    public ?bool $assoc = false;
 
-    public $pjax = true;
+    public ?bool $pjax = true;
 
-    private $_menu = [];
+    private ?array $_menu = [];
 
     /**
-     * @inheritdoc
      * @throws ServerErrorHttpException
      * @throws InvalidConfigException
      */
-    public function init()
+    public function init(): void
     {
         if (!($this->searchModel instanceof Model)) {
 
@@ -108,7 +107,7 @@ class MenuFilterWidget extends Widget
      * @return array|array[]
      * @throws InvalidConfigException
      */
-    private function attributeUrlQuery($value =null): array
+    private function attributeUrlQuery($value = null): array
     {
         if ($this->isFormName) {
 
@@ -123,9 +122,7 @@ class MenuFilterWidget extends Widget
         }
     }
 
-
     /**
-     * @return string
      * @throws Exception|Throwable
      */
     public function run(): string

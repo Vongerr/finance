@@ -5,7 +5,7 @@ use app\helpers\BankHelper;
 use app\helpers\CategoryAllHelper;
 use app\helpers\CategoryBudgetHelper;
 use kartik\date\DatePicker;
-use yii\bootstrap\ActiveForm;
+use yii\bootstrap5\ActiveForm;
 use yii\web\View;
 use yii\helpers\Html;
 
@@ -23,15 +23,15 @@ try {
     echo $form->errorSummary($model);
     ?>
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-md-6">
             <?php echo $form->field($model, 'category')->dropDownList(CategoryAllHelper::getList()); ?>
         </div>
-        <div class="col-sm-6">
+        <div class="col-md-6">
             <?php echo $form->field($model, 'budget_category')->dropDownList(CategoryBudgetHelper::getList()); ?>
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-md-6">
             <?php echo $form->field($model, 'date')->widget(
                 DatePicker::class,
                 [
@@ -43,34 +43,34 @@ try {
                 ]
             ); ?>
         </div>
-        <div class="col-sm-6">
+        <div class="col-md-6">
             <?php echo $form->field($model, 'time'); ?>
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-md-6">
             <?php echo $form->field($model, 'money'); ?>
         </div>
-        <div class="col-sm-6">
+        <div class="col-md-6">
             <?php echo $form->field($model, 'username'); ?>
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-md-6">
             <?php echo $form->field($model, 'bank')->dropDownList(BankHelper::getList()); ?>
         </div>
-        <div class="col-sm-6">
+        <div class="col-md-6">
             <?php echo $form->field($model, 'comment'); ?>
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-md-6">
             <?php echo $form->field($model, 'exclusion')->checkbox([0 => 'Не исключение', 1 => 'Исключение']); ?>
         </div>
     </div>
     <br>
     <div class="row">
-        <div class="col-xs-12">
+        <div class="col-12">
             <?= Html::submitButton('Сохранить',
                 [
                     'class' => 'btn btn-primary btn-sm',
@@ -80,7 +80,7 @@ try {
             ); ?>&nbsp;
             <?= Html::a('Отмена', user()->returnUrl,
                 [
-                    'class' => 'btn btn-default btn-sm cancel-button',
+                    'class' => 'btn btn-outline-secondary btn-sm cancel-button',
                 ]
             ); ?>
         </div>
@@ -88,7 +88,7 @@ try {
     <?php
     $form::end();
 
-} catch (Exception $e) {
+} catch (Throwable $e) {
 
     viewException($e);
 }

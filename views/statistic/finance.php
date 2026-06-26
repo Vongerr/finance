@@ -24,7 +24,7 @@ foreach ($data as $year => $yearInfo) :
 
     <label>
         <h2> <?= $year ?> </h2>
-        <table class="col-sm-3 table-finance">
+        <table class="col-md-3 table-finance">
             <tr>
                 <th class="th-finance">Месяц</th>
                 <th class="th-finance">Зарплата</th>
@@ -73,7 +73,7 @@ $expensesAll -= Finance::QIWI; ?>
 
     <label>
         <h2>Итого:</h2>
-        <table class="col-sm-3 table-finance">
+        <table class="col-md-3 table-finance">
             <tr>
                 <th class="th-finance" colspan="15">Зарплата</th>
                 <th class="th-finance" colspan="15">Стипендия</th>

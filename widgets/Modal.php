@@ -2,22 +2,16 @@
 
 namespace app\widgets;
 
-use yii\helpers\Html;
-
 /**
  * Class Modal
  * @package app\widgets
  */
-class Modal extends \yii\bootstrap\Modal
+class Modal extends \yii\bootstrap5\Modal
 {
     public $size = self::SIZE_LARGE;
 
-    protected function initOptions()
+    protected function initOptions(): void
     {
-        if (!$this->header) {
-            
-            $this->header = Html::tag('h3', '', ['class' => 'modal-title']);
-        }
         
         if (!$this->clientOptions) {
             

@@ -26,12 +26,12 @@ class CustomActionColumn extends ActionColumn
     {
         if (user()->can(RouterUrlHelper::to('view'))) {
 
-            $this->initDefaultButton('view', 'eye', ['class' => 'btn btn-primary btn-xs']);
+            $this->initDefaultButton('view', 'eye', ['class' => 'btn btn-primary btn-sm']);
         }
 
         if (user()->can(RouterUrlHelper::to('update'))) {
 
-            $this->initDefaultButton('update', 'far fa-edit', ['class' => 'btn btn-warning btn-xs']);
+            $this->initDefaultButton('update', 'far fa-edit', ['class' => 'btn btn-warning btn-sm']);
         }
 
         if (user()->can(RouterUrlHelper::to('delete'))) {
@@ -39,7 +39,7 @@ class CustomActionColumn extends ActionColumn
             $this->initDefaultButton('delete', 'trash', [
                 'data-confirm' => \Yii::t('yii', 'Are you sure you want to delete this item?'),
                 'data-method' => 'post',
-                'class' => 'btn btn-danger btn-xs'
+                'class' => 'btn btn-danger btn-sm'
             ]);
         }
     }

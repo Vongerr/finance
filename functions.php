@@ -1,5 +1,6 @@
 <?php
 /** @noinspection PhpUndefinedClassInspection */
+
 /** @noinspection PhpUndefinedNamespaceInspection */
 
 use app\components\WebUser;
@@ -7,16 +8,13 @@ use yii\caching\CacheInterface;
 use yii\console\Application as ConsoleApplication;
 use yii\helpers\VarDumper;
 use yii\web\Application as WebApplication;
+use yii\web\User;
 
 /**
  * debug function
- * @param $data
- * @param bool $isDie
- *
  */
-function printr($data, $isDie = false)
+function printr($data, bool|int $isDie = false): void
 {
-
     //if (!((defined('YII_ENV') && YII_ENV === 'dev') && (defined('YII_DEBUG') && YII_DEBUG))) return;
 
     if ($data === null) {
@@ -33,52 +31,29 @@ function printr($data, $isDie = false)
 /**
  * @return ConsoleApplication|WebApplication the application instance
  */
-function app()
+function app(): WebApplication|ConsoleApplication
 {
-
     return Yii::$app;
 }
 
-
-/**
- * @return WebUser
- */
-function user()
+function user(): User
 {
-
     return app()->user;
 }
 
-
-/**
- * @return CacheInterface
- */
-function cache()
+function cache(): CacheInterface
 {
-
     return app()->cache;
 }
 
-
-/**
- * @param $file
- * @return int
- */
-function file_crc32($file)
+function file_crc32($file): int
 {
-
     if (!file_exists($file)) return 0;
 
     return crc32(file_get_contents($file));
 }
 
-
-/**
- * @param array $data
- * @param int $rows
- * @return array
- */
-function divideDataBatchInsert(array $data, $rows = 5000)
+function divideDataBatchInsert(array $data, int $rows = 5000): array
 {
     $divide_array = [];
     if (count($data) > $rows) {
@@ -101,12 +76,7 @@ function divideDataBatchInsert(array $data, $rows = 5000)
     return $divide_array;
 }
 
-
-
-/**
- * @return mixed
- */
-function array_orderby()
+function array_orderby(): mixed
 {
     $args = func_get_args();
     $data = array_shift($args);
@@ -123,14 +93,9 @@ function array_orderby()
     return array_pop($args);
 }
 
-
-/**
- * @param $millimeters
- * @return float
- */
-function m2t($millimeters)
+function m2t($millimeters): float
 {
-    return floor($millimeters*56.7); //1 твип равен 1/567 сантиметра
+    return floor($millimeters * 56.7); //1 твип равен 1/567 сантиметра
 }//m2t
 
 /**
@@ -142,7 +107,7 @@ function apiDate($date)
     return date('Y-m-d', strtotime($date));
 }
 
-function viewException(Exception $e)
+function viewException(Throwable $e): void
 {
     printr($e->getMessage());
     printr($e->getFile());

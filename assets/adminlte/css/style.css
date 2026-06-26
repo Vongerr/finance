@@ -34,32 +34,3 @@ li.nav-header a {
 .callout ul.nav a {
     text-decoration: none;
 }
-
-.glyphicon {
-    position: relative;
-    top: 1px;
-    display: inline-block;
-    font-family: 'Glyphicons Halflings';
-    font-style: normal;
-    font-weight: normal;
-    line-height: 1;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    width: auto;
-    height: auto;
-
-}
-
-.kv-form-bs3 .hint-block {
-
-    margin-top: 5px;
-}
-
-
-
-/*
-
-.skin-green-light .main-header .navbar .dropdown-menu li a {
-    color: #fff !important;
-}
-*/

@@ -14,111 +14,104 @@
  'data' => [
  'pjax' => 0,
  'pjax-id' => 'pjax-id-container',
- 'toggle' => 'modal',
- 'target' => '#grid-modal',
+ 'bs-toggle' => 'modal',
+ 'bs-target' => '#grid-modal',
  'href' => Url::to([ajax-url-path]),
  ],
  */
 !function ($) {
     $(function () {
 
-        $.fn.modal.Constructor.prototype.enforceFocus = function () {
-        };
+        document.getElementById('grid-modal')?.addEventListener('show.bs.modal', function (e) {
 
-        $("#grid-modal")
-            .on("show.bs.modal", function (e) {
+            const link = $(e.relatedTarget),
+                el = $(this);
 
-                const link = $(e.relatedTarget),
-                    el = $(this);
+            if (link.data('bs-target') === '#grid-modal') {
 
-                if (link.data('target') === '#grid-modal') {
+                el.find("h3.modal-title").text(link.data('title'));
 
-                    el.find("h3.modal-title").text(link.data('title'));
+                el.find(".modal-body").html('').load(link.data("href"), function () {
 
-                    el.find(".modal-body").html('').load(link.data("href"), function () {
+                    el.find(".modal-body form").attr('data-pjax-container', link.data('pjax-id'));
+                });
+            }
+        });
 
-                        el.find(".modal-body form").attr('data-pjax-container', link.data('pjax-id'));
-                    });
-                }
-            })
-            .on('submit', 'form', function (e) {
+        $(document).on('submit', '#grid-modal form', function (e) {
 
-                const form = $(this),
-                    pjaxContainer = form.data('pjax-container'),
-                    formData = new FormData(form[0]);
+            const form = $(this),
+                pjaxContainer = form.data('pjax-container'),
+                formData = new FormData(form[0]);
 
-                if (form.attr('method') !== 'post') {
+            if (form.attr('method') !== 'post') {
 
-                    return true;
-                }
+                return true;
+            }
 
-                e.preventDefault();
+            e.preventDefault();
 
-                $.ajax({
-                    url: form.attr('action'),
-                    type: form.attr('method'),
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    cache: false,
-                    'success': function (res) {
+            $.ajax({
+                url: form.attr('action'),
+                type: form.attr('method'),
+                data: formData,
+                processData: false,
+                contentType: false,
+                cache: false,
+                'success': function (res) {
 
-                        if (res.success) {
+                    if (res.success) {
 
-                            $('#grid-modal').modal("toggle");
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('grid-modal'));
+                        if (modal) modal.toggle();
 
-                            if (krajeeDialog) {
-                                krajeeDialog.alert("Данные успешно сохранены!");
-                            }
+                        if (krajeeDialog) {
+                            krajeeDialog.alert("Данные успешно сохранены!");
+                        }
 
-                            if (pjaxContainer) {
+                        if (pjaxContainer) {
 
-                                if (res.url) {
+                            if (res.url) {
 
-                                    $.pjax({url: res.url, container: '#' + pjaxContainer});
-
-                                } else {
-
-                                    $.pjax.reload({container: "#" + pjaxContainer});
-                                }
+                                $.pjax({url: res.url, container: '#' + pjaxContainer});
 
                             } else {
 
-                                if (res.url) {
-
-                                    location.href = res.url;
-
-                                } else {
-
-                                    location.reload();
-                                }
+                                $.pjax.reload({container: "#" + pjaxContainer});
                             }
 
                         } else {
 
-                            $('#grid-modal').find(".modal-body").html(res);
-                            $('#grid-modal').find(".modal-body form").attr('data-pjax-container', pjaxContainer);
+                            if (res.url) {
+
+                                location.href = res.url;
+
+                            } else {
+
+                                location.reload();
+                            }
                         }
-                    },
-                    'error': function () {
 
-                        console.log('internal server error');
+                    } else {
+
+                        $('#grid-modal').find(".modal-body").html(res);
+                        $('#grid-modal').find(".modal-body form").attr('data-pjax-container', pjaxContainer);
                     }
-                });
+                },
+                'error': function () {
 
-                return false;
-            })
-            .on('click', 'a.cancel-button', function (e) {
-
-                e.preventDefault();
-                $('#grid-modal').modal("toggle");
+                    console.log('internal server error');
+                }
             });
 
-        $('body').on("hidden.bs.modal", ".modal", function () { //fire on closing modal box
+            return false;
+        });
 
-            if ($('.modal:visible').length) { // check whether parent modal is opend after child modal close
-                $('body').addClass('modal-open'); // if open mean length is 1 then add a bootstrap css class to body of the page
-            }
+        $(document).on('click', '#grid-modal a.cancel-button', function (e) {
+
+            e.preventDefault();
+            const modal = bootstrap.Modal.getInstance(document.getElementById('grid-modal'));
+            if (modal) modal.toggle();
         });
 
         function ajaxSubmit(href, pjaxContainer) {

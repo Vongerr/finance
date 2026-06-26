@@ -17,7 +17,7 @@ class CustomGridView extends GridView
     const TEMPLATE = <<<HTML
     <div class="{prefix}{type} {solid}">
         {panelHeading}
-        <div class="box-body">
+        <div class="card-body">
             {panelBefore}
             {items}
             {panelAfter}
@@ -25,15 +25,15 @@ class CustomGridView extends GridView
         {panelFooter}
     </div>
 HTML;
-    public $panelPrefix = 'box box-';
+    public $panelPrefix = 'card card-';
 
     public $panelTemplate = self::TEMPLATE;
 
     public $panelHeadingTemplate = <<< HTML
-    <div class="pull-right">
+    <div class="float-end">
         {summary}
     </div>
-    <h3 class="box-title">{heading}</h3>
+    <h3 class="card-title">{heading}</h3>
     <div class="clearfix"></div>
 HTML;
 
@@ -104,7 +104,7 @@ HTML;
             }
 
             $this->panelHeadingTemplate = strtr($this->panelHeadingTemplate, [
-                '<h3 class="box-title">{heading}</h3>'=>'{title}'
+                '<h3 class="card-title">{heading}</h3>'=>'{title}'
             ]);
         }
     }
@@ -134,12 +134,12 @@ HTML;
         $panelFooter = '';
 
         if ($heading !== false) {
-            static::initCss($headingOptions, 'box-header with-border');
+            static::initCss($headingOptions, 'card-header');
             $content = strtr($this->panelHeadingTemplate, ['{heading}' => $heading]);
             $panelHeading = Html::tag('div', $content, $headingOptions);
         }
         if ($footer !== false) {
-            static::initCss($footerOptions, 'box-footer');
+            static::initCss($footerOptions, 'card-footer');
             $content = strtr($this->panelFooterTemplate, ['{footer}' => $footer]);
             $panelFooter = Html::tag('div', $content, $footerOptions);
         }
@@ -154,7 +154,7 @@ HTML;
             $panelAfter = Html::tag('div', $content, $afterOptions);
         }
 
-        $classSolid = $solid ? 'box-solid' : '';
+        $classSolid = $solid ? '' : '';
 
         $this->panelTemplate = strtr($this->panelTemplate, ['{solid}' => $classSolid]);
 
