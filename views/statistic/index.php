@@ -323,7 +323,7 @@ try {
                     'update' => function ($url) use ($pjaxId) {
 
                         return Html::a(
-                            Html::tag('i', '', ['class' => 'bi bi-pencil', 'style' => 'height:30px; width:30px']),
+                            Html::tag('i', '', ['class' => 'bi bi-pencil', 'style' => 'height:25px; width:25px']),
                             $url,
                             [
                                 'class' => 'btn btn-warning btn-sm',

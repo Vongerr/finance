@@ -8,6 +8,7 @@ use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\base\Widget;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 use yii\web\ServerErrorHttpException;
 use yii\widgets\Menu;
 
@@ -23,7 +24,7 @@ class MenuFilterWidget extends Widget
 
     const DIRECTION_HORIZONTAL = '';
 
-    const DIRECTION_VERTICAL = 'nav-stacked';
+    const DIRECTION_VERTICAL = 'flex-column';
 
     public ?Model $searchModel = null;
 
@@ -127,16 +128,23 @@ class MenuFilterWidget extends Widget
      */
     public function run(): string
     {
-        /** @noinspection HtmlUnknownTarget */
-        $linkTemplate = $this->pjax ? '<a href="{url}">{label}</a>' : '<a href="{url}" data-pjax="0">{label}</a>';
+        $items = [];
+        foreach ($this->_menu as $item) {
+            $active = !empty($item['active']);
+            $pjaxAttr = $this->pjax ? '' : ' data-pjax="0"';
+            $linkClass = $active ? 'nav-link active' : 'nav-link';
+            $item['template'] = '<a class="' . $linkClass . '" href="{url}"' . $pjaxAttr . '>{label}</a>';
+            $item['options'] = ['class' => 'nav-item'];
+            $items[] = $item;
+        }
 
         return Menu::widget([
-            'items' => $this->_menu,
+            'items' => $items,
             'encodeLabels' => false,
             'options' => [
                 'class' => 'nav nav-' . $this->type . ' ' . $this->direction,
             ],
-            'linkTemplate' => $linkTemplate,
+            'linkTemplate' => '<a href="{url}">{label}</a>',
         ]);
     }
 }
