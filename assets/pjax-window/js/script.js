@@ -22,6 +22,8 @@
 
 (function () {
 
+    console.log(321314);
+
     function getModal() {
         return bootstrap.Modal.getOrCreateInstance(document.getElementById('grid-modal'));
     }
@@ -59,20 +61,21 @@
             .catch(function () { location.href = url; });
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('click', function (e) {
+
+        let btn = e.target.closest('[data-bs-modal="#grid-modal"]');
+
+        if (!btn) return;
+        e.preventDefault();
+
+        let href = btn.dataset.href;
+        let pjaxId = btn.dataset.pjaxId;
+
         let modalEl = findModal();
         if (!modalEl) return;
-        modalEl.addEventListener('show.bs.modal', function (e) {
-        let link = e.relatedTarget;
-        if (!link || link.dataset.bsTarget !== '#grid-modal') return;
 
-        let title = link.dataset.title;
-        let href = link.dataset.href;
-        let pjaxId = link.dataset.pjaxId;
 
-        if (title) this.querySelector('h3.modal-title').textContent = title;
-
-        let body = this.querySelector('.modal-body');
+        let body = modalEl.querySelector('.modal-body');
         if (href) {
             body.innerHTML = '';
             fetch(href)
@@ -83,9 +86,11 @@
                     if (form && pjaxId) {
                         form.dataset.pjaxContainer = pjaxId;
                     }
+                    getModal().show();
                 });
+        } else {
+            getModal().show();
         }
-    });
     });
 
     document.addEventListener('submit', function (e) {

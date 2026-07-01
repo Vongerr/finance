@@ -58,8 +58,7 @@ try {
                         'class' => 'btn btn-success',
                         'data' => [
                             'pjax' => 0,
-                            'bs-toggle' => 'modal',
-                            'bs-target' => '#grid-modal',
+                            'bs-modal' => '#grid-modal',
                             'pjax-id' => $pjaxId,
                             'title' => 'Добавление записи',
                             'href' => Url::to(['create']),
@@ -75,8 +74,7 @@ try {
                         'class' => 'btn btn-primary',
                         'data' => [
                             'pjax' => 0,
-                            'toggle' => 'modal',
-                            'target' => '#grid-modal',
+                            'bs-modal' => '#grid-modal',
                             'pjax-id' => $pjaxId,
                             'title' => 'Финансы',
                             'href' => Url::to([StatisticController::FINANCE, 'category' => $searchModel->category]),
@@ -92,11 +90,9 @@ try {
                         'class' => 'btn btn-primary',
                         'data' => [
                             'pjax' => 0,
-                            'bs-toggle' => 'modal',
-                            'bs-target' => '#grid-modal',
+                            'bs-modal' => 'grid-modal',
                             'pjax-id' => $pjaxId,
                             'title' => 'Траты в месяц',
-                            'size' => Modal::SIZE_LARGE,
                             'href' => Url::to([StatisticController::CATEGORY_FINANCE, 'category' => $searchModel->category]),
                         ],
                     ])
@@ -110,8 +106,7 @@ try {
                         'class' => 'btn btn-primary',
                         'data' => [
                             'pjax' => 0,
-                            'bs-toggle' => 'modal',
-                            'bs-target' => '#grid-modal',
+                            'bs-modal' => '#grid-modal',
                             'pjax-id' => $pjaxId,
                             'title' => 'Будущие финансы',
                             'href' => Url::to([StatisticController::FUTURE_FINANCE]),
@@ -127,8 +122,7 @@ try {
                         'class' => 'btn btn-warning',
                         'data' => [
                             'pjax' => 0,
-                            'bs-toggle' => 'modal',
-                            'bs-target' => '#grid-modal',
+                            'bs-modal' => 'grid-modal',
                             'pjax-id' => $pjaxId,
                             'title' => 'Импортировать Тинькофф',
                             'href' => Url::to([TransferFinanceController::IMPORT_FINANCE_TINKOFF]),
@@ -144,8 +138,7 @@ try {
                         'class' => 'btn btn-warning',
                         'data' => [
                             'pjax' => 0,
-                            'bs-toggle' => 'modal',
-                            'bs-target' => '#grid-modal',
+                            'bs-modal' => '#grid-modal',
                             'pjax-id' => $pjaxId,
                             'title' => 'Импортировать Альфа-банк',
                             'href' => Url::to([TransferFinanceController::IMPORT_FINANCE_ALPHA]),
@@ -161,8 +154,7 @@ try {
                         'class' => 'btn btn-warning',
                         'data' => [
                             'pjax' => 0,
-                            'bs-toggle' => 'modal',
-                            'bs-target' => '#grid-modal',
+                            'bs-modal' => '#grid-modal',
                             'pjax-id' => $pjaxId,
                             'title' => 'Импортировать Открытие',
                             'href' => Url::to([TransferFinanceController::IMPORT_FINANCE_OTKRITIE]),
@@ -178,8 +170,7 @@ try {
                         'class' => 'btn btn-success',
                         'data' => [
                             'pjax' => 0,
-                            'bs-toggle' => 'modal',
-                            'bs-target' => '#grid-modal',
+                            'bs-modal' => '#grid-modal',
                             'pjax-id' => $pjaxId,
                             'title' => 'Импортировать финансы',
                             'href' => Url::to([TransferFinanceController::IMPORT_FINANCE]),
@@ -195,8 +186,7 @@ try {
                         'class' => 'btn btn-success',
                         'data' => [
                             'pjax' => 0,
-                            'bs-toggle' => 'modal',
-                            'bs-target' => '#grid-modal',
+                            'bs-modal' => '#grid-modal',
                             'pjax-id' => $pjaxId,
                             'title' => 'Экспортировать финансы',
                             'href' => Url::to([TransferFinanceController::EXPORT_FINANCE]),
@@ -280,8 +270,7 @@ try {
                                 'title' => 'Изменение',
                                 'data' => [
                                     'pjax' => 0,
-                                    'bs-toggle' => 'modal',
-                                    'bs-target' => '#grid-modal',
+                                    'bs-modal' => 'grid-modal',
                                     'title' => 'Изменение',
                                     'href' => $url,
                                 ],
@@ -299,8 +288,7 @@ try {
                                 'title' => 'Изменение',
                                 'data' => [
                                     'pjax' => 0,
-                                    'bs-toggle' => 'modal',
-                                    'bs-target' => '#grid-modal',
+                                    'bs-modal' => 'grid-modal',
                                     'title' => 'Изменение',
                                     'href' => $url,
                                 ],
