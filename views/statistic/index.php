@@ -75,8 +75,8 @@ try {
                         'class' => 'btn btn-primary',
                         'data' => [
                             'pjax' => 0,
-                            'bs-toggle' => 'modal',
-                            'bs-target' => '#grid-modal',
+                            'toggle' => 'modal',
+                            'target' => '#grid-modal',
                             'pjax-id' => $pjaxId,
                             'title' => 'Финансы',
                             'href' => Url::to([StatisticController::FINANCE, 'category' => $searchModel->category]),
@@ -203,57 +203,6 @@ try {
                         ],
                     ])
             ],
-            /*[
-                'content' => Html::a(
-                    'Удалить информацию Тинькофф',
-                    Url::to(['delete-bank']),
-                    [
-                        'title' => 'Удалить информацию',
-                        'class' => 'btn btn-danger',
-                        'data' => [
-                            'pjax' => 0,
-                            'bs-toggle' => 'modal',
-                            'bs-target' => '#grid-modal',
-                            'pjax-id' => $pjaxId,
-                            'title' => 'Удалить информацию',
-                            'href' => Url::to(['delete-bank', 'bank' => Finance::TINKOFF]),
-                        ],
-                    ])
-            ],
-            [
-                'content' => Html::a(
-                    'Удалить информацию Альфа-банк',
-                    Url::to(['delete-bank']),
-                    [
-                        'title' => 'Удалить информацию',
-                        'class' => 'btn btn-danger',
-                        'data' => [
-                            'pjax' => 0,
-                            'bs-toggle' => 'modal',
-                            'bs-target' => '#grid-modal',
-                            'pjax-id' => $pjaxId,
-                            'title' => 'Удалить информацию',
-                            'href' => Url::to(['delete-bank', 'bank' => Finance::ALFA]),
-                        ],
-                    ])
-            ],
-            [
-                'content' => Html::a(
-                    'Удалить информацию Открытие',
-                    Url::to(['delete-bank']),
-                    [
-                        'title' => 'Удалить информацию',
-                        'class' => 'btn btn-danger',
-                        'data' => [
-                            'pjax' => 0,
-                            'bs-toggle' => 'modal',
-                            'bs-target' => '#grid-modal',
-                            'pjax-id' => $pjaxId,
-                            'title' => 'Удалить информацию',
-                            'href' => Url::to(['delete-bank', 'bank' => Finance::OTKRITIE]),
-                        ],
-                    ])
-            ],*/
         ],
         'bordered' => true,
         'striped' => false,
