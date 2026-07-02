@@ -22,8 +22,6 @@
 
 (function () {
 
-    console.log(321314);
-
     function getModal() {
         return bootstrap.Modal.getOrCreateInstance(document.getElementById('grid-modal'));
     }
@@ -34,9 +32,14 @@
 
     function pjaxReload(containerId) {
         let container = document.querySelector('#' + containerId);
-        if (!container) { location.reload(); return; }
+        if (!container) {
+            location.reload();
+            return;
+        }
         fetch(location.href)
-            .then(function (r) { return r.text(); })
+            .then(function (r) {
+                return r.text();
+            })
             .then(function (html) {
                 let parser = new DOMParser();
                 let doc = parser.parseFromString(html, 'text/html');
@@ -47,18 +50,27 @@
                     location.reload();
                 }
             })
-            .catch(function () { location.reload(); });
+            .catch(function () {
+                location.reload();
+            });
     }
 
     function pjaxLoad(url, containerId) {
         let container = document.querySelector('#' + containerId);
-        if (!container) { location.href = url; return; }
+        if (!container) {
+            location.href = url;
+            return;
+        }
         fetch(url)
-            .then(function (r) { return r.text(); })
+            .then(function (r) {
+                return r.text();
+            })
             .then(function (html) {
                 container.innerHTML = html;
             })
-            .catch(function () { location.href = url; });
+            .catch(function () {
+                location.href = url;
+            });
     }
 
     document.addEventListener('click', function (e) {
@@ -74,12 +86,13 @@
         let modalEl = findModal();
         if (!modalEl) return;
 
-
         let body = modalEl.querySelector('.modal-body');
         if (href) {
             body.innerHTML = '';
             fetch(href)
-                .then(function (r) { return r.text(); })
+                .then(function (r) {
+                    return r.text();
+                })
                 .then(function (html) {
                     body.innerHTML = html;
                     let form = body.querySelector('form');
@@ -110,9 +123,13 @@
             .then(function (r) {
                 let ct = r.headers.get('content-type') || '';
                 if (ct.indexOf('json') !== -1) {
-                    return r.json().then(function (data) { return { json: data }; });
+                    return r.json().then(function (data) {
+                        return {json: data};
+                    });
                 }
-                return r.text().then(function (html) { return { html: html }; });
+                return r.text().then(function (html) {
+                    return {html: html};
+                });
             })
             .then(function (res) {
                 if (res.json && res.json.success) {
@@ -157,8 +174,10 @@
     });
 
     function ajaxSubmit(href, pjaxContainer) {
-        fetch(href, { method: 'POST' })
-            .then(function (r) { return r.json(); })
+        fetch(href, {method: 'POST'})
+            .then(function (r) {
+                return r.json();
+            })
             .then(function (res) {
                 console.log(res);
                 if (res.success) {
@@ -204,5 +223,4 @@
             ajaxSubmit(href, pjaxContainer);
         }
     });
-
 })();

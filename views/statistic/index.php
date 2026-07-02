@@ -428,6 +428,7 @@ try {
 
     echo Modal::widget([
         'id' => 'grid-modal',
+        'options' => ['class' => 'modal-dialog-scrollable'],
     ]);
 
     echo Dialog::widget();

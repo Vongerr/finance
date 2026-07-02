@@ -34,3 +34,12 @@ li.nav-header a {
 .callout ul.nav a {
     text-decoration: none;
 }
+
+#grid-modal .modal-body {
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+#grid-modal .modal-dialog {
+    margin-top: 10vh;
+}
