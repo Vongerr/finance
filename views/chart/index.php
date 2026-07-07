@@ -11,7 +11,6 @@ use yii\helpers\Html;
 
 ?>
 
-<div class="container-fluid py-3">
     <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
         <form class="d-flex flex-wrap align-items-center gap-2" method="get">
             <select name="year" class="form-select form-select-sm" style="width: auto;">
@@ -60,41 +59,41 @@ use yii\helpers\Html;
                 <div class="card-body p-0">
                     <table class="table table-hover mb-0">
                         <thead class="table-light">
-                            <tr>
-                                <th>Категория</th>
-                                <th class="text-end">Сумма</th>
-                                <th class="text-end">%</th>
-                                <th class="text-end">Кол-во</th>
-                            </tr>
+                        <tr>
+                            <th>Категория</th>
+                            <th class="text-end">Сумма</th>
+                            <th class="text-end">%</th>
+                            <th class="text-end">Кол-во</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            <?php $firstColors = $chartData['colors']; ?>
-                            <?php foreach ($chartData['rows'] as $i => $row): ?>
-                                <tr>
-                                    <td>
-                                        <span class="d-inline-block rounded-circle me-1" style="width:10px;height:10px;background:<?= $chartData['colors'][$i] ?? '#ccc' ?>"></span>
-                                        <?= Html::encode($row['category']) ?>
-                                    </td>
-                                    <td class="text-end"><?= number_format($row['total'], 2, ',', ' ') ?></td>
-                                    <td class="text-end"><?= $row['percent'] ?>%</td>
-                                    <td class="text-end"><?= $row['count'] ?></td>
-                                </tr>
-                            <?php endforeach; ?>
-                            <?php if ($chartData['totalSum'] > 0): ?>
-                                <tr class="fw-bold table-light">
-                                    <td>Итого</td>
-                                    <td class="text-end"><?= number_format($chartData['totalSum'], 2, ',', ' ') ?></td>
-                                    <td class="text-end">100%</td>
-                                    <td class="text-end"><?= array_sum(array_column($chartData['rows'], 'count')) ?></td>
-                                </tr>
-                            <?php endif; ?>
+                        <?php $firstColors = $chartData['colors']; ?>
+                        <?php foreach ($chartData['rows'] as $i => $row): ?>
+                            <tr>
+                                <td>
+                                    <span class="d-inline-block rounded-circle me-1"
+                                          style="width:10px;height:10px;background:<?= $chartData['colors'][$i] ?? '#ccc' ?>"></span>
+                                    <?= Html::encode($row['category']) ?>
+                                </td>
+                                <td class="text-end"><?= number_format($row['total'], 2, ',', ' ') ?></td>
+                                <td class="text-end"><?= $row['percent'] ?>%</td>
+                                <td class="text-end"><?= $row['count'] ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                        <?php if ($chartData['totalSum'] > 0): ?>
+                            <tr class="fw-bold table-light">
+                                <td>Итого</td>
+                                <td class="text-end"><?= number_format($chartData['totalSum'], 2, ',', ' ') ?></td>
+                                <td class="text-end">100%</td>
+                                <td class="text-end"><?= array_sum(array_column($chartData['rows'], 'count')) ?></td>
+                            </tr>
+                        <?php endif; ?>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
 <?php
 $labelsJson = json_encode($chartData['labels']);
