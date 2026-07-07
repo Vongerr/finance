@@ -30,11 +30,6 @@ class ChartController extends MainController
         $years = $this->chartService->getAvailableYears();
 
         return $this->render('index', [
-            'chartLabels' => $chartData['labels'],
-            'chartData' => $chartData['values'],
-            'chartColors' => $chartData['colors'],
-            'tableRows' => $chartData['rows'],
-            'totalSum' => $chartData['totalSum'],
             'chartData' => $chartData,
             'years' => $years,
             'selectedYear' => $year,
