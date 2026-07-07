@@ -90,7 +90,7 @@ try {
                         'class' => 'btn btn-primary',
                         'data' => [
                             'pjax' => 0,
-                            'bs-modal' => 'grid-modal',
+                            'bs-modal' => '#grid-modal',
                             'pjax-id' => $pjaxId,
                             'title' => 'Траты в месяц',
                             'href' => Url::to([StatisticController::CATEGORY_FINANCE, 'category' => $searchModel->category]),
@@ -206,42 +206,44 @@ try {
             'type' => GridViewInterface::TYPE_DEFAULT,
         ],
         'panelTemplate' => '<div class="{prefix}{type} {solid}">{panelHeading}<div class="card-body">'
+            . '<div class="d-flex flex-wrap gap-2 mb-3">'
             . MenuFilterWidget::widget([
                 'searchModel' => $searchModel,
                 'attribute' => 'year',
                 'assoc' => true,
                 'titleAllButton' => 'Все',
-            ]) . Html::tag('br')
+            ])
             . MenuFilterWidget::widget([
                 'searchModel' => $searchModel,
                 'attribute' => 'month',
                 'assoc' => true,
                 'titleAllButton' => 'Все',
-            ]) . Html::tag('br')
+            ])
             . MenuFilterWidget::widget([
                 'searchModel' => $searchModel,
                 'attribute' => 'bank',
                 'assoc' => true,
                 'titleAllButton' => 'Все',
-            ]) . Html::tag('br')
+            ])
             . MenuFilterWidget::widget([
                 'searchModel' => $searchModel,
                 'attribute' => 'exclusion',
                 'assoc' => true,
                 'titleAllButton' => 'Все',
-            ]) . Html::tag('br')
+            ])
             . MenuFilterWidget::widget([
                 'searchModel' => $searchModel,
                 'attribute' => 'category',
                 'assoc' => true,
                 'titleAllButton' => 'Все',
-            ]) . Html::tag('br')
+            ])
             . MenuFilterWidget::widget([
                 'searchModel' => $searchModel,
                 'attribute' => 'budget_category',
                 'assoc' => true,
                 'titleAllButton' => 'Все',
-            ]) . Html::tag('br')
+            ])
+            . '</div>'
             . '{panelBefore}{items}{panelAfter}</div>{panelFooter}</div>',
         'showFooter' => false,
         'showPageSummary' => false,
@@ -428,7 +430,6 @@ try {
 
     echo Modal::widget([
         'id' => 'grid-modal',
-        'options' => ['class' => 'modal-dialog-scrollable'],
     ]);
 
     echo Dialog::widget();

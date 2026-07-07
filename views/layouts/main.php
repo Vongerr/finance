@@ -49,13 +49,13 @@ try {
                 ['label' => 'Очистить кэш', 'url' => ['/site/flush']],
                 ['label' => 'Будущие финансы', 'url' => ['/future-finance']],
                 ['label' => 'Api', 'url' => ['/api-moex']],
-                app()->user->isGuest ? (
-                ['label' => 'Авторизация', 'url' => ['/site/login']]
-                ) : (
+                app()->user->isGuest
+                    ? ['label' => 'Авторизация', 'url' => ['/site/login']]
+                    : (
                     '<li>'
                     . Html::beginForm(['/site/logout'], 'post', ['class' => 'form-inline'])
                     . Html::submitButton(
-                        'Logout (' . Yii::$app->user->identity->username . ')',
+                        'Logout (' . app()->user->identity->username . ')',
                         ['class' => 'btn btn-link logout']
                     )
                     . Html::endForm()
@@ -72,9 +72,9 @@ try {
         <div class="container">
             <?= Breadcrumbs::widget([
                 'links' => $this->params['breadcrumbs'] ?? [],
-            ]) ?>
-            <?= Alert::widget() ?>
-            <?= $content ?>
+            ]);
+            echo Alert::widget();
+            echo $content ?>
         </div>
     </main>
 

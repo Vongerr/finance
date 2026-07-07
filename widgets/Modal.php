@@ -8,11 +8,10 @@ namespace app\widgets;
  */
 class Modal extends \yii\bootstrap5\Modal
 {
-    public $size = self::SIZE_LARGE;
+    public $size = self::SIZE_EXTRA_LARGE;
 
     protected function initOptions(): void
     {
-        
         if (!$this->clientOptions) {
             
             $this->clientOptions = ['show' => false,];          

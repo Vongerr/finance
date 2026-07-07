@@ -82,10 +82,7 @@ class FinanceService
         ksort($category_list);
         ksort($data);
 
-        return [
-            'data' => $data,
-            'categoryList' => $category_list
-        ];
+        return [$data, $category_list];
     }
 
     private function defineScholarship(): array
