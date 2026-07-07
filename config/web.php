@@ -1,5 +1,6 @@
 <?php
 
+use app\components\View;
 use yii\web\UrlManager;
 
 $params = require __DIR__ . '/params.php';
@@ -55,7 +56,11 @@ $config = [
             'rules' => [
                 '<controller:[\w-]+>/<action:[\w-]+>' => '<controller>/<action>',
                 'statistic/view/<slug:[\w-]+>' => 'statistic/view',
+                'chart' => 'chart/index',
             ],
+        ],
+        'view' => [
+            'class' => View::class,
         ],
     ],
     'params' => $params,

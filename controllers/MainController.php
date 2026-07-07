@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\components\View;
 use yii\base\ExitException;
 use yii\base\Model;
+use yii\base\Module;
 use yii\helpers\ArrayHelper;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
@@ -21,7 +22,7 @@ use yii\widgets\ActiveForm;
  * @property string $smallTitle
  * @property-read string $returnUrl
  * @property View $view
- * $property Module $module
+ * @property Module $module
  */
 class MainController extends Controller
 {
@@ -29,8 +30,6 @@ class MainController extends Controller
 
     /**
      * Установить заголовок 1 уровня
-     *
-     * @param string $title
      */
     public function setTitle(string $title): void
     {
@@ -39,8 +38,6 @@ class MainController extends Controller
 
     /**
      * Установить заголовок 2 уровня
-     *
-     * @param string $title
      */
     public function setSmallTitle(string $title): void
     {
@@ -48,11 +45,9 @@ class MainController extends Controller
     }
 
     /**
-     * @param $action
-     * @return bool
      * @throws BadRequestHttpException
      */
-    public function beforeAction($action)
+    public function beforeAction($action): bool
     {
         if (parent::beforeAction($action)) {
 
@@ -66,7 +61,6 @@ class MainController extends Controller
 
         return false;
     }
-
 
     /**
      * Проверить ajax валидность данных модели формы
@@ -112,15 +106,11 @@ class MainController extends Controller
                 //'url' => $url,
             ];
 
-            if ($message) {
-
-                $data['message'] = $message;
-            }
+            if ($message) $data['message'] = $message;
 
             return $data;
         }
     }
-
 
     /**
      * Проверить ajax валидность данных e нескольких моделей формы
@@ -156,16 +146,9 @@ class MainController extends Controller
         }
     }
 
-
-    /**
-     * @param string $url
-     */
-    protected function setReturnUrl($url = ''): void
+    protected function setReturnUrl(string $url = ''): void
     {
-        if (!$url) {
-
-            $url = app()->request->url;
-        }
+        if (!$url) $url = app()->request->url;
 
         user()->returnUrl = $url;
     }
@@ -175,29 +158,17 @@ class MainController extends Controller
         return user()->returnUrl;
     }
 
-
     /**
      * @param string $view
      * @param array $params
-     * @param bool $ajaxScenario
-     * @return string
      */
-    public function render($view, $params = [], $ajaxScenario = false)
+    public function render($view, $params = [], bool $ajaxScenario = false): string
     {
-        if ($params === false) {
-
-            $params = [];
-        }
+        if ($params === false) $params = [];
 
         if ($ajaxScenario) {
 
-            if (app()->request->isAjax) {
-
-                return $this->renderAjax($view, $params);
-            } else {
-
-                return parent::render($view, $params);
-            }
+            return app()->request->isAjax ? $this->renderAjax($view, $params) : parent::render($view, $params);
         }
 
         return parent::render($view, $params);
