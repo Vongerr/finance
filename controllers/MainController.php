@@ -103,7 +103,7 @@ class MainController extends Controller
 
             $data = [
                 'success' => true,
-                'url' => $url,
+                //'url' => $url,
             ];
 
             if ($message) $data['message'] = $message;
