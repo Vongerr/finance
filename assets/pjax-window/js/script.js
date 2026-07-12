@@ -1,22 +1,20 @@
-// noinspection JSUnresolvedFunction,JSJQueryEfficiency,JSUnresolvedVariable,JSCheckFunctionSignatures
-
 /**
  * Вызов ajax окна
  *
  обязательно элемент должен обладать селектором .ajax-submit
  'data' => [
- 'pjax' => 0|1,
- 'pjax-id' => 'pjax-id-container',
- ['confirm-message' => 'Подтвержедение',]
- 'href' => Url::to([ajax-url-path]),
+    'pjax' => 0|1,
+    'pjax-id' => 'pjax-id-container',
+    ['confirm-message' => 'Подтвержедение',]
+    'href' => Url::to([ajax-url-path]),
  ],
 
  'data' => [
- 'pjax' => 0,
- 'pjax-id' => 'pjax-id-container',
- 'bs-toggle' => 'modal',
- 'bs-target' => '#grid-modal',
- 'href' => Url::to([ajax-url-path]),
+    'pjax' => 0,
+    'pjax-id' => 'pjax-id-container',
+    'bs-toggle' => 'modal',
+    'bs-target' => '#grid-modal',
+    'href' => Url::to([ajax-url-path]),
  ],
  */
 
@@ -26,79 +24,70 @@
         return bootstrap.Modal.getOrCreateInstance(document.getElementById('grid-modal'));
     }
 
-    function findModal() {
-        return document.getElementById('grid-modal');
+    function getModalBody() {
+        let el = document.getElementById('grid-modal');
+        return el && el.querySelector('.modal-body');
     }
 
-    function pjaxReload(containerId) {
-        let container = document.querySelector('#' + containerId);
-        if (!container) {
-            location.reload();
-            return;
-        }
-        fetch(location.href)
-            .then(function (r) {
-                return r.text();
-            })
-            .then(function (html) {
-                let parser = new DOMParser();
-                let doc = parser.parseFromString(html, 'text/html');
-                let newContent = doc.querySelector('#' + containerId);
-                if (newContent) {
-                    container.replaceWith(newContent);
-                } else {
-                    location.reload();
-                }
-            })
-            .catch(function () {
-                location.reload();
-            });
-    }
-
-    function pjaxLoad(url, containerId) {
-        let container = document.querySelector('#' + containerId);
-        if (!container) {
-            location.href = url;
-            return;
-        }
+    function pjax(url, containerId, replace) {
+        let container = containerId && document.querySelector('#' + containerId);
+        if (!container) { location.href = url; return; }
         fetch(url)
-            .then(function (r) {
-                return r.text();
-            })
+            .then(function (r) { return r.text(); })
             .then(function (html) {
-                container.innerHTML = html;
+                if (replace) {
+                    let doc = new DOMParser().parseFromString(html, 'text/html');
+                    let newContent = doc.querySelector('#' + containerId);
+                    if (newContent) { container.replaceWith(newContent); return; }
+                } else {
+                    container.innerHTML = html;
+                    return;
+                }
+                location.reload();
             })
-            .catch(function () {
-                location.href = url;
-            });
+            .catch(function () { location.href = url; });
+    }
+
+    function dialog(msg, cb) {
+        if (typeof krajeeDialog !== 'undefined') {
+            krajeeDialog.confirm(msg, cb);
+        } else if (confirm(msg)) cb(true);
+    }
+
+    function navigate(data, pjaxContainer) {
+        let url = data.url;
+        if (pjaxContainer) {
+            if (url) { pjax(url, pjaxContainer, false); }
+            else { pjax(location.href, pjaxContainer, true); }
+        } else {
+            if (url) { location.href = url; }
+            else { location.reload(); }
+        }
+    }
+
+    function alertSuccess() {
+        if (typeof krajeeDialog !== 'undefined') {
+            krajeeDialog.alert('\u0414\u0430\u043D\u043D\u044B\u0435 \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u044B!');
+        }
     }
 
     document.addEventListener('click', function (e) {
-
         let btn = e.target.closest('[data-bs-modal="#grid-modal"]');
-
         if (!btn) return;
         e.preventDefault();
 
         let href = btn.dataset.href;
         let pjaxId = btn.dataset.pjaxId;
+        if (!getModalBody()) return;
 
-        let modalEl = findModal();
-        if (!modalEl) return;
-
-        let body = modalEl.querySelector('.modal-body');
         if (href) {
-            body.innerHTML = '';
+            getModalBody().innerHTML = '';
             fetch(href)
-                .then(function (r) {
-                    return r.text();
-                })
+                .then(function (r) { return r.text(); })
                 .then(function (html) {
-                    body.innerHTML = html;
-                    let form = body.querySelector('form');
-                    if (form && pjaxId) {
-                        form.dataset.pjaxContainer = pjaxId;
-                    }
+                    getModalBody().innerHTML = html;
+                    let form = getModalBody().querySelector('form');
+                    if (form && pjaxId) form.dataset.pjaxContainer = pjaxId;
                     getModal().show();
                 });
         } else {
@@ -110,55 +99,29 @@
         let form = e.target.closest('#grid-modal form');
         if (!form) return;
         e.preventDefault();
+        if (form.getAttribute('method')?.toLowerCase() !== 'post') return;
 
         let pjaxContainer = form.dataset.pjaxContainer;
         let formData = new FormData(form);
 
-        if (form.getAttribute('method')?.toLowerCase() !== 'post') return;
-
-        fetch(form.action, {
-            method: 'POST',
-            body: formData,
-        })
+        fetch(form.action, { method: 'POST', body: formData })
             .then(function (r) {
                 let ct = r.headers.get('content-type') || '';
-                if (ct.indexOf('json') !== -1) {
-                    return r.json().then(function (data) {
-                        return {json: data};
-                    });
-                }
-                return r.text().then(function (html) {
-                    return {html: html};
-                });
+                return ct.indexOf('json') !== -1
+                    ? r.json().then(function (d) { return {json: d}; })
+                    : r.text().then(function (h) { return {html: h}; });
             })
             .then(function (res) {
                 if (res.json && res.json.success) {
                     getModal().toggle();
-
-                    if (typeof krajeeDialog !== 'undefined') {
-                        krajeeDialog.alert('\u0414\u0430\u043D\u043D\u044B\u0435 \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u044B!');
-                    }
-
-                    if (pjaxContainer) {
-                        if (res.json.url) {
-                            pjaxLoad(res.json.url, pjaxContainer);
-                        } else {
-                            pjaxReload(pjaxContainer);
-                        }
-                    } else {
-                        if (res.json.url) {
-                            location.href = res.json.url;
-                        } else {
-                            location.reload();
-                        }
-                    }
+                    alertSuccess();
+                    navigate(res.json, pjaxContainer);
                 } else {
-                    let body = findModal().querySelector('.modal-body');
-                    body.innerHTML = res.html || res.json;
-                    let newForm = body.querySelector('form');
-                    if (newForm && pjaxContainer) {
-                        newForm.dataset.pjaxContainer = pjaxContainer;
-                    }
+                    let mb = getModalBody();
+                    if (!mb) return;
+                    mb.innerHTML = res.html || res.json;
+                    let newForm = mb.querySelector('form');
+                    if (newForm && pjaxContainer) newForm.dataset.pjaxContainer = pjaxContainer;
                 }
             })
             .catch(function () {
@@ -174,35 +137,11 @@
     });
 
     function ajaxSubmit(href, pjaxContainer) {
-        fetch(href, {method: 'POST'})
-            .then(function (r) {
-                return r.json();
-            })
+        fetch(href, { method: 'POST' })
+            .then(function (r) { return r.json(); })
             .then(function (res) {
-                console.log(res);
-                if (res.success) {
-                    if (pjaxContainer) {
-                        if (res.url) {
-                            pjaxLoad(res.url, pjaxContainer);
-                        } else {
-                            pjaxReload(pjaxContainer);
-                        }
-                    } else {
-                        if (res.url) {
-                            location.href = res.url;
-                        } else {
-                            location.reload();
-                        }
-                    }
-                } else {
-                    if (res.message) {
-                        if (typeof krajeeDialog !== 'undefined') {
-                            krajeeDialog.alert(res.message);
-                        } else {
-                            alert(res.message);
-                        }
-                    }
-                }
+                if (res.success) { navigate(res, pjaxContainer); }
+                else if (res.message) { dialog(res.message, function () {}); }
             });
     }
 
@@ -212,15 +151,16 @@
         e.preventDefault();
 
         let href = link.dataset.href;
-        let confirmMsg = link.dataset.confirmMessage;
+        let msg = link.dataset.confirmMessage;
         let pjaxContainer = link.dataset.pjaxId;
 
-        if (confirmMsg && typeof krajeeDialog !== 'undefined') {
-            krajeeDialog.confirm(confirmMsg, function (result) {
+        if (msg && typeof krajeeDialog !== 'undefined') {
+            krajeeDialog.confirm(msg, function (result) {
                 if (result) ajaxSubmit(href, pjaxContainer);
             });
         } else {
             ajaxSubmit(href, pjaxContainer);
         }
     });
+
 })();

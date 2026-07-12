@@ -4,7 +4,6 @@ namespace app\controllers;
 
 use app\helpers\CategoryAllHelper;
 use app\services\ChartService;
-use Yii;
 
 class ChartController extends MainController
 {

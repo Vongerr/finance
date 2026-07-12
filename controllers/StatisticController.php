@@ -46,7 +46,7 @@ class StatisticController extends MainController
     {
         if (parent::beforeAction($action)) {
 
-            //$this->setTitle('Статистика');
+            $this->setTitle('Статистика');
 
             return true;
         }

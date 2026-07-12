@@ -270,7 +270,7 @@ try {
                                 'title' => 'Изменение',
                                 'data' => [
                                     'pjax' => 0,
-                                    'bs-modal' => 'grid-modal',
+                                    'bs-modal' => '#grid-modal',
                                     'title' => 'Изменение',
                                     'href' => $url,
                                 ],
@@ -288,7 +288,7 @@ try {
                                 'title' => 'Изменение',
                                 'data' => [
                                     'pjax' => 0,
-                                    'bs-modal' => 'grid-modal',
+                                    'bs-modal' => '#grid-modal',
                                     'title' => 'Изменение',
                                     'href' => $url,
                                 ],
