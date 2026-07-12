@@ -27,11 +27,11 @@ class StatisticController extends MainController
 
     private DeleteService $serviceDelete;
 
-    public function __construct(string               $id,
-                                                     $module,
-                                FinanceService       $service,
-                                DeleteService        $serviceDelete,
-                                array                $config = [])
+    public function __construct(string         $id,
+                                               $module,
+                                FinanceService $service,
+                                DeleteService  $serviceDelete,
+                                array          $config = [])
     {
         parent::__construct($id, $module, $config);
 
@@ -73,6 +73,8 @@ class StatisticController extends MainController
 
     public function actionCreate(): Response|array|string
     {
+        $this->setSmallTitle('Создание строки');
+
         $form = new FinanceForm();
 
         if ($form->load(app()->request->post()) && $form->validate()) {
@@ -130,7 +132,7 @@ class StatisticController extends MainController
             try {
                 $this->service->update($form, $model);
 
-                return $this->ajaxRedirect();
+                return $this->ajaxRedirect(Url::to(['index']));
 
             } catch (Exception $e) {
 

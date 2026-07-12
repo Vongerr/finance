@@ -92,7 +92,7 @@ class MainController extends Controller
 
             if ($message) {
 
-                user()->setSuccessFlash($message);
+                app()->session->set('success', $message);
             }
 
             return $this->redirect($url);
@@ -103,7 +103,7 @@ class MainController extends Controller
 
             $data = [
                 'success' => true,
-                //'url' => $url,
+                'url' => $url,
             ];
 
             if ($message) $data['message'] = $message;

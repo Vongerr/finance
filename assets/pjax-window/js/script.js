@@ -56,12 +56,12 @@
 
     function navigate(data, pjaxContainer) {
         let url = data.url;
-        if (pjaxContainer) {
-            if (url) { pjax(url, pjaxContainer, false); }
-            else { pjax(location.href, pjaxContainer, true); }
+        if (url) {
+            location.href = url;
+        } else if (pjaxContainer) {
+            pjax(location.href, pjaxContainer, true);
         } else {
-            if (url) { location.href = url; }
-            else { location.reload(); }
+            location.reload();
         }
     }
 
@@ -104,7 +104,7 @@
         let pjaxContainer = form.dataset.pjaxContainer;
         let formData = new FormData(form);
 
-        fetch(form.action, { method: 'POST', body: formData })
+        fetch(form.action, { method: 'POST', body: formData, headers: { 'X-Requested-With': 'XMLHttpRequest' } })
             .then(function (r) {
                 let ct = r.headers.get('content-type') || '';
                 return ct.indexOf('json') !== -1
@@ -137,7 +137,7 @@
     });
 
     function ajaxSubmit(href, pjaxContainer) {
-        fetch(href, { method: 'POST' })
+        fetch(href, { method: 'POST', headers: { 'X-Requested-With': 'XMLHttpRequest' } })
             .then(function (r) { return r.json(); })
             .then(function (res) {
                 if (res.success) { navigate(res, pjaxContainer); }
