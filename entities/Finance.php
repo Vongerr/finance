@@ -75,6 +75,7 @@ class Finance extends ActiveRecord
     const FINANCE = 'finance';
     const CHARITY = 'charity';
     const AUTO = 'auto';
+    const COMMUNAL = 'communal_services';
     const REFUND = 'refund';
     const OTHER = 'other';
 

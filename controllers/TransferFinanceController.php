@@ -12,6 +12,7 @@ class TransferFinanceController extends MainController
     const IMPORT_FINANCE_TINKOFF = '\\/transfer-finance\import-finance-tinkoff';
     const IMPORT_FINANCE_ALPHA = '\\/transfer-finance\import-finance-alpha';
     const IMPORT_FINANCE_OTKRITIE = '\\/transfer-finance\import-finance-otkritie';
+    const IMPORT_FINANCE_VTB = '\\/transfer-finance\import-finance-vtb';
     const IMPORT_FINANCE = '\\/transfer-finance\import-finance';
     const EXPORT_FINANCE = '\\/transfer-finance\export-finance';
 
@@ -66,6 +67,14 @@ class TransferFinanceController extends MainController
     public function actionImportFinanceOtkritie(): void
     {
         $this->serviceImport->importFinanceOtkritie();
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function actionImportFinanceVtb(): void
+    {
+        $this->serviceImport->importFinanceVtb();
     }
 
     /**

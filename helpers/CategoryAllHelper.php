@@ -50,6 +50,7 @@ class CategoryAllHelper extends ListHelper
             Finance::FINANCE => 'Финансы',
             Finance::CHARITY => 'Благотворительность',
             Finance::AUTO => 'Автоуслуги',
+            Finance::COMMUNAL => 'Коммунальные услуги',
             Finance::REFUND => 'Возврат',
             Finance::OTHER => 'Другое'
         ];
@@ -100,6 +101,7 @@ class CategoryAllHelper extends ListHelper
             Finance::CASH => Html::tag('span', 'Наличные', ['class' => 'label label-danger']),
             Finance::FINANCE => Html::tag('span', 'Финансы', ['class' => 'label label-danger']),
             Finance::OTHER => Html::tag('span', 'Другое', ['class' => 'label label-info']),
+            Finance::COMMUNAL => Html::tag('span', 'Коммунальные услуги', ['class' => 'label label-info']),
         ];
     }
 }

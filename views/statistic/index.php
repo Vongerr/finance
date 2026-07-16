@@ -51,7 +51,7 @@ try {
         'toolbar' => [
             [
                 'content' => Html::a(
-                    '<i class="fas fa-plus"></i> Добавить запись',
+                    'Добавить запись',
                     Url::to(['create']),
                     [
                         'title' => 'Добавление записи',
@@ -147,17 +147,17 @@ try {
             ],
             [
                 'content' => Html::a(
-                    'Импортировать Открытие',
-                    Url::to([TransferFinanceController::IMPORT_FINANCE_OTKRITIE]),
+                    'Импортировать Втб',
+                    Url::to([TransferFinanceController::IMPORT_FINANCE_VTB]),
                     [
-                        'title' => 'Импортировать Открытие',
+                        'title' => 'Импортировать Втб',
                         'class' => 'btn btn-warning',
                         'data' => [
                             'pjax' => 0,
                             'bs-modal' => '#grid-modal',
                             'pjax-id' => $pjaxId,
-                            'title' => 'Импортировать Открытие',
-                            'href' => Url::to([TransferFinanceController::IMPORT_FINANCE_OTKRITIE]),
+                            'title' => 'Импортировать Втб',
+                            'href' => Url::to([TransferFinanceController::IMPORT_FINANCE_VTB]),
                         ],
                     ])
             ],
