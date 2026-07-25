@@ -17,140 +17,6 @@ class ImportFinanceService
         $this->repository = $repository;
     }
 
-    public function importFinanceOtkritie(): void
-    {
-        $exclusions = [
-            //'Владимир Ю.' => 'Владимир Ю.',
-            'Перевод между счетами' => 'Перевод между счетами',
-            'Вывод с брокерского счета' => 'Вывод с брокерского счета',
-            //'Дмитрий Ю.' => 'Дмитрий Ю.',
-            'Артем Г.' => 'Артем Г.',
-            'Регулярный перевод в Инвесткопилку' => 'Регулярный перевод в Инвесткопилку',
-            'Вывод со счета Тинькофф Брокер' => 'Вывод со счета Тинькофф Брокер',
-            'Вывод средств с брокерского счета' => 'Вывод средств с брокерского счета',
-            'Пополнение счета Тинькофф Брокер' => 'Пополнение счета Тинькофф Брокер',
-            'Пополнение брокерского счета' => 'Пополнение брокерского счета',
-            'Пополнение Инвесткопилки' => 'Пополнение Инвесткопилки',
-            'Перевод на вклад' => 'Перевод на вклад',
-            'Внесение наличных через банкомат Тинькофф' => 'Внесение наличных через банкомат Тинькофф',
-        ];
-
-        $transports = [
-            'Перевод денежных средств' => 'Переводы',
-            'Перевод между своими счетами' => 'Переводы',
-            'Транспорт' => 'Общественный транспорт',
-            'Платежи' => 'Мобильная связь',
-            'Красота и здоровье' => 'Красота',
-            'Рестораны и кафе' => 'Рестораны',
-            'Дом' => 'Дом и ремонт',
-            'Развлечения и шопинг' => 'Развлечения',
-            'Бизнес услуги' => 'Другое',
-            'Спорт' => 'Спорттовары'
-        ];
-
-        $dateScholarshipList = [
-            '2022-07-25' => '2022-07-25',
-            '2022-06-24' => '2022-06-25',
-        ];
-
-        $dateCashListExclusion = [
-            '2022-01-19' => '2022-01-19',
-            '2021-09-04' => '2021-09-04',
-        ];
-
-        $text = file_get_contents($this->getPathDocs('otkritie.txt'));
-
-        $financeList = explode(';', $text);
-        $indexPay = 0;
-
-        $list = [];
-
-        foreach ($financeList as $index => $finance) {
-
-            if ($index < 11) continue;
-
-            $list[$indexPay][] = $finance;
-
-            if ($finance == 'RUR') ++$indexPay;
-        }
-
-        $categoryList = $this->repository->getCategoryList();
-        $hashList = $this->repository->getFinanceList();
-
-        /*$arr = [];
-
-        foreach ($list as $it) {
-            if (!isset($it[6])) continue;
-            if ($it[3] == 'Ошибка') continue;
-
-            $arr[$it[5] . '; ' . $it[6]] = $it[6];
-        }
-
-        printr($arr,1);*/
-
-        $count = 0;
-
-        foreach ($list as $name) {
-
-            if (!isset($name[6])) continue;
-            if ($name[2] == 'Ошибка') continue;
-
-            $form = new FinanceForm();
-
-            $category = $transports[$name[5]] ?? $name[5];
-
-            $form->bank = Finance::OTKRITIE;
-            $form->date = date('Y-m-d', strtotime($name[0]));
-            $form->time = date('H:i', strtotime($name[0]));
-            $form->comment = $name[6];
-            $form->category = $categoryList[$category] ?? Finance::OTHER;
-            $form->exclusion = isset($exclusions[$name[6]]) ? Finance::EXCLUSION : Finance::NO_EXCLUSION;
-
-            if ($name[6] == 'Перевод между своими счетами')
-                $form->exclusion = Finance::EXCLUSION;
-
-            if (str_contains($name[6], 'заработной')
-                || str_contains($name[6], 'Пособия')
-                || str_contains($name[6], 'Salary')
-                || str_contains($name[6], 'аванс')
-                || str_contains($name[6], 'отпускные')) {
-
-                $form->category = Finance::SALARY;
-            }
-
-            if (str_contains($name[6], 'стипендия')) {
-
-                $form->category = Finance::SCHOLARSHIP;
-            }
-
-            if (date('Y-m-d', strtotime($name[0])) < '2022-03-01' && Finance::SALARY == $categoryList[$category]
-                || date('Y-m-d', strtotime($name[0])) < '2022-03-01' && str_contains($name[6], 'реестру')
-                || in_array(date('Y-m-d', strtotime($name[0])), $dateScholarshipList) && Finance::SALARY == $categoryList[$category]) {
-
-                $form->category = Finance::SCHOLARSHIP;
-            }
-
-            $indexMoney = (count($name) == 9) ? 7 : 9;
-
-            $form->budget_category = $name[$indexMoney] > 0 ? Finance::REVENUE : Finance::EXPENSES;
-            $form->money = $name[$indexMoney] > 0 ? (double)$name[$indexMoney] : (double)$name[$indexMoney] * (-1);
-
-            if (Finance::CASH == $form->category && Finance::EXPENSES == $form->budget_category
-                || $name[6] == 'Перевод между своими счетами'
-                || in_array(date('Y-m-d', strtotime($name[0])), $dateCashListExclusion)) $form->exclusion = Finance::EXCLUSION;
-
-            if (isset($hashList[$this->repository->getHashFinance($form)])) continue;
-
-            $model = Finance::create($form);
-
-            $this->repository->save($model);
-
-            ++$count;
-        }
-
-        echo 'Все финансы импортированы: ' . $count;
-    }
-
     /**
      * @throws Exception
      */
@@ -329,7 +195,11 @@ class ImportFinanceService
                     ? Finance::EXCLUSION
                     : Finance::NO_EXCLUSION;
 
-                if ($form->date == '2025-12-31' && $form->time == '16:16') printr($row,1);
+                if (isset($hashList[$this->repository->getHashFinance($form)])) continue;
+
+                $model = Finance::create($form);
+
+                $this->repository->save($model);
 
                 ++$count;
             }
@@ -402,6 +272,7 @@ class ImportFinanceService
             'Пополнение Инвесткопилки' => 'Пополнение Инвесткопилки',
             'Перевод на вклад' => 'Перевод на вклад',
             'Внесение наличных через банкомат Тинькофф' => 'Внесение наличных через банкомат Тинькофф',
+            'Между своими счетами' => 'Между своими счетами'
         ];
 
         $transports = [
@@ -437,14 +308,20 @@ class ImportFinanceService
 
                 $category = $transports[$row[9]] ?? $row[9];
 
+                $date = str_replace('"."', '.', trim(stripslashes($row[0]), '"'));
+
+                $money = (double)$row[14] ?? 0;
+
                 $form->bank = Finance::TINKOFF;
-                $form->date = date('Y-m-d', strtotime($row[0]));
-                $form->time = date('H:i', strtotime($row[0]));
+                $form->date = date('Y-m-d', strtotime($date));
+                $form->time = date('H:i', strtotime($date));
                 $form->budget_category = (int)$row[4] > 0 ? Finance::REVENUE : Finance::EXPENSES;
                 $form->category = $categoryList[$category] ?? Finance::OTHER;
-                $form->money = (double)$row[14];
+                $form->money = $money < 0 ? $money * (-1) : $money;
                 $form->comment = $row[11];
                 $form->exclusion = isset($exclusions[$row[11]]) ? Finance::EXCLUSION : Finance::NO_EXCLUSION;
+
+
 
                 if (isset($hashList[$this->repository->getHashFinance($form)])) continue;
 
