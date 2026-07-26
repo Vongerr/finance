@@ -257,8 +257,6 @@ class ImportFinanceService
      */
     public function importFinanceTinkoff(): void
     {
-
-
         $exclusions = [
             'Даниил Ю.' => 'Даниил Ю.',
             //'Ирина Ю.' => 'Ирина Ю.',
