@@ -7,6 +7,7 @@ use app\forms\FinanceForm;
 use app\repositories\FinanceRepository;
 use Exception;
 use SpreadsheetReader;
+use Throwable;
 
 class ImportFinanceService
 {
@@ -252,10 +253,12 @@ class ImportFinanceService
     }
 
     /**
-     * @throws Exception
+     * @throws Throwable
      */
     public function importFinanceTinkoff(): void
     {
+
+
         $exclusions = [
             'Даниил Ю.' => 'Даниил Ю.',
             //'Ирина Ю.' => 'Ирина Ю.',
@@ -272,10 +275,15 @@ class ImportFinanceService
             'Пополнение Инвесткопилки' => 'Пополнение Инвесткопилки',
             'Перевод на вклад' => 'Перевод на вклад',
             'Внесение наличных через банкомат Тинькофф' => 'Внесение наличных через банкомат Тинькофф',
-            'Между своими счетами' => 'Между своими счетами'
+            'Между своими счетами' => 'Между своими счетами',
+            'Вывод с Инвесткопилки' => 'Вывод с Инвесткопилки',
+            'Atomyze' => 'Atomyze',
+            'Пополнение смарт-счета' => 'Пополнение смарт-счета',
+            'Банк ВТБ' => 'Банк ВТБ',
+            'Покупка золота' => 'Покупка золота'
         ];
 
-        $transports = [
+        $true_categories = [
             'Транспорт' => 'Общественный транспорт',
             'Местный транспорт' => 'Общественный транспорт',
             'Животные' => 'Зоомагазин',
@@ -284,6 +292,9 @@ class ImportFinanceService
             'Связь' => 'Мобильная связь',
             'Различные товары' => 'Другое',
             'Пополнения' => 'Переводы',
+            'Банк ВТБ' => 'Наличные',
+            'Пополнение. VB24 IOSHKAR-OLA G RUS' => 'Наличные',
+            'Внесение наличных через банкомат Т-Банк' => 'Наличные'
         ];
 
         $reader = new SpreadsheetReader($this->getPathDocs('tinkoff.xlsx'));
@@ -306,7 +317,7 @@ class ImportFinanceService
 
                 $form = new FinanceForm();
 
-                $category = $transports[$row[9]] ?? $row[9];
+                $category = $true_categories[$row[11]] ?? $true_categories[$row[9]] ?? $row[9];
 
                 $date = str_replace('"."', '.', trim(stripslashes($row[0]), '"'));
 
@@ -321,7 +332,7 @@ class ImportFinanceService
                 $form->comment = $row[11];
                 $form->exclusion = isset($exclusions[$row[11]]) ? Finance::EXCLUSION : Finance::NO_EXCLUSION;
 
-
+                if ($row[11] == 'Внесение наличных через банкомат Т-Банк') printr($row,1);
 
                 if (isset($hashList[$this->repository->getHashFinance($form)])) continue;
 
