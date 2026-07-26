@@ -330,8 +330,6 @@ class ImportFinanceService
                 $form->comment = $row[11];
                 $form->exclusion = isset($exclusions[$row[11]]) ? Finance::EXCLUSION : Finance::NO_EXCLUSION;
 
-                if ($row[11] == 'Внесение наличных через банкомат Т-Банк') printr($row,1);
-
                 if (isset($hashList[$this->repository->getHashFinance($form)])) continue;
 
                 $model = Finance::create($form);
