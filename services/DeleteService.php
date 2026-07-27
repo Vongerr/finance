@@ -3,11 +3,19 @@
 namespace app\services;
 
 use app\entities\Finance;
+use app\repositories\DeleteRepository;
 use Throwable;
 use yii\db\StaleObjectException;
 
 class DeleteService
 {
+    private DeleteRepository $repository;
+
+    public function __construct(DeleteRepository $repository)
+    {
+        $this->repository = $repository;
+    }
+
     /**
      * @throws Throwable
      * @throws StaleObjectException
@@ -16,7 +24,7 @@ class DeleteService
     {
         $count = 0;
 
-        foreach (Finance::find()->andWhere(['bank' => $bank])->all() as $finance) {
+        foreach ($this->repository->findFinanceByBank($bank) as $finance) {
 
             $finance->delete();
 
@@ -24,5 +32,23 @@ class DeleteService
         }
 
         echo 'Успешно удалено: ' . $count;
+    }
+
+    /**
+     * @throws Throwable
+     * @throws StaleObjectException
+     */
+    public function deleteTBankByDate(string $date): int
+    {
+        $count = 0;
+
+        foreach ($this->repository->findByDate($date, Finance::TINKOFF) as $finance) {
+
+            $finance->delete();
+
+            ++$count;
+        }
+
+        return $count;
     }
 }
