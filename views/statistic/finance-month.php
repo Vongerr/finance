@@ -1,8 +1,11 @@
 <?php
 
 use app\components\View;
+use app\controllers\StatisticController;
 use app\helpers\CategoryAllHelper;
 use app\helpers\MonthHelper;
+use yii\helpers\Html;
+use yii\helpers\Url;
 
 /* @var $this View */
 /* @var $data array */
@@ -12,9 +15,11 @@ $changeYear = 0;
 
 $color = 'style="color: #931517;"';
 
+$pjaxId = 'finance-month-pjax';
+
 foreach ($data as $year => $yearInfo) : ?>
 
-    <label>
+    <div>
         <h2> <?= $year ?> </h2>
         <table class="col-md-3 table-finance">
             <tr>
@@ -32,7 +37,19 @@ foreach ($data as $year => $yearInfo) : ?>
                     <?php foreach ($yearInfo as $month => $monthInfo) : ?>
 
                         <td class="td-finance"><?= isset($monthInfo[$category])
-                                ? number_format((float)$monthInfo[$category], 0, ',', '.')
+                                ? Html::a(
+                                    number_format((float)$monthInfo[$category], 0, ',', '.'),
+                                    Url::to([StatisticController::DETAIL_CATEGORY_MONTH, 'category' => $category, 'year' => $year, 'month' => $month]),
+                                    [
+                                        'title' => 'Будущие финансы',
+                                        'data' => [
+                                            'pjax' => 0,
+                                            'bs-modal' => '#grid-modal',
+                                            'pjax-id' => $pjaxId . $month . $category,
+                                            'title' => 'Будущие финансы',
+                                            'href' => Url::to([StatisticController::DETAIL_CATEGORY_MONTH, 'category' => $category, 'year' => $year, 'month' => $month]),
+                                        ],
+                                    ])
                                 : '' ?></td>
 
                         <?php if ($changeYear != $year) {
@@ -44,55 +61,55 @@ foreach ($data as $year => $yearInfo) : ?>
                 </tr>
             <?php endforeach; ?>
         </table>
-    </label>
+    </div>
 
 <?php endforeach;
 
 $this->registerCss(
     <<<CSS
 .table-finance {
-border-spacing: 0 10px;
-font-family: 'Open Sans', sans-serif;
-font-weight: bold;
+    border-spacing: 0 10px;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: bold;
 }
 
 .th-finance {
-padding: 5px 5px;
-background: #56433D;
-color: #F9C941;
-font-size: 0.9em;
-border-top: 2px solid #56433D;
-border-bottom: 2px solid #56433D;
-border-right: 2px solid #56433D;
-border-left: 2px solid #56433D;
+    padding: 5px 5px;
+    background: #56433D;
+    color: #F9C941;
+    font-size: 0.9em;
+    border-top: 2px solid #56433D;
+    border-bottom: 2px solid #56433D;
+    border-right: 2px solid #56433D;
+    border-left: 2px solid #56433D;
 }
 
 .th-finance:first-child {
-text-align: center;
+    text-align: center;
 }
 
 .th-finance:last-child {
-border-right: none;
+    border-right: none;
 }
 
 .td-finance {
-vertical-align: middle;
-padding: 5px;
-font-size: 14px;
-text-align: center;
-border-top: 2px solid #56433D;
-border-bottom: 2px solid #56433D;
-border-right: 2px solid #56433D;
-border-left: 2px solid #56433D;
+    vertical-align: middle;
+    padding: 5px;
+    font-size: 14px;
+    text-align: center;
+    border-top: 2px solid #56433D;
+    border-bottom: 2px solid #56433D;
+    border-right: 2px solid #56433D;
+    border-left: 2px solid #56433D;
 }
 
 .td-finance:first-child {
-border-left: 2px solid #56433D;
-border-right: none;
+    border-left: 2px solid #56433D;
+    border-right: none;
 }
 
 .td-finance:nth-child(2){
-text-align: left;
+    text-align: left;
 }
 
 CSS

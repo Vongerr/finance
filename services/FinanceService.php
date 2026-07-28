@@ -22,6 +22,14 @@ class FinanceService
         return $this->repository->getStatisticById($id);
     }
 
+    public function defineCategoryMonthFinance(string $category, string $year, string $month): array
+    {
+        $start_date = date('Y-m-d', strtotime(sprintf('%s-%s-01', $year, $month)));
+        $end_date = date('Y-m-t', strtotime($start_date));
+
+        return $this->repository->findCategoryMonthInfo($category, $start_date, $end_date);
+    }
+
     public function defineCategoryFinance(): array
     {
         $models = $this->repository->getCategoryFinanceModels();

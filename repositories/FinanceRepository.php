@@ -137,8 +137,22 @@ class FinanceRepository
 
             $ads->delete();
 
-        } catch (StaleObjectException $e) {
+        } catch (StaleObjectException) {
+
             throw new DomainException('Error deleted!');
         }
+    }
+
+    public function findCategoryMonthInfo(string $category, string $start_date, string $end_date): array
+    {
+        return Finance::find()
+            ->andWhere([
+                'category' => $category,
+                'budget_category' => Finance::EXPENSES
+            ])
+            ->andWhere(['between', 'date', $start_date, $end_date])
+            ->select(['date', 'money', 'comment'])
+            ->asArray()
+            ->all();
     }
 }

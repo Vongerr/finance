@@ -89,9 +89,6 @@ try {
                         'title' => 'Траты в месяц',
                         'class' => 'btn btn-primary',
                         'data' => [
-                            'pjax' => 0,
-                            'bs-modal' => '#grid-modal',
-                            'pjax-id' => $pjaxId,
                             'title' => 'Траты в месяц',
                             'href' => Url::to([StatisticController::CATEGORY_FINANCE, 'category' => $searchModel->category]),
                         ],

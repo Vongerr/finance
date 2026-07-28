@@ -22,6 +22,7 @@ class StatisticController extends MainController
     const CATEGORY_FINANCE = 'category-finance';
 
     const FUTURE_FINANCE = 'future-finance';
+    const DETAIL_CATEGORY_MONTH = 'detail-category-month';
 
     private FinanceService $service;
 
@@ -168,6 +169,13 @@ class StatisticController extends MainController
     public function actionFutureFinance(): string
     {
         return $this->render('future-finance', [
+        ], true);
+    }
+
+    public function actionDetailCategoryMonth(string $category, string $year, string $month): string
+    {
+        return $this->render('detail-category-month', [
+            'data' => $this->service->defineCategoryMonthFinance($category, $year, $month),
         ], true);
     }
 
