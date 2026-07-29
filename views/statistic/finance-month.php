@@ -1,9 +1,11 @@
 <?php
 
+use app\assets\PjaxWindowAsset;
 use app\components\View;
 use app\controllers\StatisticController;
 use app\helpers\CategoryAllHelper;
 use app\helpers\MonthHelper;
+use app\widgets\Modal;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
@@ -16,6 +18,8 @@ $changeYear = 0;
 $color = 'style="color: #931517;"';
 
 $pjaxId = 'finance-month-pjax';
+
+PjaxWindowAsset::register($this);
 
 foreach ($data as $year => $yearInfo) : ?>
 
@@ -42,6 +46,8 @@ foreach ($data as $year => $yearInfo) : ?>
                                     Url::to([StatisticController::DETAIL_CATEGORY_MONTH, 'category' => $category, 'year' => $year, 'month' => $month]),
                                     [
                                         'title' => 'Будущие финансы',
+                                        'class' => 'btn',
+                                        'pjax-class' => $pjaxId . $month . $category,
                                         'data' => [
                                             'pjax' => 0,
                                             'bs-modal' => '#grid-modal',
@@ -114,3 +120,7 @@ $this->registerCss(
 
 CSS
 );
+
+echo Modal::widget([
+    'id' => 'grid-modal',
+]);
