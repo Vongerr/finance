@@ -1,5 +1,11 @@
 {
+  "scripts": {
+    "build": "tsc && copyfiles -u 1 \"views/**/*.js\" web\\js",
+    "watch": "tsc --watch",
+    "postbuild": "copyfiles -u 1 \"views/**/*.js\" web\\js"
+  },
   "devDependencies": {
+    "copyfiles": "^2.4.1",
     "typescript": "^5.8.3"
   }
 }

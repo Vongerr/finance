@@ -86,6 +86,14 @@
                 .then(function (r) { return r.text(); })
                 .then(function (html) {
                     getModalBody().innerHTML = html;
+                    getModalBody().querySelectorAll('script').forEach(function (oldScript) {
+                        var newScript = document.createElement('script');
+                        Array.from(oldScript.attributes).forEach(function (attr) {
+                            newScript.setAttribute(attr.name, attr.value);
+                        });
+                        newScript.textContent = oldScript.textContent;
+                        oldScript.parentNode.replaceChild(newScript, oldScript);
+                    });
                     let form = getModalBody().querySelector('form');
                     if (form && pjaxId) form.dataset.pjaxContainer = pjaxId;
                     getModal().show();
@@ -120,6 +128,14 @@
                     let mb = getModalBody();
                     if (!mb) return;
                     mb.innerHTML = res.html || res.json;
+                    mb.querySelectorAll('script').forEach(function (oldScript) {
+                        var newScript = document.createElement('script');
+                        Array.from(oldScript.attributes).forEach(function (attr) {
+                            newScript.setAttribute(attr.name, attr.value);
+                        });
+                        newScript.textContent = oldScript.textContent;
+                        oldScript.parentNode.replaceChild(newScript, oldScript);
+                    });
                     let newForm = mb.querySelector('form');
                     if (newForm && pjaxContainer) newForm.dataset.pjaxContainer = pjaxContainer;
                 }

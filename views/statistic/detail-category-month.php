@@ -1,46 +1,25 @@
 <?php
 
 /* @var $data array */
+/* @var $this View */
+
+use app\components\View;
+use yii\base\InvalidConfigException;
+
 ?>
 
 <div id="app"></div>
 
-<script>
-    let data: <?php echo json_encode($data, JSON_UNESCAPED_UNICODE); ?>;
+<script id="detail-data" type="application/json"><?= json_encode(['financeList' => $data], JSON_UNESCAPED_UNICODE) ?></script>
 
-    // Генерация DOM
-    const app = document.getElementById('app')!;
-    const table = document.createElement('table');
+<?php
+try {
+    $this->registerJsFile('/js/statistic/detail.js', ['position' => $this::POS_END]);
+} catch (InvalidConfigException $e) {
 
-    // Добавляем классы для CSS
-    table.className = 'modern-table';
-
-    // Заголовок
-    const thead = document.createElement('thead');
-    thead.innerHTML = `
-<tr>
-    <th>Дата</th>
-    <th>Цена</th>
-    <th>Комментарий</th>
-</tr>`;
-    table.appendChild(thead);
-
-    // Тело
-    const tbody = document.createElement('tbody');
-    data.forEach(item => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-<td>${item.id}</td>
-<td><strong>${item.product}</strong></td>
-<td>${new Intl.NumberFormat('ru-RU', {style: 'currency', currency: 'RUB'}).format(item.price)}</td>
-<td>${item.inStock ? '✅ Есть' : '❌ Нет'}</td>
-`;
-        tbody.appendChild(tr);
-    });
-    table.appendChild(tbody);
-    app.appendChild(table);
-
-</script>
+    viewException($e);
+}
+?>
 
 <style>
     .modern-table {
@@ -68,12 +47,10 @@
     border-bottom: 1px solid #e9ecef;
     }
 
-    /* Эффект зебры */
     .modern-table tbody tr:nth-child(even) {
     background-color: #f8f9fa;
     }
 
-    /* Hover эффект */
     .modern-table tbody tr:hover {
     background-color: #e9ecef;
     transition: background 0.2s;

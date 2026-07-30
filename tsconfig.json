@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "target": "ES2018",
+    "module": "ES6",
+    "strict": true,
+    "sourceMap": false,
+    "removeComments": true
+  },
+  "include": ["views/**/*.ts", "assets/ts/**/*.ts"]
+}

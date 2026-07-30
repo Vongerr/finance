@@ -36,3 +36,8 @@ tests/_support/_generated
 /web/docs-statistics
 
 /runtime
+
+# compiled js from TypeScript
+/web/js
+/views/**/*.js
+/node_modules

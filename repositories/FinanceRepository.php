@@ -148,11 +148,13 @@ class FinanceRepository
         return Finance::find()
             ->andWhere([
                 'category' => $category,
-                'budget_category' => Finance::EXPENSES
+                'budget_category' => Finance::EXPENSES,
+                'exclusion' => Finance::NO_EXCLUSION,
             ])
             ->andWhere(['between', 'date', $start_date, $end_date])
-            ->select(['date', 'money', 'comment'])
+            ->select(['DATE_FORMAT(date, "%d.%m.%Y") as date', 'money', 'comment'])
             ->asArray()
+            ->orderBy(['money' => SORT_DESC])
             ->all();
     }
 }
