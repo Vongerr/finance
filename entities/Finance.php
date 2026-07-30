@@ -35,6 +35,8 @@ class Finance extends ActiveRecord
     const EXCLUSION = 1; // Исключение
     const NO_EXCLUSION = 0; // Не исключение
 
+    const CANCEL_OPERATION = 'Операция отклонена';
+
     const TAXI = 'taxi';
     const CAFE = 'cafe';
     const RESTAURANT = 'restaurant';

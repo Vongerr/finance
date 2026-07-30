@@ -38,6 +38,11 @@ class ImportFinanceService
             'Пополнение Инвесткопилки' => 'Пополнение Инвесткопилки',
             'Перевод на вклад' => 'Перевод на вклад',
             'Между своими счетами' => 'Между своими счетами',
+            'Пополнение брокерского счета, перевод кэшбэка на Инвесткопилку' => 'Пополнение брокерского счета, перевод кэшбэка на Инвесткопилку'
+        ];
+
+        $exclusion_parts = [
+            'ЮМАКОВ ДАНИИЛ ВЛАДИМИРОВИЧ Погашение ОД' => 'ЮМАКОВ ДАНИИЛ ВЛАДИМИРОВИЧ Погашение ОД'
         ];
 
         $transports = [
@@ -83,7 +88,13 @@ class ImportFinanceService
                 $form->time = '01:00';
                 $form->money = (double)$row[7];
                 $form->comment = $row[6];
-                $form->exclusion = isset($exclusions[$row[6]]) ? Finance::EXCLUSION : Finance::NO_EXCLUSION;
+
+                foreach ($exclusion_parts as $part) {
+
+                    if (str_contains($row[11], $part)) $form->exclusion = Finance::EXCLUSION;
+                }
+
+                $form->exclusion = $form->exclusion ?: (isset($exclusions[$row[11]]) ? Finance::EXCLUSION : Finance::NO_EXCLUSION);
 
                 if (isset($hashList[$this->repository->getHashFinance($form)])) continue;
 
@@ -176,8 +187,7 @@ class ImportFinanceService
 
                 if ($indexRow == 0) continue;
 
-                if (count($row) < 13) continue;
-                if (!$row[3] && !$row[7]) continue;
+                if (count($row) < 13 || !$row[3] && !$row[7] || Finance::CANCEL_OPERATION == $row[17]) continue;
 
                 $form = new FinanceForm();
 
@@ -195,6 +205,8 @@ class ImportFinanceService
                 $form->exclusion = (isset($exclusions[$row[11]]) || isset($exclusions[$row[13]]))
                     ? Finance::EXCLUSION
                     : Finance::NO_EXCLUSION;
+
+                if ('Уфанет' == $row[17] && $form->money == 700) continue;
 
                 if (isset($hashList[$this->repository->getHashFinance($form)])) continue;
 
@@ -279,7 +291,8 @@ class ImportFinanceService
             'Пополнение смарт-счета' => 'Пополнение смарт-счета',
             'Банк ВТБ' => 'Банк ВТБ',
             'Покупка золота' => 'Покупка золота',
-            'Пополнение. ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ "АТОМАЙЗ"' => 'Пополнение. ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ "АТОМАЙЗ"'
+            'Пополнение. ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ "АТОМАЙЗ"' => 'Пополнение. ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ "АТОМАЙЗ"',
+            'Брокерский счёт' => 'Брокерский счёт'
         ];
 
         $true_categories = [

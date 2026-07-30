@@ -152,8 +152,20 @@
         }
     });
 
+    function getCsrfToken() {
+        var meta = document.querySelector('meta[name="csrf-token"]');
+        return meta ? meta.getAttribute('content') : '';
+    }
+
+    function getCsrfParam() {
+        var meta = document.querySelector('meta[name="csrf-param"]');
+        return meta ? meta.getAttribute('content') : '_csrf';
+    }
+
     function ajaxSubmit(href, pjaxContainer) {
-        fetch(href, { method: 'POST', headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+        var body = new URLSearchParams();
+        body.set(getCsrfParam(), getCsrfToken());
+        fetch(href, { method: 'POST', body: body, headers: { 'X-Requested-With': 'XMLHttpRequest' } })
             .then(function (r) { return r.json(); })
             .then(function (res) {
                 if (res.success) { navigate(res, pjaxContainer); }
