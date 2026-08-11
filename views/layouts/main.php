@@ -72,6 +72,10 @@ try {
     <main role="main" class="flex-shrink-0">
         <div class="container">
             <?= Breadcrumbs::widget([
+                'homeLink' => [
+                    'template' => '',
+                    'label' => 'Главная',
+                ],
                 'links' => $this->params['breadcrumbs'] ?? [],
             ]);
             echo Alert::widget();
