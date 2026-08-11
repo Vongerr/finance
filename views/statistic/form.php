@@ -24,15 +24,15 @@ try {
     ?>
     <div class="row">
         <div class="col-md-6">
-            <?php echo $form->field($model, 'category')->dropDownList(CategoryAllHelper::getList()); ?>
+            <?= $form->field($model, 'category')->dropDownList(CategoryAllHelper::getList()); ?>
         </div>
         <div class="col-md-6">
-            <?php echo $form->field($model, 'budget_category')->dropDownList(CategoryBudgetHelper::getList()); ?>
+            <?= $form->field($model, 'budget_category')->dropDownList(CategoryBudgetHelper::getList()); ?>
         </div>
     </div>
     <div class="row">
         <div class="col-md-6">
-            <?php echo $form->field($model, 'date')->widget(
+            <?=$form->field($model, 'date')->widget(
                 DatePicker::class,
                 [
                     'language' => 'ru',
@@ -44,28 +44,28 @@ try {
             ); ?>
         </div>
         <div class="col-md-6">
-            <?php echo $form->field($model, 'time'); ?>
+            <?= $form->field($model, 'time'); ?>
         </div>
     </div>
     <div class="row">
         <div class="col-md-6">
-            <?php echo $form->field($model, 'money'); ?>
+            <?= $form->field($model, 'money'); ?>
         </div>
         <div class="col-md-6">
-            <?php echo $form->field($model, 'username'); ?>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            <?php echo $form->field($model, 'bank')->dropDownList(BankHelper::getList()); ?>
-        </div>
-        <div class="col-md-6">
-            <?php echo $form->field($model, 'comment'); ?>
+            <?= $form->field($model, 'username'); ?>
         </div>
     </div>
     <div class="row">
         <div class="col-md-6">
-            <?php echo $form->field($model, 'exclusion')->checkbox([0 => 'Не исключение', 1 => 'Исключение']); ?>
+            <?= $form->field($model, 'bank')->dropDownList(BankHelper::getList()); ?>
+        </div>
+        <div class="col-md-6">
+            <?= $form->field($model, 'comment'); ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <?= $form->field($model, 'exclusion')->checkbox([0 => 'Не исключение', 1 => 'Исключение']); ?>
         </div>
     </div>
     <br>

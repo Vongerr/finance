@@ -105,7 +105,7 @@ try {
                             ],
                         ])
                     . Html::a(
-                        'Импортировать Тинькофф',
+                        'Импортировать Тиньк',
                         Url::to([TransferFinanceController::IMPORT_FINANCE_TINKOFF]),
                         [
                             'title' => 'Импортировать Тинькофф',
@@ -119,7 +119,7 @@ try {
                             ],
                         ])
                     . Html::a(
-                        'Импортировать Альфа-банк',
+                        'Импортировать Альф',
                         Url::to([TransferFinanceController::IMPORT_FINANCE_ALPHA]),
                         [
                             'title' => 'Импортировать Альфа-банк',

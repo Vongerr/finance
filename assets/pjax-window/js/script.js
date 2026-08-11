@@ -20,6 +20,54 @@
 
 (function () {
 
+    function execScripts(root) {
+        const scripts = Array.prototype.slice.call(root.querySelectorAll('script'));
+        let i = 0;
+        return new Promise(function (resolve) {
+            (function next() {
+                if (i >= scripts.length) { resolve(); return; }
+                const oldScript = scripts[i++];
+                const newScript = document.createElement('script');
+                Array.prototype.forEach.call(oldScript.attributes, function (attr) {
+                    try { newScript.setAttribute(attr.name, attr.value); } catch (e) {}
+                });
+                newScript.textContent = oldScript.textContent || '';
+                oldScript.parentNode.replaceChild(newScript, oldScript);
+                if (newScript.src) {
+                    newScript.onload = function () { next(); };
+                    newScript.onerror = function () { next(); };
+                } else {
+                    next();
+                }
+            })();
+        });
+    }
+
+    function prepareModalHtml(html) {
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const existing = {};
+        Array.prototype.forEach.call(document.querySelectorAll('link[rel="stylesheet"]'), function (link) {
+            if (link.href) existing[link.href] = true;
+        });
+        Array.prototype.forEach.call(doc.querySelectorAll('link[rel="stylesheet"]'), function (link) {
+            if (!link.href) {
+                link.parentNode && link.parentNode.removeChild(link);
+                return;
+            }
+            if (existing[link.href]) {
+                link.parentNode && link.parentNode.removeChild(link);
+                return;
+            }
+            existing[link.href] = true;
+            const copy = document.createElement('link');
+            copy.rel = 'stylesheet';
+            copy.href = link.href;
+            document.head.appendChild(copy);
+            link.parentNode && link.parentNode.removeChild(link);
+        });
+        return doc.documentElement.outerHTML;
+    }
+
     function getModal() {
         return bootstrap.Modal.getOrCreateInstance(document.getElementById('grid-modal'));
     }
@@ -85,18 +133,12 @@
             fetch(href)
                 .then(function (r) { return r.text(); })
                 .then(function (html) {
-                    getModalBody().innerHTML = html;
-                    getModalBody().querySelectorAll('script').forEach(function (oldScript) {
-                        var newScript = document.createElement('script');
-                        Array.from(oldScript.attributes).forEach(function (attr) {
-                            newScript.setAttribute(attr.name, attr.value);
-                        });
-                        newScript.textContent = oldScript.textContent;
-                        oldScript.parentNode.replaceChild(newScript, oldScript);
+                    getModalBody().innerHTML = prepareModalHtml(html);
+                    return execScripts(getModalBody()).then(function () {
+                        let form = getModalBody().querySelector('form');
+                        if (form && pjaxId) form.dataset.pjaxContainer = pjaxId;
+                        getModal().show();
                     });
-                    let form = getModalBody().querySelector('form');
-                    if (form && pjaxId) form.dataset.pjaxContainer = pjaxId;
-                    getModal().show();
                 });
         } else {
             getModal().show();
@@ -128,16 +170,10 @@
                     let mb = getModalBody();
                     if (!mb) return;
                     mb.innerHTML = res.html || res.json;
-                    mb.querySelectorAll('script').forEach(function (oldScript) {
-                        var newScript = document.createElement('script');
-                        Array.from(oldScript.attributes).forEach(function (attr) {
-                            newScript.setAttribute(attr.name, attr.value);
-                        });
-                        newScript.textContent = oldScript.textContent;
-                        oldScript.parentNode.replaceChild(newScript, oldScript);
+                    execScripts(mb).then(function () {
+                        let newForm = mb.querySelector('form');
+                        if (newForm && pjaxContainer) newForm.dataset.pjaxContainer = pjaxContainer;
                     });
-                    let newForm = mb.querySelector('form');
-                    if (newForm && pjaxContainer) newForm.dataset.pjaxContainer = pjaxContainer;
                 }
             })
             .catch(function () {
@@ -153,17 +189,17 @@
     });
 
     function getCsrfToken() {
-        var meta = document.querySelector('meta[name="csrf-token"]');
+        const meta = document.querySelector('meta[name="csrf-token"]');
         return meta ? meta.getAttribute('content') : '';
     }
 
     function getCsrfParam() {
-        var meta = document.querySelector('meta[name="csrf-param"]');
+        const meta = document.querySelector('meta[name="csrf-param"]');
         return meta ? meta.getAttribute('content') : '_csrf';
     }
 
     function ajaxSubmit(href, pjaxContainer) {
-        var body = new URLSearchParams();
+        const body = new URLSearchParams();
         body.set(getCsrfParam(), getCsrfToken());
         fetch(href, { method: 'POST', body: body, headers: { 'X-Requested-With': 'XMLHttpRequest' } })
             .then(function (r) { return r.json(); })
