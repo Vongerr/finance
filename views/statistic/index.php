@@ -56,7 +56,7 @@ try {
                         Url::to(['create']),
                         [
                             'title' => 'Добавление записи',
-                            'class' => 'main-bth btn btn-success',
+                            'class' => 'main-btn btn-success',
                             'data' => [
                                 'pjax' => 0,
                                 'bs-modal' => '#grid-modal',
@@ -70,7 +70,7 @@ try {
                         Url::to([StatisticController::FINANCE]),
                         [
                             'title' => 'Финансы',
-                            'class' => 'btn btn-primary',
+                            'class' => 'main-btn finance-stat',
                             'data' => [
                                 'pjax' => 0,
                                 'bs-modal' => '#grid-modal',
@@ -109,7 +109,7 @@ try {
                         Url::to([TransferFinanceController::IMPORT_FINANCE_TINKOFF]),
                         [
                             'title' => 'Импортировать Тинькофф',
-                            'class' => 'btn btn-warning',
+                            'class' => 'main-btn t-bank',
                             'data' => [
                                 'pjax' => 0,
                                 'bs-modal' => 'grid-modal',
@@ -123,7 +123,7 @@ try {
                         Url::to([TransferFinanceController::IMPORT_FINANCE_ALPHA]),
                         [
                             'title' => 'Импортировать Альфа-банк',
-                            'class' => 'btn btn-warning',
+                            'class' => 'main-btn alpha-bank',
                             'data' => [
                                 'pjax' => 0,
                                 'bs-modal' => '#grid-modal',
@@ -137,7 +137,7 @@ try {
                         Url::to([TransferFinanceController::IMPORT_FINANCE_VTB]),
                         [
                             'title' => 'Импортировать Втб',
-                            'class' => 'btn btn-warning',
+                            'class' => 'main-btn vtb-bank',
                             'data' => [
                                 'pjax' => 0,
                                 'bs-modal' => '#grid-modal',
@@ -417,12 +417,12 @@ try {
 
     $this->registerCss(<<<CSS
 
-.main-bth {
-  padding: 15px 40px;
+.main-btn {
+  padding: 15px 20px;
   border: none;
   border-radius: 50px; /* Сильная скругленность */
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 400;
   color: #fff;
   background: linear-gradient(145deg, #6a11cb, #2575fc);
   box-shadow: 0 10px 20px rgba(37, 117, 252, 0.3);
@@ -430,6 +430,31 @@ try {
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 1px;
+  text-decoration: none;
+}
+
+.main-btn.t-bank {
+  color: #fff;
+  background: #daad3b;
+}
+
+.main-btn.alpha-bank {
+  color: #fff;
+  box-shadow: 0 10px 20px rgba(37, 117, 252, 0.3);
+  background: #fc0202;
+}
+
+.main-btn.vtb-bank {
+  color: #fff;
+  background: linear-gradient(145deg, #6a11cb, #2575fc);
+  box-shadow: 0 10px 20px rgba(37, 117, 252, 0.3);
+}
+
+.main-btn.finance-stat {
+  padding: 10px 40px;
+  color: #fff;
+  box-shadow: 0 10px 20px rgba(37, 117, 252, 0.3);
+  background: #fc0202;
 }
 
 .main-bth:hover {
