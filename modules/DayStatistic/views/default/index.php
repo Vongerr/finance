@@ -2,28 +2,23 @@
 
 use app\components\View;
 use app\helpers\MonthHelper;
+use app\modules\DayStatistic\services\DayStatisticService;
 use yii\helpers\Html;
 
 /* @var View $this */
 /* @var array $statistic */
 /* @var array $years */
 
-try {
+$summary = $statistic['summary'];
+$year = $statistic['year'];
+$month = $statistic['month'];
+$monthName = $statistic['monthName'];
 
-    $days = $statistic['days'];
-    $summary = $statistic['summary'];
-    $year = $statistic['year'];
-    $month = $statistic['month'];
-    $monthName = $statistic['monthName'];
+$totalNet = $summary['totalNet'];
 
-    $fmt = static fn(float $value): string => number_format($value, 0, ',', '.');
+$fmt = [DayStatisticService::class, 'formatMoney'];
 
-    $totalNet = $summary['totalNet'];
-    $avgDaily = $summary['activeDays'] > 0 ? $summary['totalExpenses'] / $summary['activeDays'] : 0;
-    $maxExpense = max($summary['maxDayExpense'], 1);
-
-    $this->params['breadcrumbs'][] = Html::encode($monthName . ' ' . $year);
-    ?>
+$this->params['breadcrumbs'][] = Html::encode($monthName . ' ' . $year); ?>
 
     <div class="container-fluid py-3 ds-page">
         <!-- Фильтр по периоду -->
@@ -34,11 +29,9 @@ try {
                         <span>Год</span>
                         <select name="year" class="form-select form-select-sm">
                             <?php if (empty($years)) $years = [$year];
-
                             foreach ($years as $y): ?>
                                 <option value="<?= $y ?>" <?= $y == $year ? 'selected' : '' ?>><?= $y ?></option>
                             <?php endforeach; ?>
-
                         </select>
                     </label>
                     <label class="ds-filter-label">
@@ -52,9 +45,7 @@ try {
                     <button type="submit" class="btn btn-sm ds-btn-primary">Показать</button>
                 </form>
                 <div class="ds-period-title">
-                    <i class="bi bi-calendar3 me-1"></i>
-                    <?= Html::encode($monthName);
-                    echo $year ?>
+                    <i class="bi bi-calendar3 me-1"></i><?= Html::encode($monthName) ?> <?= $year ?>
                 </div>
             </div>
         </div>
@@ -95,7 +86,7 @@ try {
                 <div class="ds-sum-icon"><i class="bi bi-graph-up-arrow"></i></div>
                 <div class="ds-sum-body">
                     <div class="ds-sum-label">Средний расход / день</div>
-                    <div class="ds-sum-value"><?= $fmt($avgDaily) ?> <small>руб.</small></div>
+                    <div class="ds-sum-value"><?= $fmt($summary['avgDaily']) ?> <small>руб.</small></div>
                 </div>
             </div>
         </div>
@@ -120,8 +111,8 @@ try {
                 <div class="ds-legend">
                     <span class="ds-legend-item"><i class="bi bi-circle-fill" style="color:#2e8b57"></i> Доходы</span>
                     <span class="ds-legend-item"><i class="bi bi-circle-fill" style="color:#c0392b"></i> Расходы</span>
-                    <span class="ds-legend-item ds-max-net"><i class="bi bi-star-fill"></i> Лучший день</span>
-                    <span class="ds-legend-item ds-max-exp"><i class="bi bi-exclamation-triangle-fill"></i> Макс. расход</span>
+                    <span class="ds-legend-item"><i class="bi bi-star-fill"></i> Лучший день</span>
+                    <span class="ds-legend-item"><i class="bi bi-exclamation-triangle-fill"></i> Макс. расход</span>
                 </div>
             </div>
             <div class="ds-card-body p-0">
@@ -140,100 +131,64 @@ try {
                         </tr>
                         </thead>
                         <tbody>
-                        <?php
-                        $currentWeek = null;
-                        $weekFirst = null;
-                        $weekLast = null;
-                        $weekCount = 0;
-                        $weekRevenue = 0.0;
-                        $weekExpenses = 0.0;
-                        $weekNet = 0.0;
-
-                        foreach ($days as $info):
-
-                            $week = (int)date('W', strtotime($info['date']));
-
-                            if ($currentWeek !== null && $week !== $currentWeek):
-                                ?>
-                                <tr class="ds-week-total">
-                                    <td colspan="2">
-                                        <i class="bi bi-calendar-week me-1"></i>Неделя <?= $currentWeek ?>
-                                        <span class="ds-week-range"><?= date('d.m', strtotime($weekFirst)) ?> – <?= date('d.m', strtotime($weekLast)) ?></span>
-                                    </td>
-                                    <td class="text-end ds-txt-green"><?= $fmt($weekRevenue) ?></td>
-                                    <td class="text-end ds-txt-red"><?= $fmt($weekExpenses) ?></td>
-                                    <td class="text-end <?= $weekNet >= 0 ? 'ds-txt-green' : 'ds-txt-red' ?>"><?= $fmt($weekNet) ?></td>
-                                    <td colspan="3"></td>
-                                </tr>
-                            <?php endif;
-
-                            $currentWeek = $week;
-                            $weekFirst = $info['date'];
-
-                            if (empty($weekLast) || strtotime($info['date']) > strtotime($weekLast)) $weekLast = $info['date'];
-
-                            $weekCount += $info['count'];
-                            $weekRevenue += $info['revenue'];
-                            $weekExpenses += $info['expenses'];
-                            $weekNet += $info['net'];
-
-                            $isWeekend = in_array($info['weekday'], ['Сб', 'Вс'], true);
-                            $isMaxNet = $info['date'] === $summary['maxNetDay'] && $info['net'] > 0;
-                            $isMaxExp = $info['date'] === $summary['maxExpenseDay'] && $summary['maxDayExpense'] > 0;
-                            $netClass = $info['net'] > 0 ? 'ds-txt-green fw-semibold' : ($info['net'] < 0 ? 'ds-txt-red fw-semibold' : 'text-secondary');
-                            $rowClass = trim(($isWeekend ? ' ds-row-weekend' : '') . ($isMaxNet ? ' ds-row-max-net' : '') . ($isMaxExp ? ' ds-row-max-exp' : ''));
-                            $percent = $info['expenses'] > 0 ? (int)round($info['expenses'] / $maxExpense * 100) : 0;
-                            $barColor = $percent >= 80 ? '#c0392b' : ($percent >= 45 ? '#e67e22' : '#2e8b57');
-                            $avgOp = $info['expenses'] > 0 && $info['count'] > 0 ? $info['expenses'] / $info['count'] : 0;
-                            $top = !empty($info['rows']) ? array_keys($info['rows'])[0] : null;
-                            ?>
-                            <tr class="ds-day-row<?= $rowClass ?>">
-                                <td class="ds-th-day">
-                                    <span class="ds-day-num"><?= $info['day'] ?></span>
-                                    <span class="ds-day-week <?= $isWeekend ? 'ds-day-weekend' : '' ?>"><?= $info['weekday'] ?></span>
-                                </td>
-                                <td class="text-center">
-                                    <?php if ($info['count'] > 0): ?>
-                                        <span class="ds-badge-count"><?= $info['count'] ?></span>
-                                    <?php else: ?>
-                                        <span class="text-secondary">—</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td class="text-end ds-txt-green"><?= $info['revenue'] > 0 ? $fmt($info['revenue']) : '<span class="text-secondary">—</span>' ?></td>
-                                <td class="text-end ds-txt-red"><?= $info['expenses'] > 0 ? $fmt($info['expenses']) : '<span class="text-secondary">—</span>' ?></td>
-                                <td class="text-end <?= $netClass ?>"><?= $info['count'] > 0 ? $fmt($info['net']) : '<span class="text-secondary">—</span>' ?></td>
-                                <td class="text-end text-secondary"><?= $avgOp > 0 ? $fmt($avgOp) : '—' ?></td>
-                                <td>
-                                    <?php if ($top !== null): ?>
-                                        <span class="ds-top-cat" title="<?= Html::encode($top) ?>">
-                                        <?= Html::encode($top) ?>
-                                        <small>(<?= $fmt($info['rows'][$top]) ?>)</small>
-                                    </span>
-                                    <?php else: ?>
-                                        <span class="text-secondary">—</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <div class="ds-progress" title="<?= $percent ?>% от макс. дневного расхода">
-                                        <div class="ds-progress-bar"
-                                             style="width: <?= $percent ?>%; background: <?= $barColor ?>;"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php endforeach;
-
-                        if ($currentWeek !== null): ?>
+                        <?php foreach ($statistic['weeks'] as $week): ?>
                             <tr class="ds-week-total">
                                 <td colspan="2">
-                                    <i class="bi bi-calendar-week me-1"></i>Неделя <?= $currentWeek ?>
-                                    <span class="ds-week-range"><?= date('d.m', strtotime($weekFirst)) ?> – <?= date('d.m', strtotime($weekLast)) ?></span>
+                                    <i class="bi bi-calendar-week me-1"></i>Неделя <?= $week['number'] ?>
+                                    <span class="ds-week-range"><?= date('d.m', strtotime($week['first'])) ?> – <?= date('d.m', strtotime($week['last'])) ?></span>
                                 </td>
-                                <td class="text-end ds-txt-green"><?= $fmt($weekRevenue) ?></td>
-                                <td class="text-end ds-txt-red"><?= $fmt($weekExpenses) ?></td>
-                                <td class="text-end <?= $weekNet >= 0 ? 'ds-txt-green' : 'ds-txt-red' ?>"><?= $fmt($weekNet) ?></td>
+                                <td class="text-end ds-txt-green"><?= $fmt($week['revenue']) ?></td>
+                                <td class="text-end ds-txt-red"><?= $fmt($week['expenses']) ?></td>
+                                <td class="text-end <?= $week['net'] >= 0 ? 'ds-txt-green' : 'ds-txt-red' ?>"><?= $fmt($week['net']) ?></td>
                                 <td colspan="3"></td>
                             </tr>
-                        <?php endif; ?>
+
+                            <?php foreach ($week['days'] as $info):
+
+                                $rowClass = trim(($info['is_weekend'] ? ' ds-row-weekend' : '')
+                                    . ($info['is_max_net'] ? ' ds-row-max-net' : '')
+                                    . ($info['is_max_exp'] ? ' ds-row-max-exp' : ''));
+
+                                $netClass = $info['net'] > 0
+                                    ? 'ds-txt-green fw-semibold'
+                                    : ($info['net'] < 0 ? 'ds-txt-red fw-semibold' : 'text-secondary');
+                                ?>
+                                <tr class="ds-day-row<?= $rowClass ?>">
+                                    <td class="ds-th-day">
+                                        <span class="ds-day-num"><?= $info['day'] ?></span>
+                                        <span class="ds-day-week <?= $info['is_weekend'] ? 'ds-day-weekend' : '' ?>"><?= $info['weekday'] ?></span>
+                                    </td>
+                                    <td class="text-center">
+                                        <?php if ($info['has_data']): ?>
+                                            <span class="ds-badge-count"><?= $info['count'] ?></span>
+                                        <?php else: ?>
+                                            <span class="text-secondary">—</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="text-end ds-txt-green"><?= $info['revenue'] > 0 ? $fmt($info['revenue']) : '<span class="text-secondary">—</span>' ?></td>
+                                    <td class="text-end ds-txt-red"><?= $info['expenses'] > 0 ? $fmt($info['expenses']) : '<span class="text-secondary">—</span>' ?></td>
+                                    <td class="text-end <?= $netClass ?>"><?= $info['has_data'] ? $fmt($info['net']) : '<span class="text-secondary">—</span>' ?></td>
+                                    <td class="text-end text-secondary"><?= $info['avg_op'] > 0 ? $fmt($info['avg_op']) : '—' ?></td>
+                                    <td>
+                                        <?php if ($info['top_label'] !== null): ?>
+                                            <span class="ds-top-cat" title="<?= Html::encode($info['top_label']) ?>">
+                                            <?= Html::encode($info['top_label']) ?>
+                                            <small>(<?= $fmt($info['top_value']) ?>)</small>
+                                        </span>
+                                        <?php else: ?>
+                                            <span class="text-secondary">—</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <div class="ds-progress"
+                                             title="<?= $info['bar_percent'] ?>% от макс. дневного расхода">
+                                            <div class="ds-progress-bar"
+                                                 style="width: <?= $info['bar_percent'] ?>%; background: <?= $info['bar_color'] ?>;"></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endforeach; ?>
 
                         <tr class="ds-table-total">
                             <td colspan="2"><i class="bi bi-flag-fill me-1"></i>Итого</td>
@@ -249,29 +204,19 @@ try {
         </div>
     </div>
 
-    <?php
+<?php if ($summary['activeDays'] > 0):
 
-    $labels = range(1, $statistic['daysInMonth']);
-    $expensesData = [];
-    $revenueData = [];
+    $chart = $statistic['chart'];
 
-    for ($d = 1; $d <= $statistic['daysInMonth']; $d++) {
-
-        $key = sprintf('%04d-%02d-%02d', $year, $month, $d);
-
-        $expensesData[] = isset($days[$key]) ? round($days[$key]['expenses'], 2) : 0;
-        $revenueData[] = isset($days[$key]) ? round($days[$key]['revenue'], 2) : 0;
-    }
-
-    $jsExpenses = json_encode($expensesData);
-    $jsRevenue = json_encode($revenueData);
-    $jsLabels = json_encode($labels);
+    $jsLabels = json_encode($chart['labels']);
+    $jsExpenses = json_encode($chart['expenses']);
+    $jsRevenue = json_encode($chart['revenue']);
 
     $this->registerJsFile('https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js', [
         'position' => $this::POS_HEAD,
     ]);
 
-    $this->registerCss(<<<CSS
+    $this->registerCss(<<<'CSS'
 .ds-page { color: #2c3e50; }
 .ds-card {
   background: #fff;
@@ -412,7 +357,7 @@ CSS
                     backgroundColor: 'rgba(192, 57, 43, .75)',
                     borderColor: '#c0392b',
                     borderWidth: 1,
-                    borderRadius: 4
+                    borderRadius: 4,
                 },
                 {
                     label: 'Доходы',
@@ -420,7 +365,7 @@ CSS
                     backgroundColor: 'rgba(46, 139, 87, .75)',
                     borderColor: '#2e8b57',
                     borderWidth: 1,
-                    borderRadius: 4
+                    borderRadius: 4,
                 }
             ]
         },
@@ -456,11 +401,6 @@ CSS
         }
     });
 })();
-
 JS
     );
-
-} catch (Throwable $e) {
-
-    viewException($e);
-}
+endif;

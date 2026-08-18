@@ -18,11 +18,20 @@ class DayStatisticService
         7 => 'Вс',
     ];
 
+    private const BAR_GREEN = '#2e8b57';
+    private const BAR_ORANGE = '#e67e22';
+    private const BAR_RED = '#c0392b';
+
     private DayStatisticRepository $repository;
 
     public function __construct(DayStatisticRepository $repository)
     {
         $this->repository = $repository;
+    }
+
+    public static function formatMoney(float $value): string
+    {
+        return number_format($value, 0, ',', '.');
     }
 
     public function getAvailableYears(): array
@@ -36,9 +45,7 @@ class DayStatisticService
 
         $days = [];
         for ($day = 1; $day <= $daysInMonth; $day++) {
-
             $date = sprintf('%04d-%02d-%02d', $year, $month, $day);
-
             $days[$date] = [
                 'date' => $date,
                 'day' => $day,
@@ -48,17 +55,24 @@ class DayStatisticService
                 'net' => 0.0,
                 'count' => 0,
                 'rows' => [],
+                'has_data' => false,
+                'is_weekend' => false,
+                'is_max_net' => false,
+                'is_max_exp' => false,
+                'bar_percent' => 0,
+                'bar_color' => self::BAR_GREEN,
+                'avg_op' => 0.0,
+                'top_label' => null,
+                'top_value' => null,
             ];
         }
 
         foreach ($this->repository->getDayTotals($year, $month) as $row) {
-
-            $date = $row['date'];
-
-            if (!isset($days[$date])) continue;
-
+            $date = $row['day'];
+            if (!isset($days[$date])) {
+                continue;
+            }
             $days[$date]['count'] += (int)$row['count'];
-
             if ($row['budget_category'] === Finance::REVENUE) {
                 $days[$date]['revenue'] += (float)$row['total'];
             } else {
@@ -69,13 +83,11 @@ class DayStatisticService
         $categories = CategoryAllHelper::getList();
 
         foreach ($this->repository->getDayCategoryBreakdown($year, $month) as $row) {
-
-            $date = $row['date'];
-
-            if (!isset($days[$date])) continue;
-
+            $date = $row['day'];
+            if (!isset($days[$date])) {
+                continue;
+            }
             $label = $categories[$row['category']] ?? $row['category'];
-
             $days[$date]['rows'][$label] = ($days[$date]['rows'][$label] ?? 0) + (float)$row['total'];
         }
 
@@ -87,43 +99,101 @@ class DayStatisticService
         $activeDays = 0;
 
         foreach ($days as $date => &$info) {
-
             $info['net'] = $info['revenue'] - $info['expenses'];
+            $info['has_data'] = $info['count'] > 0;
+            $info['is_weekend'] = in_array($info['weekday'], ['Сб', 'Вс'], true);
+            $info['avg_op'] = $info['expenses'] > 0 && $info['count'] > 0 ? $info['expenses'] / $info['count'] : 0.0;
 
             arsort($info['rows']);
-
             $info['rows'] = array_slice($info['rows'], 0, 3, true);
+            if ($info['rows']) {
+                $topKeys = array_keys($info['rows']);
+                $info['top_label'] = $topKeys[0];
+                $info['top_value'] = $info['rows'][$topKeys[0]];
+            }
 
             $totalRevenue += $info['revenue'];
             $totalExpenses += $info['expenses'];
 
-            if ($info['count'] > 0) $activeDays++;
-
+            if ($info['has_data']) {
+                $activeDays++;
+            }
             if ($info['expenses'] > $maxDayExpense) {
-
                 $maxDayExpense = $info['expenses'];
                 $maxExpenseDay = $date;
             }
-
             if ($info['net'] >= 0 && ($maxNetDay === null || $info['net'] > $days[$maxNetDay]['net'])) {
-
                 $maxNetDay = $date;
             }
         }
-
         unset($info);
 
+        $maxDayExpenseSafe = max($maxDayExpense, 1);
+
+        foreach ($days as $date => &$info) {
+            $info['is_max_net'] = $info['net'] > 0 && $date === $maxNetDay;
+            $info['is_max_exp'] = $maxDayExpense > 0 && $date === $maxExpenseDay;
+            $info['bar_percent'] = $info['expenses'] > 0 ? (int)round($info['expenses'] / $maxDayExpenseSafe * 100) : 0;
+            $info['bar_color'] = $info['bar_percent'] >= 80
+                ? self::BAR_RED
+                : ($info['bar_percent'] >= 45 ? self::BAR_ORANGE : self::BAR_GREEN);
+        }
+        unset($info);
+
+        $weeks = [];
+        $currentWeek = null;
+        $week = null;
+
+        foreach ($days as $info) {
+            $weekNumber = (int)date('W', strtotime($info['date']));
+            if ($currentWeek !== $weekNumber) {
+                $currentWeek = $weekNumber;
+                $week = [
+                    'number' => $weekNumber,
+                    'first' => $info['date'],
+                    'last' => $info['date'],
+                    'revenue' => 0.0,
+                    'expenses' => 0.0,
+                    'net' => 0.0,
+                    'days' => [],
+                ];
+                $weeks[] = &$week;
+            }
+            $week['last'] = $info['date'];
+            $week['revenue'] += $info['revenue'];
+            $week['expenses'] += $info['expenses'];
+            $week['net'] += $info['net'];
+            $week['days'][] = $info;
+        }
+        unset($week);
+
+        $chartLabels = [];
+        $chartExpenses = [];
+        $chartRevenue = [];
+        for ($day = 1; $day <= $daysInMonth; $day++) {
+            $date = sprintf('%04d-%02d-%02d', $year, $month, $day);
+            $chartLabels[] = $day;
+            $chartExpenses[] = round($days[$date]['expenses'], 2);
+            $chartRevenue[] = round($days[$date]['revenue'], 2);
+        }
+
         return [
-            'days' => $days,
             'year' => $year,
             'month' => $month,
             'monthName' => $daysInMonth ? $this->getMonthName($month) : '',
             'daysInMonth' => $daysInMonth,
+            'weeks' => $weeks,
+            'chart' => [
+                'labels' => $chartLabels,
+                'expenses' => $chartExpenses,
+                'revenue' => $chartRevenue,
+            ],
             'summary' => [
                 'totalRevenue' => $totalRevenue,
                 'totalExpenses' => $totalExpenses,
                 'totalNet' => $totalRevenue - $totalExpenses,
                 'activeDays' => $activeDays,
+                'avgDaily' => $activeDays > 0 ? $totalExpenses / $activeDays : 0,
                 'maxDayExpense' => $maxDayExpense,
                 'maxExpenseDay' => $maxExpenseDay,
                 'maxNetDay' => $maxNetDay,
