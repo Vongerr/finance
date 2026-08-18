@@ -68,7 +68,7 @@ class DayStatisticService
         }
 
         foreach ($this->repository->getDayTotals($year, $month) as $row) {
-            $date = $row['day'];
+            $date = $row['date'];
             if (!isset($days[$date])) {
                 continue;
             }
@@ -83,7 +83,7 @@ class DayStatisticService
         $categories = CategoryAllHelper::getList();
 
         foreach ($this->repository->getDayCategoryBreakdown($year, $month) as $row) {
-            $date = $row['day'];
+            $date = $row['date'];
             if (!isset($days[$date])) {
                 continue;
             }
