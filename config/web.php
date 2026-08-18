@@ -54,6 +54,8 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => true,
             'rules' => [
+                'day-statistic' => 'day-statistic/default/index',
+                'day-statistic/<action:[\w-]+>' => 'day-statistic/default/<action>',
                 '<controller:[\w-]+>/<action:[\w-]+>' => '<controller>/<action>',
                 'statistic/view/<slug:[\w-]+>' => 'statistic/view',
                 'chart' => 'chart/index',
@@ -65,7 +67,8 @@ $config = [
     ],
     'params' => $params,
     'modules' => [
-        'gridview' => ['class' => 'kartik\grid\Module']
+        'gridview' => ['class' => 'kartik\grid\Module'],
+        'day-statistic' => ['class' => 'app\modules\DayStatistic\Module'],
     ]
 ];
 

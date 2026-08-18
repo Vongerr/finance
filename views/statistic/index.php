@@ -50,7 +50,7 @@ try {
         'filterRowOptions' => ['class' => 'kartik-sheet-style'],
         'toolbar' => [
             [
-                'content' => '<div class="d-flex flex-wrap gap-2">'
+                'content' => '<div class="toolbar-buttons d-flex flex-wrap gap-2">'
                     . Html::a(
                         'Добавить запись',
                         Url::to(['create']),
@@ -84,7 +84,7 @@ try {
                         Url::to([StatisticController::CATEGORY_FINANCE]),
                         [
                             'title' => 'Траты в месяц',
-                            'class' => 'btn btn-primary',
+                            'class' => 'main-btn finance-stat',
                             'data' => [
                                 'title' => 'Траты в месяц',
                                 'href' => Url::to([StatisticController::CATEGORY_FINANCE, 'category' => $searchModel->category]),
@@ -95,7 +95,7 @@ try {
                         Url::to([StatisticController::FUTURE_FINANCE]),
                         [
                             'title' => 'Будущие финансы',
-                            'class' => 'btn btn-primary',
+                            'class' => 'main-btn finance-stat',
                             'data' => [
                                 'pjax' => 0,
                                 'bs-modal' => '#grid-modal',
@@ -361,17 +361,6 @@ try {
                     return BankHelper::getValue($model->bank);
                 },
             ],
-            /*[
-                'class' => DataColumn::class,
-                'attribute' => 'username',
-                'hAlign' => GridViewInterface::ALIGN_CENTER,
-                'vAlign' => GridViewInterface::ALIGN_TOP,
-                'width' => '30px',
-                'value' => function (Finance $model) {
-
-                    return $model->username;
-                },
-            ],*/
             [
                 'class' => DataColumn::class,
                 'attribute' => 'comment',
@@ -454,16 +443,19 @@ try {
   padding: 10px 40px;
   color: #fff;
   box-shadow: 0 10px 20px rgba(37, 117, 252, 0.3);
-  background: #fc0202;
+  background: #405eef;
 }
 
-.main-bth:hover {
+.toolbar-buttons a {
+  transition: all 0.3s ease;
+}
+
+.toolbar-buttons a:hover {
   transform: translateY(-3px); /* Поднимается вверх */
   box-shadow: 0 15px 30px rgba(37, 117, 252, 0.5);
 }
 
-/* Эффект при нажатии */
-.main-bth:active {
+.toolbar-buttons a:active {
   transform: translateY(0px);
   box-shadow: 0 5px 10px rgba(37, 117, 252, 0.3);
 }

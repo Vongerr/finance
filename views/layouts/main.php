@@ -49,6 +49,7 @@ try {
                 ['label' => 'Очистить кэш', 'url' => ['/site/flush']],
                 ['label' => 'Будущие финансы', 'url' => ['/future-finance']],
                 ['label' => 'Диаграмма', 'url' => ['/chart']],
+                ['label' => 'По дням', 'url' => ['/day-statistic']],
                 ['label' => 'Api', 'url' => ['/api-moex']],
                 app()->user->isGuest
                     ? ['label' => 'Авторизация', 'url' => ['/site/login']]
