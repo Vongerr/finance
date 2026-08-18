@@ -3,9 +3,18 @@
 namespace app\modules\DayStatistic\repositories;
 
 use app\entities\Finance;
+use yii\db\ActiveQuery;
 
 class DayStatisticRepository
 {
+    private function queryFinance(int $year, int $month): ActiveQuery
+    {
+        return Finance::find()
+            ->andWhere(['YEAR(date)' => $year, 'MONTH(date)' => $month])
+            ->andWhere(['exclusion' => Finance::NO_EXCLUSION])
+            ->asArray();
+    }
+
     public function getAvailableYears(): array
     {
         return Finance::find()
@@ -22,17 +31,14 @@ class DayStatisticRepository
      */
     public function getDayTotals(int $year, int $month): array
     {
-        return Finance::find()
-            ->andWhere(['YEAR(date)' => $year, 'MONTH(date)' => $month])
-            ->andWhere(['exclusion' => Finance::NO_EXCLUSION])
+        return $this->queryFinance($year, $month)
             ->select([
-                'DATE_FORMAT(date, "%Y-%m-%d") as day',
+                'date',
                 'budget_category',
                 'SUM(money) as total',
                 'COUNT(*) as count',
             ])
-            ->groupBy(['day', 'budget_category'])
-            ->asArray()
+            ->groupBy(['date', 'budget_category'])
             ->all();
     }
 
@@ -43,18 +49,15 @@ class DayStatisticRepository
      */
     public function getDayCategoryBreakdown(int $year, int $month): array
     {
-        return Finance::find()
-            ->andWhere(['YEAR(date)' => $year, 'MONTH(date)' => $month])
-            ->andWhere(['exclusion' => Finance::NO_EXCLUSION])
+        return $this->queryFinance($year, $month)
             ->andWhere(['budget_category' => Finance::EXPENSES])
             ->select([
-                'DATE_FORMAT(date, "%Y-%m-%d") as day',
+                'date',
                 'category',
                 'SUM(money) as total',
                 'COUNT(*) as count',
             ])
-            ->groupBy(['day', 'category'])
-            ->asArray()
+            ->groupBy(['date', 'category'])
             ->all();
     }
 }

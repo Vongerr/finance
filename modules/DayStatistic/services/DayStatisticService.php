@@ -36,7 +36,9 @@ class DayStatisticService
 
         $days = [];
         for ($day = 1; $day <= $daysInMonth; $day++) {
+
             $date = sprintf('%04d-%02d-%02d', $year, $month, $day);
+
             $days[$date] = [
                 'date' => $date,
                 'day' => $day,
@@ -50,11 +52,13 @@ class DayStatisticService
         }
 
         foreach ($this->repository->getDayTotals($year, $month) as $row) {
-            $date = $row['day'];
-            if (!isset($days[$date])) {
-                continue;
-            }
+
+            $date = $row['date'];
+
+            if (!isset($days[$date])) continue;
+
             $days[$date]['count'] += (int)$row['count'];
+
             if ($row['budget_category'] === Finance::REVENUE) {
                 $days[$date]['revenue'] += (float)$row['total'];
             } else {
@@ -65,11 +69,13 @@ class DayStatisticService
         $categories = CategoryAllHelper::getList();
 
         foreach ($this->repository->getDayCategoryBreakdown($year, $month) as $row) {
-            $date = $row['day'];
-            if (!isset($days[$date])) {
-                continue;
-            }
+
+            $date = $row['date'];
+
+            if (!isset($days[$date])) continue;
+
             $label = $categories[$row['category']] ?? $row['category'];
+
             $days[$date]['rows'][$label] = ($days[$date]['rows'][$label] ?? 0) + (float)$row['total'];
         }
 
@@ -81,24 +87,30 @@ class DayStatisticService
         $activeDays = 0;
 
         foreach ($days as $date => &$info) {
+
             $info['net'] = $info['revenue'] - $info['expenses'];
+
             arsort($info['rows']);
+
             $info['rows'] = array_slice($info['rows'], 0, 3, true);
 
             $totalRevenue += $info['revenue'];
             $totalExpenses += $info['expenses'];
 
-            if ($info['count'] > 0) {
-                $activeDays++;
-            }
+            if ($info['count'] > 0) $activeDays++;
+
             if ($info['expenses'] > $maxDayExpense) {
+
                 $maxDayExpense = $info['expenses'];
                 $maxExpenseDay = $date;
             }
+
             if ($info['net'] >= 0 && ($maxNetDay === null || $info['net'] > $days[$maxNetDay]['net'])) {
+
                 $maxNetDay = $date;
             }
         }
+
         unset($info);
 
         return [

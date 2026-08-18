@@ -11,12 +11,7 @@ class DefaultController extends MainController
 
     private DayStatisticService $service;
 
-    public function __construct(
-        string               $id,
-        $module,
-        DayStatisticService  $service,
-        array                $config = []
-    )
+    public function __construct(string $id, $module, DayStatisticService $service, array $config = [])
     {
         parent::__construct($id, $module, $config);
 
@@ -29,13 +24,6 @@ class DefaultController extends MainController
 
         $year = (int)$request->get('year', date('Y'));
         $month = (int)$request->get('month', date('n'));
-
-        if ($month < 1 || $month > 12) {
-            $month = (int)date('n');
-        }
-        if ($year < 2000) {
-            $year = (int)date('Y');
-        }
 
         return $this->render('index', [
             'statistic' => $this->service->buildMonthStatistic($year, $month),
