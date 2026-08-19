@@ -145,25 +145,26 @@ class DayStatisticService
         $week = null;
 
         foreach ($days as $info) {
+
             $weekNumber = (int)date('W', strtotime($info['date']));
+
             if ($currentWeek !== $weekNumber) {
+
                 $currentWeek = $weekNumber;
-                $week = [
+                $weeks[$weekNumber] = [
                     'number' => $weekNumber,
                     'first' => $info['date'],
-                    'last' => $info['date'],
                     'revenue' => 0.0,
                     'expenses' => 0.0,
                     'net' => 0.0,
                     'days' => [],
                 ];
-                $weeks[] = &$week;
             }
-            $week['last'] = $info['date'];
-            $week['revenue'] += $info['revenue'];
-            $week['expenses'] += $info['expenses'];
-            $week['net'] += $info['net'];
-            $week['days'][] = $info;
+            $weeks[$weekNumber]['last'] = $info['date'];
+            $weeks[$weekNumber]['revenue'] += $info['revenue'];
+            $weeks[$weekNumber]['expenses'] += $info['expenses'];
+            $weeks[$weekNumber]['net'] += $info['net'];
+            $weeks[$weekNumber]['days'][] = $info;
         }
         unset($week);
 
